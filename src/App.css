@@ -1,22 +1,16 @@
 .App {
-  text-align: center;
+
+
 }
 
-.App-logo {
-  height: 40vmin;
+.table-main {
+margin-top: -2%;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #09d3ac;
+.input-form {
+  margin-top: 5%;
+  position: relative;
+  width: 450px;
+  height: 100px;
+  left: 10px;
 }

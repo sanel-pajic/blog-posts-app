@@ -1,0 +1,81 @@
+import React, { useState } from "react";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import gql from "graphql-tag";
+import mongoID from "bson-objectid";
+import { useQuery, useMutation } from "@apollo/react-hooks";
+
+const BLOGS_QUERY = gql`
+  query {
+    blogPosts {
+      _id
+      title
+      description
+    }
+  }
+`;
+
+const ADD_MUTATION = gql`
+  mutation($data: BlogPostInput!) {
+    addBlogPost(data: $data)
+  }
+`;
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      "& > *": {
+        margin: theme.spacing(1),
+        width: 200
+      }
+    }
+  })
+);
+
+export const InputBlogComponent: React.FC = () => {
+  const classes = useStyles();
+
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+
+  const { data, loading } = useQuery(BLOGS_QUERY);
+  const [addBlogPost, { error }] = useMutation(ADD_MUTATION, {
+    variables: { title, description },
+    refetchQueries: ["addBlogPost"]
+  });
+  if (error) {
+    console.log("error", error);
+  }
+  console.log("data:", data);
+  if (loading || !data) {
+    return null;
+  }
+
+  return (
+    <div>
+      <form className={classes.root} noValidate autoComplete="off">
+        <TextField
+          id="standard-basic"
+          label="Title"
+          value={title}
+          onChange={e => setTitle(e.target.value)}
+        />
+        <TextField
+          id="standard-basic"
+          label="Description"
+          value={description}
+          onChange={e => setDescription(e.target.value)}
+        />
+      </form>
+      <Button
+        color="primary"
+        variant="contained"
+        style={{ position: "relative", left: "450px", bottom: "50px" }}
+     
+      >
+        ADD BLOG
+      </Button>
+    </div>
+  );
+};

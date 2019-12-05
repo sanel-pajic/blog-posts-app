@@ -62,7 +62,7 @@ const REMOVE_MUTATION = gql`
   }
 `;
 
-export const TableBlogPosts: React.FC = () => {
+export const BlogPosts: React.FC = () => {
   const classes = useStyles();
 
   const { data, loading } = useQuery(BLOGS_QUERY);

@@ -1,10 +1,10 @@
 .App {
-
-
 }
+/* background-color: rgba(145, 145, 139, 0.333);
+background-color: #edf1f5af;*/
 
 .table-main {
-margin-top: -2%;
+  margin-top: -2%;
 }
 
 .input-form {
@@ -13,4 +13,10 @@ margin-top: -2%;
   width: 450px;
   height: 100px;
   left: 10px;
+}
+
+.logo {
+  margin: 0;
+  padding: 0;
+  position: relative;
 }

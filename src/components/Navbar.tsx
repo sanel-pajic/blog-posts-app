@@ -4,7 +4,6 @@ import Paper from "@material-ui/core/Paper";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import { Link } from "react-router-dom";
-import logo from "../images/blog.jpg";
 
 const useStyles = makeStyles({
   root: {
@@ -24,10 +23,15 @@ export const Navbar: React.FC = () => {
   };
 
   return (
-    <div style={{ display: "flex" }}>
-      <Link to="/">
-        <img src={logo} alt="Blog Logo" className="logo" />
-      </Link>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        position: "relative",
+        bottom: 0
+      }}
+    >
       <Paper className={classes.root}>
         <Tabs
           value={value}
@@ -37,7 +41,7 @@ export const Navbar: React.FC = () => {
           centered
         >
           <Tab label="Home" component={Link} to={"/"} />
-          <Tab label="Blog Posts" component={Link} to={"/blogposts"} />
+          <Tab label="Add Blog Post" component={Link} to={"/addblogpost"} />
           <Tab label="About" component={Link} to={"/about"} />
           <Tab label="Blog List" component={Link} to={"/list"} />
         </Tabs>

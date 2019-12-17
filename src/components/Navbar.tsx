@@ -37,7 +37,6 @@ export const Navbar: React.FC = () => {
           value={value}
           onChange={handleChange}
           indicatorColor="secondary"
-          textColor="default"
           centered
         >
           <Tab label="Home" component={Link} to={"/"} />

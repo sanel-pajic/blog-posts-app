@@ -4,6 +4,7 @@
         "browserslist",
         "bson",
         "ezjvs",
-        "objectid"
+        "objectid",
+        "signup"
     ]
 }

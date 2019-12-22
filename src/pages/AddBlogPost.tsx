@@ -13,6 +13,8 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { EditorState, convertToRaw } from "draft-js";
 import { CloudinaryWidget } from "../components/CloudinaryWidget";
 import draftToHtml from "draftjs-to-html";
+import Avatar from "@material-ui/core/Avatar";
+import { blue } from "@material-ui/core/colors";
 
 let schema = yup.object().shape({
   title: yup
@@ -50,6 +52,16 @@ const useStyles = makeStyles((theme: Theme) =>
         margin: theme.spacing(1),
         width: "98.5%"
       }
+    },
+    avatar: {
+      backgroundColor: blue[800],
+      width: "4vw",
+      height: "8vh",
+      marginRight: "0.5vw"
+    },
+    blogTitle: {
+      fontColor: blue[800],
+      marginRight: "0.5vw"
     }
   })
 );
@@ -84,100 +96,127 @@ export const AddBlogPost: React.FC = () => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        marginTop: "3%"
+        marginTop: "1%"
       }}
     >
       <Paper
         style={{
-          background: "#f5f5f5",
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          width: "70%",
-          padding: "1%"
+          width: "58%",
+          padding: "1.5%",
+          boxShadow: "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)"
         }}
       >
-        <Typography variant="h5" color="primary">
-          Add New Blog Post
-        </Typography>
-        <form className={classes.root} noValidate autoComplete="off">
-          <TextField
-            id="title"
-            label="Title"
-            placeholder="Title: Min 5 characters"
-            value={title}
-            onChange={e => setTitle(e.target.value)}
-          />
-          <TextareaAutosize
-            id="description_short"
-            aria-label="minimum height"
-            placeholder="Short Description: Min 100 characters"
-            style={{ height: 80 }}
-            value={description_short}
-            onChange={e => setDescriptionShort(e.target.value)}
-          />
-          <div>
-            <Editor
-              editorState={description}
-              wrapperClassName="wrapper-class"
-              editorClassName="editor-class"
-              toolbarClassName="toolbar-class"
-              placeholder="Description"
-              wrapperStyle={{ color: "black" }}
-              editorStyle={{
-                color: "black",
-                border: "1px solid grey",
-                height: 250
-              }}
-              onEditorStateChange={editorState => onChangeHandler(editorState)}
-            />
-          </div>
-        </form>
         <div
           style={{
-            padding: 10,
             display: "flex",
             justifyContent: "center",
             alignItems: "center"
           }}
         >
-          <CloudinaryWidget onUploadSuccess={setImageURL} />
-          <Button
-            id="submitButton"
-            color="primary"
-            variant="contained"
-            style={{ width: 120, marginLeft: 100 }}
-            onClick={() => {
-              try {
-                const valid = schema.validateSync({
-                  title,
-                  description_short,
-                  description
-                });
-                console.log("VALID", valid);
-
-                addBlogPost({
-                  variables: {
-                    data: {
-                      _id: mongoID.generate(),
-                      title,
-                      description_short,
-                      description: draftToHtml(
-                        convertToRaw(description.getCurrentContent())
-                      ),
-                      image
-                    }
-                  },
-                  refetchQueries: [{ query: BLOGS_QUERY }]
-                });
-              } catch (error) {
-                alert(error);
-              }
+          <Typography variant="h5" className={classes.blogTitle}>
+            Add New
+          </Typography>
+          <Avatar aria-label="recipe" className={classes.avatar}>
+            Blog
+          </Avatar>
+          <Typography variant="h5" className={classes.blogTitle}>
+            Post
+          </Typography>
+        </div>
+        <div
+          style={{
+            border: "1px solid #bdbdbd",
+            margin: "4%",
+            padding: "6%"
+          }}
+        >
+          <form className={classes.root} noValidate autoComplete="off">
+            <TextField
+              id="title"
+              label="Title"
+              placeholder="Title: Min 5 characters"
+              value={title}
+              onChange={e => setTitle(e.target.value)}
+            />
+            <TextareaAutosize
+              id="description_short"
+              aria-label="minimum height"
+              placeholder="Short Description: Min 100 characters"
+              style={{ height: "10vh" }}
+              value={description_short}
+              onChange={e => setDescriptionShort(e.target.value)}
+            />
+            <div>
+              <Editor
+                editorState={description}
+                wrapperClassName="wrapper-class"
+                editorClassName="editor-class"
+                toolbarClassName="toolbar-class"
+                placeholder="Description"
+                wrapperStyle={{ color: "black", border: "1px solid #bdbdbd" }}
+                editorStyle={{
+                  color: "black",
+                  borderTop: "1px solid #bdbdbd",
+                  height: "40vh"
+                }}
+                onEditorStateChange={editorState =>
+                  onChangeHandler(editorState)
+                }
+              />
+            </div>
+          </form>
+          <div
+            style={{
+              padding: 10,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center"
             }}
           >
-            ADD BLOG
-          </Button>
+            <div style={{ marginRight: "5vw" }}>
+              <CloudinaryWidget onUploadSuccess={setImageURL} />
+            </div>
+            <Button
+              id="submitButton"
+              color="primary"
+              variant="contained"
+              size="large"
+              style={{ width: "8vw", marginLeft: "5vw" }}
+              onClick={() => {
+                try {
+                  const valid = schema.validateSync({
+                    title,
+                    description_short,
+                    description
+                  });
+                  console.log("VALID", valid);
+
+                  addBlogPost({
+                    variables: {
+                      data: {
+                        _id: mongoID.generate(),
+                        title,
+                        description_short,
+                        description: draftToHtml(
+                          convertToRaw(description.getCurrentContent())
+                        ),
+                        image
+                      }
+                    },
+                    refetchQueries: [{ query: BLOGS_QUERY }]
+                  });
+                } catch (error) {
+                  alert(error);
+                }
+              }}
+            >
+              ADD BLOG
+            </Button>
+          </div>
         </div>
       </Paper>
     </div>

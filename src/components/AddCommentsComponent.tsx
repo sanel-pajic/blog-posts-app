@@ -1,0 +1,163 @@
+import React, { useState } from "react";
+import {
+  TextField,
+  Paper,
+  createStyles,
+  makeStyles,
+  Theme,
+  Button,
+  Typography,
+  Divider,
+  withStyles
+} from "@material-ui/core";
+import gql from "graphql-tag";
+import mongoID from "bson-objectid";
+import { useQuery, useMutation } from "@apollo/react-hooks";
+import { teal } from "@material-ui/core/colors";
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      padding: "2%",
+      width: "60%",
+      marginTop: "3%",
+      marginBottom: "4%",
+      boxShadow: "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)"
+    },
+
+    margin: {
+      margin: theme.spacing(1)
+    }
+  })
+);
+
+const ColorButton = withStyles((theme: Theme) => ({
+  root: {
+    color: theme.palette.getContrastText(teal[500]),
+    backgroundColor: teal[300],
+    height: "5vh",
+    "&:hover": {
+      backgroundColor: teal[500]
+    }
+  }
+}))(Button);
+
+export const AddCommentsComponent: React.FC<{ postId: string }> = ({
+  postId
+}) => {
+  const COMMENTS_QUERY = gql`
+  query {
+    comments(postId: "${postId}") {
+      _id
+      postId
+      text
+      user_name
+    }
+  }
+`;
+
+  const ADD_COMMENT = gql`
+    mutation($data: CommentInput!) {
+      addComment(data: $data)
+    }
+  `;
+  const classes = useStyles();
+  const [text, setText] = useState("");
+  const [user_name, setUserName] = useState("");
+  const { data, loading } = useQuery(COMMENTS_QUERY);
+  const [addComment, { error }] = useMutation(ADD_COMMENT);
+  if (error) {
+    console.log("error", error);
+  }
+
+  if (loading || !data) {
+    return null;
+  }
+  return (
+    <div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center"
+        }}
+      >
+        <Paper className={classes.root}>
+          <Typography
+            variant="subtitle2"
+            color="textSecondary"
+            style={{ marginLeft: "1rem", marginBottom: "0.5rem" }}
+          >
+            COMMENT
+          </Typography>
+          <TextField
+            id="comment"
+            placeholder="Write a comment"
+            multiline
+            rows="4"
+            variant="outlined"
+            value={text}
+            onChange={e => setText(e.target.value)}
+            style={{
+              width: "100%"
+            }}
+          />
+          <Typography
+            variant="subtitle2"
+            color="textSecondary"
+            style={{
+              marginLeft: "1rem",
+              marginTop: "1.5rem",
+              marginBottom: "0.5rem"
+            }}
+          >
+            NAME
+          </Typography>
+          <TextField
+            id="name"
+            placeholder="Name"
+            variant="outlined"
+            value={user_name}
+            onChange={e => setUserName(e.target.value)}
+            style={{
+              width: "100%"
+            }}
+          />
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center"
+            }}
+          >
+            <ColorButton
+              variant="text"
+              color="inherit"
+              className={classes.margin}
+              style={{ marginTop: "5%", marginLeft: "50%" }}
+              onClick={() => {
+                addComment({
+                  variables: {
+                    data: {
+                      _id: mongoID.generate(),
+                      postId: postId,
+                      text,
+                      user_name
+                    }
+                  },
+                  refetchQueries: [{ query: COMMENTS_QUERY }]
+                });
+              }}
+            >
+              POST A COMMENT
+            </ColorButton>
+          </div>
+        </Paper>
+      </div>
+      <Divider
+        variant="fullWidth"
+        style={{ marginBottom: "10%", marginTop: "5%" }}
+      />
+    </div>
+  );
+};

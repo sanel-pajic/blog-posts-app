@@ -50,13 +50,11 @@ export const ImageCarousel: React.FC = () => {
     <div
       style={{
         background: "#f5f5f5",
-        width: "80vw",
-        height: "50vh",
+        width: "75%",
+        height: "90%",
         display: "block",
         marginLeft: "auto",
-        marginRight: "auto",
-        position: "relative",
-        bottom: -5
+        marginRight: "auto"
       }}
     >
       <Gallery

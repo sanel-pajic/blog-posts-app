@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import logoError from "../images/error.png";
 import Button from "@material-ui/core/Button";
+import { Paper } from "@material-ui/core";
 
 export const Error: React.FC = () => {
   return (
@@ -10,21 +11,34 @@ export const Error: React.FC = () => {
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
-        alignItems: "center",
-        overflow: "hidden"
+        alignItems: "center"
       }}
     >
-      <img src={logoError} alt="Error Logo" style={{ marginTop: 5 }} />
+      <Paper
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          overflow: "hidden",
+          width: "40%",
+          height: "50vh", 
+          padding: "5%", 
+          marginTop:"1%"
+        }}
+      >
+        <img src={logoError} alt="Error Logo" style={{ marginTop: "3vh" }} />
 
-      <Link to="/">
-        <Button
-          variant="outlined"
-          color="default"
-          style={{ position: "relative", bottom: 75 }}
-        >
-          Back to home
-        </Button>
-      </Link>
+        <Link to="/">
+          <Button
+            variant="outlined"
+            color="default"
+            style={{ position: "relative", bottom: "8vh" }}
+          >
+            Back to home
+          </Button>
+        </Link>
+      </Paper>
     </div>
   );
 };

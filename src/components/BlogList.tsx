@@ -30,11 +30,10 @@ const useStyles = makeStyles((theme: Theme) =>
     card: {
       height: "auto",
       width: 450,
-      marginTop: 50
+      marginTop: "5vh"
     },
     media: {
-      height: 0,
-      paddingTop: "56.25%" // 16:9
+      paddingTop: "56.25%"
     },
     expand: {
       transform: "rotate(0deg)",

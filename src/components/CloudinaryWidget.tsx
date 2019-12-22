@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "@material-ui/core";
+import { Button, Typography } from "@material-ui/core";
 
 type Props = {
   onUploadSuccess: (image: string) => void;
@@ -16,8 +16,7 @@ export const CloudinaryWidget: React.FC<Props> = ({ onUploadSuccess }) => {
       if (!error && result && result.event === "success") {
         console.log("Done! Here is the image info: ", result.info);
         const dataURL: string = result.info.url;
-       onUploadSuccess(dataURL);
-
+        onUploadSuccess(dataURL);
       }
     }
   );
@@ -27,8 +26,23 @@ export const CloudinaryWidget: React.FC<Props> = ({ onUploadSuccess }) => {
   };
 
   return (
-    <div>
-      <Button onClick={showWidget} variant="contained" color="primary">
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center"
+      }}
+    >
+      <Typography variant="h6" style={{ marginBottom: "4%" }}>
+        Here you can upload a image for your blog.
+      </Typography>
+      <Button
+        onClick={showWidget}
+        variant="outlined"
+        color="default"
+        size="large"
+      >
         Upload Photo
       </Button>
     </div>

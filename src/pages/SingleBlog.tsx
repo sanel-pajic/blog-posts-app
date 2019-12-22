@@ -5,13 +5,14 @@ import { CircularLoading } from "../components/CircularLoading";
 import { Paper, Typography, CardMedia, Divider } from "@material-ui/core";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import { RouteComponentProps } from "react-router-dom";
-import { Comments } from "../components/Comments";
+import { CommentComponent } from "../components/CommentComponent";
+import { AddCommentsComponent } from "../components/AddCommentsComponent";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     media: {
-      height: "45vh",
-      width: "90vw"
+      height: "50vh",
+      width: "85vw"
     }
   })
 );
@@ -47,12 +48,13 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        marginTop: "4%"
+        marginTop: "2%",
+        marginBottom: "2%"
       }}
     >
       <Paper
         style={{
-          width: "40vw"
+          width: "50vw"
         }}
       >
         <Typography
@@ -71,7 +73,7 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
           color="textSecondary"
           variant="h5"
           style={{
-            padding: "2rem",
+            padding: "3rem",
             marginTop: "1%"
           }}
         >
@@ -82,12 +84,13 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            padding: 30
+            padding: "1rem"
           }}
         >
           <CardMedia
             title="Blog Post Image"
             className={classes.media}
+            style={{ width: "90%", marginBottom: "1rem", marginTop: "1rem" }}
             image={data.blogPost.image}
           />
         </div>
@@ -95,12 +98,13 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
           color="textPrimary"
           variant="h5"
           style={{
-            padding: "20px"
+            padding: "3rem"
           }}
           dangerouslySetInnerHTML={{ __html: data.blogPost.description }}
         ></Typography>
-        <Divider variant="middle" style={{}} />
-        <Comments />
+        <Divider variant="fullWidth" style={{ marginBottom: "5%" }} />
+        <AddCommentsComponent postId={idFromHistory} />
+        <CommentComponent postId={idFromHistory} />
       </Paper>
     </div>
   );

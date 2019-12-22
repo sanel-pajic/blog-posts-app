@@ -1,8 +1,8 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
 import Link from "@material-ui/core/Link";
+import { Divider } from "@material-ui/core";
 
 function Copyright() {
   return (
@@ -22,12 +22,12 @@ function Copyright() {
 
 const useStyles = makeStyles(theme => ({
   footer: {
-    backgroundColor: "  #bdbdbd",
+    backgroundColor: "#fafafa",
     padding: theme.spacing(6, 0),
-    position: "relative", 
+    position: "relative",
     bottom: 0,
     width: "100%",
-    marginTop: 100
+    marginTop: "5%"
   }
 }));
 
@@ -40,20 +40,21 @@ export const Footer: React.FC<{
 
   return (
     <footer className={classes.footer}>
-      <Container maxWidth="lg">
-        <Typography variant="h6" align="center" gutterBottom>
-          {title}
-        </Typography>
-        <Typography
-          variant="subtitle1"
-          align="center"
-          color="textSecondary"
-          component="p"
-        >
-          {description}
-        </Typography>
-        <Copyright />
-      </Container>
+      <Divider
+        style={{ position: "relative", bottom: "6.1vh", width: "100%" }}
+      />
+      <Typography variant="h6" align="center" gutterBottom>
+        {title}
+      </Typography>
+      <Typography
+        variant="subtitle1"
+        align="center"
+        color="textSecondary"
+        component="p"
+      >
+        {description}
+      </Typography>
+      <Copyright />
     </footer>
   );
 };

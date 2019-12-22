@@ -12,17 +12,28 @@ export const Home: React.FC = () => {
         width: "85%"
       }}
     >
-      <Paper
+      <div
         style={{
-          height: "55vh",
-          width: "85vw",
           display: "flex",
           justifyContent: "center",
-          alignItems: "center"
+          alignItems: "center",
+          marginTop: "0.5vh"
         }}
       >
-        <ImageCarousel />
-      </Paper>
+        <Paper
+          style={{
+            height: "45vh",
+            width: "50vw",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            boxShadow:
+              "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)"
+          }}
+        >
+          <ImageCarousel />
+        </Paper>
+      </div>
     </div>
   );
 };

@@ -7,10 +7,9 @@ import { Link } from "react-router-dom";
 
 const useStyles = makeStyles({
   root: {
-    width: 680,
-    height: 50,
-    marginTop: 20,
-    marginLeft: 50
+    width: "41vw",
+    height: "6vh",
+    marginTop: "2vh"
   }
 });
 
@@ -29,7 +28,7 @@ export const Navbar: React.FC = () => {
         justifyContent: "center",
         alignItems: "center",
         position: "relative",
-        bottom: 0
+        bottom: "1vh"
       }}
     >
       <Paper className={classes.root}>

@@ -6,7 +6,7 @@ import { Divider } from "@material-ui/core";
 
 function Copyright() {
   return (
-    <Typography variant="body2" color="textSecondary" align="center">
+    <Typography variant="body2" align="center" style={{ color: "#afafaf" }}>
       {"Copyright © "}
       <Link
         color="primary"
@@ -22,12 +22,17 @@ function Copyright() {
 
 const useStyles = makeStyles(theme => ({
   footer: {
-    backgroundColor: "#fafafa",
-    padding: theme.spacing(6, 0),
+    backgroundColor: "#282c34",
     position: "relative",
     bottom: 0,
     width: "100%",
-    marginTop: "5%"
+    height: "12vh",
+    marginTop: "5vh",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center", 
+    padding:"2%"
   }
 }));
 
@@ -40,16 +45,19 @@ export const Footer: React.FC<{
 
   return (
     <footer className={classes.footer}>
-      <Divider
-        style={{ position: "relative", bottom: "6.1vh", width: "100%" }}
-      />
-      <Typography variant="h6" align="center" gutterBottom>
+      <Divider />
+      <Typography
+        variant="h6"
+        align="center"
+        gutterBottom
+        style={{ color: "#afafaf" }}
+      >
         {title}
       </Typography>
       <Typography
         variant="subtitle1"
         align="center"
-        color="textSecondary"
+        style={{ color: "#afafaf" }}
         component="p"
       >
         {description}

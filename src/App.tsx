@@ -2,7 +2,6 @@ import React from "react";
 import "./App.css";
 import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "@apollo/react-hooks";
-import { AddBlogPost } from "./pages/AddBlogPost";
 import { Navbar } from "./components/Navbar";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { Home } from "./pages/Home";
@@ -14,6 +13,9 @@ import { Header } from "./components/Header";
 import { SingleBlog } from "./pages/SingleBlog";
 import { LoginPage } from "./pages/LoginPage";
 import { SignUpPage } from "./pages/SignUpPage";
+import { AuthorizePage } from "./pages/AuthorizePage";
+import { AddBlogPost } from "./pages/AddBlogPost";
+import { UserList } from "./components/UserList";
 
 const client = new ApolloClient({
   uri: "http://localhost:8080/graphql"
@@ -28,12 +30,14 @@ const App: React.FC = () => {
           <Navbar />
           <Switch>
             <Route exact path="/" component={Home} />
-            <Route exact path="/addblogpost/" component={AddBlogPost} />
             <Route exact path="/about/" component={About} />
-            <Route exact path="/list/" component={BlogList} />
+            <Route exact path="/bloglist/" component={BlogList} />
             <Route exact path="/singleblog/:id" component={SingleBlog} />
-            <Route exact path="/login" component={LoginPage} />
-            <Route exact path="/signup" component={SignUpPage} />
+            <Route exact path="/login/" component={LoginPage} />
+            <Route exact path="/signup/" component={SignUpPage} />
+            <Route exact path="/authorize/" component={AuthorizePage} />
+            <Route exact path="/addblogpost/" component={AddBlogPost} />
+            <Route exact path="/userlist/" component={UserList} />
             <Route render={() => <Error />} />
           </Switch>
           <Footer

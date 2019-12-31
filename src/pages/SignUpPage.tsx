@@ -11,6 +11,48 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { Paper } from "@material-ui/core";
+import gql from "graphql-tag";
+import mongoID from "bson-objectid";
+import { useQuery, useMutation } from "@apollo/react-hooks";
+import * as yup from "yup";
+
+let schema = yup.object().shape({
+  first_name: yup
+    .string()
+    .required()
+    .min(5),
+  last_name: yup
+    .string()
+    .required()
+    .min(5),
+  email: yup
+    .string()
+    .required()
+    .min(5)
+    .email(),
+  password: yup
+    .string()
+    .required()
+    .min(5)
+});
+
+const USERS_QUERY = gql`
+  query {
+    users {
+      _id
+      first_name
+      last_name
+      email
+      password
+    }
+  }
+`;
+
+const ADD_MUTATION_USER = gql`
+  mutation($data: UserInput!) {
+    addUser(data: $data)
+  }
+`;
 
 function Copyright() {
   return (
@@ -30,14 +72,14 @@ function Copyright() {
 
 const useStyles = makeStyles(theme => ({
   root: {
-    display: "block",
+    display: "flex",
+    justifyContent: "space-around",
     marginLeft: "auto",
     marginRight: "auto",
     width: "35%",
-    marginTop: "6rem",
+    marginTop: "2%",
     marginBottom: "4.7%",
-    paddingTop: "1rem",
-    paddingBottom: "9rem"
+    paddingBottom: "4%"
   },
   paper: {
     marginTop: theme.spacing(8),
@@ -62,10 +104,22 @@ const useStyles = makeStyles(theme => ({
 export const SignUpPage: React.FC = () => {
   const classes = useStyles();
 
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [first_name, setFirstName] = useState("");
+  const [last_name, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const { data, loading } = useQuery(USERS_QUERY);
+
+  const [addUser, { error }] = useMutation(ADD_MUTATION_USER);
+  if (error) {
+    console.log("error", error);
+  }
+
+  if (loading || !data) {
+    return null;
+  }
+
   return (
     <Paper className={classes.root}>
       <Container component="main" maxWidth="xs">
@@ -89,7 +143,7 @@ export const SignUpPage: React.FC = () => {
                   id="firstName"
                   label="First Name"
                   autoFocus
-                  value={firstName}
+                  value={first_name}
                   onChange={e => setFirstName(e.target.value)}
                 />
               </Grid>
@@ -102,7 +156,7 @@ export const SignUpPage: React.FC = () => {
                   label="Last Name"
                   name="lastName"
                   autoComplete="lname"
-                  value={lastName}
+                  value={last_name}
                   onChange={e => setLastName(e.target.value)}
                 />
               </Grid>
@@ -140,12 +194,38 @@ export const SignUpPage: React.FC = () => {
               variant="contained"
               color="primary"
               className={classes.submit}
+              onClick={() => {
+                try {
+                  const valid = schema.validateSync({
+                    first_name,
+                    last_name,
+                    email,
+                    password
+                  });
+                  console.log("VALID", valid);
+
+                  addUser({
+                    variables: {
+                      data: {
+                        _id: mongoID.generate(),
+                        first_name,
+                        last_name,
+                        email,
+                        password
+                      }
+                    },
+                    refetchQueries: [{ query: USERS_QUERY }]
+                  });
+                } catch (error) {
+                  alert(error);
+                }
+              }}
             >
               Sign Up
             </Button>
             <Grid container justify="flex-end">
               <Grid item>
-                <Link href="/login" variant="body2">
+                <Link href="/authorize" variant="body2">
                   Already have an account? Sign in
                 </Link>
               </Grid>

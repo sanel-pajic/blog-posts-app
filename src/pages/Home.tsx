@@ -17,7 +17,8 @@ export const Home: React.FC = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          marginTop: "0.5vh"
+          marginTop: "3.5vh",
+          marginBottom: "15%"
         }}
       >
         <Paper

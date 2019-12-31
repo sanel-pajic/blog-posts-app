@@ -12,6 +12,7 @@ import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
+import { login } from "../components/authActions";
 
 function Copyright() {
   return (
@@ -31,9 +32,9 @@ function Copyright() {
 
 const useStyles = makeStyles(theme => ({
   root: {
-    height: "59vh",
-    width: "50vw",
-    marginTop: "5rem"
+    height: "45vh",
+    width: "100%",
+    marginTop: "1%"
   },
   image: {
     backgroundImage: "url(https://source.unsplash.com/random)",
@@ -46,10 +47,13 @@ const useStyles = makeStyles(theme => ({
     backgroundPosition: "center"
   },
   paper: {
-    margin: theme.spacing(8, 4),
+    padding: "10%",
     display: "flex",
     flexDirection: "column",
-    alignItems: "center"
+    alignItems: "center",
+    justifyContent: "space-around",
+    width: "100%",
+    margin: "2%"
   },
   avatar: {
     margin: theme.spacing(1),
@@ -59,23 +63,27 @@ const useStyles = makeStyles(theme => ({
     width: "100%",
     marginTop: theme.spacing(1)
   },
-  submit: {
-    margin: theme.spacing(3, 0, 2)
+  submitButton: {
+    margin: theme.spacing(3, 0, 2),
+    width: "68%"
   }
 }));
 
 export const LoginPage: React.FC = () => {
   const classes = useStyles();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("sanel@sanel.com");
+  const [password, setPassword] = useState("sanel");
 
   return (
     <div
       style={{
         display: "flex",
-        justifyContent: "center",
-        alignItems: "center"
+        justifyContent: "space-around",
+        alignItems: "center",
+        marginBottom: "40vh",
+        marginTop: "1%",
+        width: 1000
       }}
     >
       <Grid container component="main" className={classes.root}>
@@ -120,15 +128,24 @@ export const LoginPage: React.FC = () => {
                 control={<Checkbox value="remember" color="primary" />}
                 label="Remember me"
               />
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-                className={classes.submit}
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center"
+                }}
               >
-                Sign In
-              </Button>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  className={classes.submitButton}
+                  onClick={login}
+                >
+                  Sign In - PRESS TO LOGIN
+                </Button>
+              </div>
               <Grid container>
                 <Grid item xs>
                   <Link href="#" variant="body2">

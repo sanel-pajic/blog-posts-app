@@ -15,6 +15,8 @@ import { CloudinaryWidget } from "../components/CloudinaryWidget";
 import draftToHtml from "draftjs-to-html";
 import Avatar from "@material-ui/core/Avatar";
 import { blue } from "@material-ui/core/colors";
+import { useProtectedPath } from "../components/useProtectedPath";
+import { Redirect } from "react-router";
 
 let schema = yup.object().shape({
   title: yup
@@ -72,6 +74,7 @@ export const AddBlogPost: React.FC = () => {
   const [description_short, setDescriptionShort] = useState("");
   const [description, setDescription] = useState(EditorState.createEmpty());
   const [image, setImageURL] = useState("");
+  const accessGrant = useProtectedPath();
 
   const { data, loading } = useQuery(BLOGS_QUERY);
 
@@ -83,6 +86,11 @@ export const AddBlogPost: React.FC = () => {
   if (loading || !data) {
     return null;
   }
+
+  if (!accessGrant) {
+    return <Redirect to="/authorize" />;
+  }
+  console.log("ACCES GRANT", accessGrant);
 
   const onChangeHandler = (description: EditorState) => {
     const raw = convertToRaw(description.getCurrentContent());

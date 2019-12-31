@@ -14,6 +14,8 @@ import gql from "graphql-tag";
 import mongoID from "bson-objectid";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import { teal } from "@material-ui/core/colors";
+import { useProtectedPath } from "./useProtectedPath";
+import { Redirect } from "react-router";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -45,6 +47,9 @@ const ColorButton = withStyles((theme: Theme) => ({
 export const AddCommentsComponent: React.FC<{ postId: string }> = ({
   postId
 }) => {
+  const accessGrant = useProtectedPath();
+  console.log("ACCES GRAND", accessGrant);
+
   const COMMENTS_QUERY = gql`
   query {
     comments(postId: "${postId}") {
@@ -73,6 +78,11 @@ export const AddCommentsComponent: React.FC<{ postId: string }> = ({
   if (loading || !data) {
     return null;
   }
+
+  if (!accessGrant) {
+    return <Redirect to="/authorize" />;
+  }
+  console.log("ACCESS", accessGrant);
   return (
     <div>
       <div

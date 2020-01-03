@@ -1,8 +1,9 @@
+  
 import { useStore } from 'react-stores';
 import { store } from './store';
 import { useRouteMatch } from 'react-router';
 
-const PROTECTED_PATHS = ['/addblogpost'];
+const PROTECTED_PATHS = ['/addblogpost','/userlist'];
 
 export const useProtectedPath = () => {
   const { authorized } = useStore(store);

@@ -69,12 +69,13 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export const AddBlogPost: React.FC = () => {
+  const accessGrant = useProtectedPath();
   const classes = useStyles();
   const [title, setTitle] = useState("");
   const [description_short, setDescriptionShort] = useState("");
   const [description, setDescription] = useState(EditorState.createEmpty());
   const [image, setImageURL] = useState("");
-  const accessGrant = useProtectedPath();
+
 
   const { data, loading } = useQuery(BLOGS_QUERY);
 
@@ -90,8 +91,9 @@ export const AddBlogPost: React.FC = () => {
   if (!accessGrant) {
     return <Redirect to="/authorize" />;
   }
-  console.log("ACCES GRANT", accessGrant);
+  console.log("ACCESS GRANT", accessGrant);
 
+  
   const onChangeHandler = (description: EditorState) => {
     const raw = convertToRaw(description.getCurrentContent());
     setDescription(description);

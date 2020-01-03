@@ -17,10 +17,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export const Navbar: React.FC = () => {
+  const authStoreState = useStore(store);
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
-  const authStoreState = useStore(store);
-  console.log("AUTHORIZE STATE", authStoreState);
+
+  console.log(authStoreState);
 
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
@@ -54,8 +55,7 @@ export const Navbar: React.FC = () => {
             style={{ fontSize: 20 }}
             label="Add Blog Post"
             component={NavLink}
-            {...authStoreState.authorized ? 'Authorized' : 'Login'}
-            to={"/authorize"}
+            to={"/addblogpost"}
           />
           <Tab
             style={{ fontSize: 20 }}
@@ -74,6 +74,13 @@ export const Navbar: React.FC = () => {
             label="User List"
             component={NavLink}
             to={"/userlist"}
+          />
+          <Tab
+            style={{ fontSize: 20 }}
+            label="AUTHORIZE PAGE"
+            {...authStoreState.authorized}
+            component={NavLink}
+            to={"/authorize"}
           />
         </Tabs>
       </div>

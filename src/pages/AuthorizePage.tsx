@@ -3,11 +3,11 @@ import { useStore } from "react-stores";
 import { store } from "../components/store";
 import { logout } from "../components/authActions";
 import { LoginPage } from "./LoginPage";
-import { AddBlogPost } from "./AddBlogPost";
 import { makeStyles, createStyles, Theme, withStyles } from "@material-ui/core";
 import { Button } from "@material-ui/core";
 import { red } from "@material-ui/core/colors";
 import { SnackbarComponent } from "../components/SnackbarComponent";
+import { GreetingUserComponent } from "../components/GreetingUserComponent";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -30,6 +30,8 @@ const ColorButton = withStyles((theme: Theme) => ({
 export const AuthorizePage: React.FC = () => {
   const classes = useStyles();
   const authStoreState = useStore(store);
+
+  console.log("AUTH STATE STORE", authStoreState);
 
   return authStoreState.authorized ? (
     <div>
@@ -68,7 +70,7 @@ export const AuthorizePage: React.FC = () => {
           </ColorButton>
         </div>
       </div>
-      <AddBlogPost />
+      <GreetingUserComponent />
     </div>
   ) : (
     <div>

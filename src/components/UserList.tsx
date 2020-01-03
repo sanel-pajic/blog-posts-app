@@ -55,6 +55,10 @@ export const UserList: React.FC = () => {
   const accessGrant = useProtectedPath();
 
   const [removeUser, { error }] = useMutation(REMOVE_MUTATION);
+
+  if (!accessGrant) {
+    return <Redirect to="/authorize" />;
+  }
   if (loading || !data) {
     return <CircularLoading />;
   }
@@ -63,10 +67,7 @@ export const UserList: React.FC = () => {
     return <ErrorLoading />;
   }
 
-  if (!accessGrant) {
-    return <Redirect to="/authorize" />;
-  }
-
+  console.log("ACCESS GRANT USER LIST", accessGrant);
   return (
     <div
       style={{

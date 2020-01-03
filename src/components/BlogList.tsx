@@ -73,17 +73,6 @@ const REMOVE_MUTATION = gql`
   }
 `;
 
-/*
-  const [removeBlogPost, { error }] = useMutation(REMOVE_MUTATION);
-    if (error) {
-      console.log("error", error);
-    }
-    console.log("data:", data);
-    if (loading || !data) {
-      return null;
-    }
-    */
-
 export const BlogList: React.FC = () => {
   const classes = useStyles();
   let history = useHistory();

@@ -7,8 +7,8 @@ export const About: React.FC = () => {
       style={{
         display: "flex",
         justifyContent: "center",
-        justifyItems: "center", 
-        marginTop:"1vh"
+        justifyItems: "center",
+        marginTop: "1vh"
       }}
     >
       <Paper
@@ -16,7 +16,9 @@ export const About: React.FC = () => {
           width: "70vw",
           height: "60vh"
         }}
-      >ABOUT COMPONENT</Paper>
+      >
+        ABOUT COMPONENT
+      </Paper>
     </div>
   );
 };

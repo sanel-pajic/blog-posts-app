@@ -14,6 +14,7 @@ import { BlogList } from "./components/BlogList";
 import { UserList } from "./components/UserList";
 import { Error } from "./pages/Error";
 import { SingleBlog } from "./pages/SingleBlog";
+import { SignUpPage } from "./pages/SignUpPage";
 
 const client = new ApolloClient({
   uri: "http://localhost:8080/graphql"
@@ -23,6 +24,7 @@ const App: React.FC = () => {
   return (
     <ApolloProvider client={client}>
       <BrowserRouter>
+   <div className="App">
         <Header />
         <Navbar />
         <main>
@@ -33,6 +35,7 @@ const App: React.FC = () => {
             <Route exact path="/singleblog/:id" component={SingleBlog} />
             <Route exact path="/bloglist" component={BlogList} />
             <Route exact path="/userlist" component={UserList} />
+            <Route exact path="/signup" component={SignUpPage} />
             <Route exact path="/authorize" component={AuthorizePage} />
             <Route render={() => <Error />} />
           </Switch>
@@ -41,6 +44,7 @@ const App: React.FC = () => {
             description="Blog Posts React App"
           />
         </main>
+        </div>
       </BrowserRouter>
     </ApolloProvider>
   );

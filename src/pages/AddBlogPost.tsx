@@ -17,6 +17,8 @@ import Avatar from "@material-ui/core/Avatar";
 import { blue } from "@material-ui/core/colors";
 import { useProtectedPath } from "../components/useProtectedPath";
 import { Redirect } from "react-router";
+import { CircularLoading } from "../components/CircularLoading";
+import { ErrorLoading } from "../components/ErrorLoading";
 
 let schema = yup.object().shape({
   title: yup
@@ -76,16 +78,16 @@ export const AddBlogPost: React.FC = () => {
   const [description, setDescription] = useState(EditorState.createEmpty());
   const [image, setImageURL] = useState("");
 
-
   const { data, loading } = useQuery(BLOGS_QUERY);
 
   const [addBlogPost, { error }] = useMutation(ADD_MUTATION);
   if (error) {
     console.log("error", error);
+    return <ErrorLoading />;
   }
 
   if (loading || !data) {
-    return null;
+    return <CircularLoading />;
   }
 
   if (!accessGrant) {
@@ -93,7 +95,6 @@ export const AddBlogPost: React.FC = () => {
   }
   console.log("ACCESS GRANT", accessGrant);
 
-  
   const onChangeHandler = (description: EditorState) => {
     const raw = convertToRaw(description.getCurrentContent());
     setDescription(description);
@@ -196,7 +197,11 @@ export const AddBlogPost: React.FC = () => {
               variant="contained"
               size="large"
               style={{ width: "8vw", marginLeft: "5vw" }}
-              onClick={() => {
+              onClick={e => {
+                e.preventDefault();
+                setTitle("");
+                setDescriptionShort("");
+                setDescription(EditorState.createEmpty());
                 try {
                   const valid = schema.validateSync({
                     title,

@@ -33,7 +33,7 @@ export const Error: React.FC = () => {
           <Button
             variant="outlined"
             color="default"
-            style={{ position: "relative", bottom: "8vh" }}
+            style={{ position: "relative", bottom: "5vh" }}
           >
             Back to home
           </Button>

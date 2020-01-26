@@ -16,6 +16,8 @@ import { useQuery, useMutation } from "@apollo/react-hooks";
 import { teal } from "@material-ui/core/colors";
 import { useProtectedPath } from "./useProtectedPath";
 import { Redirect } from "react-router";
+import { CircularLoading } from "./CircularLoading";
+import { ErrorLoading } from "./ErrorLoading";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -37,7 +39,6 @@ const ColorButton = withStyles((theme: Theme) => ({
   root: {
     color: theme.palette.getContrastText(teal[500]),
     backgroundColor: teal[300],
-    height: "5vh",
     "&:hover": {
       backgroundColor: teal[500]
     }
@@ -48,7 +49,7 @@ export const AddCommentsComponent: React.FC<{ postId: string }> = ({
   postId
 }) => {
   const accessGrant = useProtectedPath();
-  console.log("ACCES GRAND", accessGrant);
+  console.log("ACCESS GRAND", accessGrant);
 
   const COMMENTS_QUERY = gql`
   query {
@@ -73,10 +74,11 @@ export const AddCommentsComponent: React.FC<{ postId: string }> = ({
   const [addComment, { error }] = useMutation(ADD_COMMENT);
   if (error) {
     console.log("error", error);
+    return <ErrorLoading />;
   }
 
   if (loading || !data) {
-    return null;
+    return <CircularLoading />;
   }
 
   if (!accessGrant) {
@@ -136,15 +138,15 @@ export const AddCommentsComponent: React.FC<{ postId: string }> = ({
           <div
             style={{
               display: "flex",
-              justifyContent: "center",
-              alignItems: "center"
+              justifyContent: "flex-end",
+              alignItems: "center",
+              marginTop: "5%"
             }}
           >
             <ColorButton
               variant="text"
               color="inherit"
               className={classes.margin}
-              style={{ marginTop: "5%", marginLeft: "50%" }}
               onClick={() => {
                 addComment({
                   variables: {

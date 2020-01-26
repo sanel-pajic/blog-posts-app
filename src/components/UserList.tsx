@@ -19,7 +19,7 @@ import { Redirect } from "react-router";
 
 const useStyles = makeStyles({
   root: {
-    width: "60%",
+    width: "80%",
     overflowX: "auto"
   },
   table: {

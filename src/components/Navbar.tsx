@@ -59,9 +59,9 @@ export const Navbar: React.FC = () => {
           />
           <Tab
             style={{ fontSize: 20 }}
-            label="About"
+            label="Component Article"
             component={NavLink}
-            to={"/about"}
+            to={"/article"}
           />
           <Tab
             style={{ fontSize: 20 }}

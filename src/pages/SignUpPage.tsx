@@ -15,16 +15,18 @@ import gql from "graphql-tag";
 import mongoID from "bson-objectid";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import * as yup from "yup";
+import { CircularLoading } from "../components/CircularLoading";
+import { ErrorLoading } from "../components/ErrorLoading";
 
 let schema = yup.object().shape({
   first_name: yup
     .string()
     .required()
-    .min(5),
+    .min(3),
   last_name: yup
     .string()
     .required()
-    .min(5),
+    .min(3),
   email: yup
     .string()
     .required()
@@ -114,10 +116,11 @@ export const SignUpPage: React.FC = () => {
   const [addUser, { error }] = useMutation(ADD_MUTATION_USER);
   if (error) {
     console.log("error", error);
+    return <ErrorLoading />;
   }
 
   if (loading || !data) {
-    return null;
+    return <CircularLoading />;
   }
 
   return (
@@ -135,7 +138,7 @@ export const SignUpPage: React.FC = () => {
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  autoComplete="fname"
+                  autoComplete="firstName"
                   name="firstName"
                   variant="outlined"
                   required
@@ -155,7 +158,7 @@ export const SignUpPage: React.FC = () => {
                   id="lastName"
                   label="Last Name"
                   name="lastName"
-                  autoComplete="lname"
+                  autoComplete="lastName"
                   value={last_name}
                   onChange={e => setLastName(e.target.value)}
                 />
@@ -194,7 +197,12 @@ export const SignUpPage: React.FC = () => {
               variant="contained"
               color="primary"
               className={classes.submit}
-              onClick={() => {
+              onClick={e => {
+                e.preventDefault();
+                setFirstName("");
+                setLastName("");
+                setEmail("");
+                setPassword("");
                 try {
                   const valid = schema.validateSync({
                     first_name,

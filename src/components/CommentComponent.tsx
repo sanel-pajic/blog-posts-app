@@ -118,6 +118,7 @@ export const CommentComponent: React.FC<{ postId: string }> = ({ postId }) => {
                       variant="body1"
                       color="textPrimary"
                       className={classes.textComment}
+                      style={{ wordWrap: "break-word" }}
                     >
                       {comment.text}
                     </Typography>
@@ -132,20 +133,33 @@ export const CommentComponent: React.FC<{ postId: string }> = ({ postId }) => {
                     marginBottom: "2.2%",
                     padding: "0.2%",
                     display: "flex",
-                    alignItems: "center"
+                    alignItems: "center",
+                    justifyContent: "space-between"
                   }}
                 >
-                  <IconButton style={{ position: "relative", left: "2%" }}>
-                    <Like />
-                  </IconButton>
-                  <Typography color="primary" className={classes.numberOfLikes}>
-                    100
-                  </Typography>
                   <div
                     style={{
                       display: "flex",
-                      position: "relative",
-                      left: "63%"
+                      justifyContent: "center",
+                      alignItems: "center"
+                    }}
+                  >
+                    <IconButton>
+                      <Like />
+                    </IconButton>
+                    <Typography
+                      color="primary"
+                      className={classes.numberOfLikes}
+                    >
+                      100
+                    </Typography>
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      marginRight: "3%"
                     }}
                   >
                     <IconButton>
@@ -154,9 +168,7 @@ export const CommentComponent: React.FC<{ postId: string }> = ({ postId }) => {
                     <Divider
                       style={{
                         transform: "rotate(90deg)",
-                        width: "2.8vw",
-                        position: "relative",
-                        top: "3vh"
+                        width: "45%"
                       }}
                     />
                     <IconButton>

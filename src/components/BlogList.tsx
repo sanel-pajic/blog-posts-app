@@ -2,7 +2,6 @@ import React from "react";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import { useQuery, useMutation } from "@apollo/react-hooks";
-import gql from "graphql-tag";
 import DeleteIcon from "@material-ui/icons/Delete";
 import IconButton from "@material-ui/core/IconButton";
 import { Typography, Button } from "@material-ui/core";
@@ -18,6 +17,8 @@ import ShareIcon from "@material-ui/icons/Share";
 import { CircularLoading } from "./CircularLoading";
 import { ErrorLoading } from "./ErrorLoading";
 import { useHistory } from "react-router-dom";
+import { BLOGS_QUERY } from "../queries/queries";
+import { REMOVE_BLOG_MUTATION } from "../queries/mutations";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -53,26 +54,6 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const BLOGS_QUERY = gql`
-  query {
-    blogPosts {
-      _id
-      title
-      description_short
-      description
-      image
-    }
-  }
-`;
-
-const REMOVE_MUTATION = gql`
-  mutation($_id: ID!) {
-    removeBlogPost(_id: $_id) {
-      _id
-    }
-  }
-`;
-
 export const BlogList: React.FC = () => {
   const classes = useStyles();
   let history = useHistory();
@@ -85,7 +66,7 @@ export const BlogList: React.FC = () => {
     fetchPolicy: "network-only"
   });
 
-  const [removeBlogPost, { error }] = useMutation(REMOVE_MUTATION);
+  const [removeBlogPost, { error }] = useMutation(REMOVE_BLOG_MUTATION);
   if (loading || !data) {
     return <CircularLoading />;
   }

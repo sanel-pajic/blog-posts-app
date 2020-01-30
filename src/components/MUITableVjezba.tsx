@@ -1,31 +1,12 @@
 import React from "react";
 import MUIDataTable, { MUIDataTableOptions } from "mui-datatables";
 import { useQuery, useMutation } from "@apollo/react-hooks";
-import gql from "graphql-tag";
 import { CircularLoading } from "./CircularLoading";
 import { ErrorLoading } from "./ErrorLoading";
 import { Button } from "@material-ui/core";
 import * as R from "ramda";
-
-const USERS_QUERY = gql`
-  query {
-    users {
-      _id
-      first_name
-      last_name
-      email
-      password
-    }
-  }
-`;
-
-const REMOVE_MUTATION = gql`
-  mutation($_id: ID!) {
-    removeUser(_id: $_id) {
-      _id
-    }
-  }
-`;
+import { USERS_QUERY } from "../queries/queries";
+import { REMOVE_USER_MUTATION } from "../queries/mutations";
 
 export const MUITableVjezba: React.FC = () => {
   const { data, loading } = useQuery(USERS_QUERY, {
@@ -34,7 +15,7 @@ export const MUITableVjezba: React.FC = () => {
 
   console.log("DOCS", data);
 
-  const [removeUser, { error }] = useMutation(REMOVE_MUTATION);
+  const [removeUser, { error }] = useMutation(REMOVE_USER_MUTATION);
 
   if (loading || !data) {
     return <CircularLoading />;

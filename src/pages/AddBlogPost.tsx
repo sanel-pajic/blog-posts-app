@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
-import gql from "graphql-tag";
 import mongoID from "bson-objectid";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import * as yup from "yup";
@@ -19,6 +18,8 @@ import { useProtectedPath } from "../components/useProtectedPath";
 import { Redirect } from "react-router";
 import { CircularLoading } from "../components/CircularLoading";
 import { ErrorLoading } from "../components/ErrorLoading";
+import { BLOGS_QUERY } from "../queries/queries";
+import { ADD_BLOG_MUTATION } from "../queries/mutations";
 
 let schema = yup.object().shape({
   title: yup
@@ -30,24 +31,6 @@ let schema = yup.object().shape({
     .required()
     .min(5)
 });
-
-const BLOGS_QUERY = gql`
-  query {
-    blogPosts {
-      _id
-      title
-      description_short
-      description
-      image
-    }
-  }
-`;
-
-const ADD_MUTATION = gql`
-  mutation($data: BlogPostInput!) {
-    addBlogPost(data: $data)
-  }
-`;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -80,7 +63,7 @@ export const AddBlogPost: React.FC = () => {
 
   const { data, loading } = useQuery(BLOGS_QUERY);
 
-  const [addBlogPost, { error }] = useMutation(ADD_MUTATION);
+  const [addBlogPost, { error }] = useMutation(ADD_BLOG_MUTATION);
   if (error) {
     console.log("error", error);
     return <ErrorLoading />;

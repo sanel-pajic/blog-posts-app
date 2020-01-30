@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const ColorButton = withStyles((theme: Theme) => ({
+export const ColorButton = withStyles((theme: Theme) => ({
   root: {
     color: theme.palette.getContrastText(teal[500]),
     backgroundColor: teal[300],

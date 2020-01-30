@@ -16,28 +16,24 @@ import { Error } from "./pages/Error";
 import { SingleBlog } from "./pages/SingleBlog";
 import { SignUpPage } from "./pages/SignUpPage";
 import { MUITableVjezba } from "./components/MUITableVjezba";
-import { onError } from "apollo-link-error";
 
-const errorLink = onError(({ graphQLErrors, networkError }) => {
-  if (graphQLErrors)
-    graphQLErrors.map(({ message, locations, path }) =>
-      console.log(
-        `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
-      )
-    );
+export const client = new ApolloClient({
+  uri: "http://localhost:8080/graphql",
+  onError: ({ graphQLErrors, networkError }) => {
+    if (graphQLErrors)
+      graphQLErrors.map(
+        ({ message, locations, path }) =>
+          console.log(
+            `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+          ),
+        console.log("GRAPHQL ERRORS", graphQLErrors)
+      );
 
-  if (networkError) console.log(`[Network error]: ${networkError}`);
+    if (networkError) console.log(`[Network error]: ${networkError}`);
+  }
 });
 
-if (!errorLink) {
-  console.log("ERROR", errorLink);
-} else {
-  console.log("ERROR LINK", errorLink);
-}
-
-const client = new ApolloClient({
-  uri: "http://localhost:8080/graphql"
-});
+// Implementacija preko hooks, useMutation
 
 const App: React.FC = () => {
   return (
@@ -49,10 +45,9 @@ const App: React.FC = () => {
         <BrowserRouter>
           <Header />
           <Navbar />
-
           <Switch>
             <Route exact path="/" component={Home} />
-            <Route exact path="/article/" component={ComponentArticle} />
+            <Route exact path="/article" component={ComponentArticle} />
             <Route exact path="/addblogpost" component={AddBlogPost} />
             <Route exact path="/singleblog/:id" component={SingleBlog} />
             <Route exact path="/bloglist" component={BlogList} />

@@ -11,12 +11,13 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { Paper } from "@material-ui/core";
-import gql from "graphql-tag";
 import mongoID from "bson-objectid";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import * as yup from "yup";
 import { CircularLoading } from "../components/CircularLoading";
-import { ErrorLoading } from "../components/ErrorLoading";
+import { USERS_QUERY } from "../queries/queries";
+import { ADD_MUTATION_USER } from "../queries/mutations";
+import { ModalError } from "../components/ModalError";
 
 let schema = yup.object().shape({
   first_name: yup
@@ -37,24 +38,6 @@ let schema = yup.object().shape({
     .required()
     .min(5)
 });
-
-const USERS_QUERY = gql`
-  query {
-    users {
-      _id
-      first_name
-      last_name
-      email
-      password
-    }
-  }
-`;
-
-const ADD_MUTATION_USER = gql`
-  mutation($data: UserInput!) {
-    addUser(data: $data)
-  }
-`;
 
 function Copyright() {
   return (
@@ -113,10 +96,20 @@ export const SignUpPage: React.FC = () => {
 
   const { data, loading } = useQuery(USERS_QUERY);
 
-  const [addUser, { error }] = useMutation(ADD_MUTATION_USER);
+  const [addUser, { error }] = useMutation(ADD_MUTATION_USER, {
+    errorPolicy: "all"
+  });
   if (error) {
     console.log("error", error);
-    return <ErrorLoading />;
+    return (
+      <div>
+        {error.graphQLErrors.map(({ message }, i) => (
+          <div key={i}>
+            <ModalError message={message} />
+          </div>
+        ))}
+      </div>
+    );
   }
 
   if (loading || !data) {
@@ -223,6 +216,8 @@ export const SignUpPage: React.FC = () => {
                       }
                     },
                     refetchQueries: [{ query: USERS_QUERY }]
+                  }).catch(error => {
+                    console.log("ERROR ADD USER", error);
                   });
                 } catch (error) {
                   alert(error);

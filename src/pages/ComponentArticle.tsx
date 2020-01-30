@@ -2,14 +2,16 @@ import React, { useState } from "react";
 import { Paper, Button, Typography, Grid } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
-import gql from "graphql-tag";
 import mongoID from "bson-objectid";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import * as yup from "yup";
 import { useProtectedPath } from "../components/useProtectedPath";
 import { Redirect } from "react-router";
 import { CircularLoading } from "../components/CircularLoading";
-import { ErrorLoading } from "../components/ErrorLoading";
+import { TableArticles } from "../components/TableArticles";
+import { ARTICLES_QUERY } from "../queries/queries";
+import { ADD_MUTATION_ARTICLE } from "../queries/mutations";
+import { ModalError } from "../components/ModalError";
 
 let schema = yup.object().shape({
   code: yup
@@ -30,29 +32,11 @@ let schema = yup.object().shape({
     .min(1)
 });
 
-const ARTICLES_QUERY = gql`
-  query {
-    componentArticles {
-      _id
-      code
-      description
-      quantity
-      price
-    }
-  }
-`;
-
-const ADD_MUTATION_ARTICLE = gql`
-  mutation($data: ComponentArticleInput!) {
-    addComponentArticle(data: $data)
-  }
-`;
-
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     paper: {
       width: "70vw",
-      height: "60vh",
+
       display: "flex",
       flexDirection: "column",
       justifyContent: "center",
@@ -68,8 +52,8 @@ const useStyles = makeStyles((theme: Theme) =>
       marginTop: "1%",
       boxShadow: "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)",
       position: "relative",
-      bottom: "23%",
-      padding: "1%"
+      padding: "1%",
+      marginBottom: "4%"
     },
     root: {
       "& > *": {
@@ -94,8 +78,8 @@ const useStyles = makeStyles((theme: Theme) =>
       marginLeft: "5%"
     },
     textHeader: {
-      position: "relative",
-      bottom: "23%"
+      marginTop: "2%",
+      marginBottom: "1%"
     },
     rootGrid: {
       flexGrow: 2
@@ -113,11 +97,21 @@ export const ComponentArticle: React.FC = () => {
 
   const { data, loading } = useQuery(ARTICLES_QUERY);
 
-  const [addComponentArticle, { error }] = useMutation(ADD_MUTATION_ARTICLE);
+  const [addComponentArticle, { error }] = useMutation(ADD_MUTATION_ARTICLE, {
+    errorPolicy: "all"
+  });
   if (error) {
     console.log("error", error);
 
-    return <ErrorLoading />;
+    return (
+      <div>
+        {error.graphQLErrors.map(({ message }, i) => (
+          <div key={i}>
+            <ModalError message={message} />
+          </div>
+        ))}
+      </div>
+    );
   }
 
   if (loading || !data) {
@@ -128,7 +122,6 @@ export const ComponentArticle: React.FC = () => {
     return <Redirect to="/authorize" />;
   }
 
-  console.log("ACCESS GRANT", accessGrant);
   return (
     <div
       style={{
@@ -141,7 +134,7 @@ export const ComponentArticle: React.FC = () => {
       <Paper className={classes.paper}>
         <Typography
           variant="h4"
-          color="textSecondary"
+          color="inherit"
           className={classes.textHeader}
         >
           Add New Component
@@ -245,7 +238,9 @@ export const ComponentArticle: React.FC = () => {
                           }
                         },
                         refetchQueries: [{ query: ARTICLES_QUERY }]
-                      });
+                      }).catch(error =>
+                        console.log("ERROR ADD ARTICLE", error)
+                      );
                     } catch (error) {
                       alert(error);
                     }
@@ -257,6 +252,8 @@ export const ComponentArticle: React.FC = () => {
             </Grid>
           </div>
         </Paper>
+        <Typography variant="h4" color="textSecondary">List of all components</Typography>
+        <TableArticles />
       </Paper>
     </div>
   );

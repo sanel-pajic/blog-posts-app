@@ -21,11 +21,16 @@ export const Navbar: React.FC = () => {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
 
-  console.log(authStoreState);
-
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
   };
+
+  function a11yProps(index: any) {
+    return {
+      id: `simple-tab-${index}`,
+      "aria-controls": `simple-tabpanel-${index}`
+    };
+  }
 
   return (
     <div
@@ -50,30 +55,36 @@ export const Navbar: React.FC = () => {
             label="Home"
             component={NavLink}
             to={"/"}
+            {...a11yProps(0)}
           />
           <Tab
             style={{ fontSize: 20 }}
             label="Add Blog Post"
             component={NavLink}
             to={"/addblogpost"}
+            {...a11yProps(1)}
           />
+          )}
           <Tab
             style={{ fontSize: 20 }}
             label="Component Article"
             component={NavLink}
             to={"/article"}
+            {...a11yProps(2)}
           />
           <Tab
             style={{ fontSize: 20 }}
             label="Blog List"
             component={NavLink}
             to={"/bloglist"}
+            {...a11yProps(3)}
           />
           <Tab
             style={{ fontSize: 20 }}
             label="User List"
             component={NavLink}
             to={"/userlist"}
+            {...a11yProps(4)}
           />
           <Tab
             style={{ fontSize: 20 }}
@@ -81,6 +92,7 @@ export const Navbar: React.FC = () => {
             {...authStoreState.authorized}
             component={NavLink}
             to={"/authorize"}
+            {...a11yProps(5)}
           />
         </Tabs>
       </div>

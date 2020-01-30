@@ -1,0 +1,50 @@
+import gql from "graphql-tag";
+
+// ARTICLE MUTATIONS
+// Mutation for add new article
+export const ADD_MUTATION_ARTICLE = gql`
+  mutation($data: ComponentArticleInput!) {
+    addComponentArticle(data: $data)
+  }
+`;
+
+// Mutation for remove article
+export const REMOVE_ARTICLE_MUTATION = gql`
+  mutation($_id: ID!) {
+    removeComponentArticle(_id: $_id) {
+      _id
+    }
+  }
+`;
+// BLOG POST MUTATIONS
+// Mutatuion for add new blog post
+export const ADD_BLOG_MUTATION = gql`
+  mutation($data: BlogPostInput!) {
+    addBlogPost(data: $data)
+  }
+`;
+
+// Mutation for remove blog post
+export const REMOVE_BLOG_MUTATION = gql`
+  mutation($_id: ID!) {
+    removeBlogPost(_id: $_id) {
+      _id
+    }
+  }
+`;
+
+// Mutation for add user
+export const ADD_MUTATION_USER = gql`
+  mutation($data: UserInput!) {
+    addUser(data: $data)
+  }
+`;
+
+// Mutation for remove users
+export const REMOVE_USER_MUTATION = gql`
+  mutation($_id: ID!) {
+    removeUser(_id: $_id) {
+      _id
+    }
+  }
+`;

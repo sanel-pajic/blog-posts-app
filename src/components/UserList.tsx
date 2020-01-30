@@ -1,6 +1,5 @@
 import React from "react";
 import { useQuery, useMutation } from "@apollo/react-hooks";
-import gql from "graphql-tag";
 import { CircularLoading } from "./CircularLoading";
 import { ErrorLoading } from "./ErrorLoading";
 import { makeStyles } from "@material-ui/core/styles";
@@ -16,6 +15,8 @@ import EditIcon from "@material-ui/icons/Edit";
 import { Typography } from "@material-ui/core";
 import { useProtectedPath } from "../components/useProtectedPath";
 import { Redirect } from "react-router";
+import { USERS_QUERY } from "../queries/queries";
+import { REMOVE_USER_MUTATION } from "../queries/mutations";
 
 const useStyles = makeStyles({
   root: {
@@ -27,26 +28,6 @@ const useStyles = makeStyles({
   }
 });
 
-const USERS_QUERY = gql`
-  query {
-    users {
-      _id
-      first_name
-      last_name
-      email
-      password
-    }
-  }
-`;
-
-const REMOVE_MUTATION = gql`
-  mutation($_id: ID!) {
-    removeUser(_id: $_id) {
-      _id
-    }
-  }
-`;
-
 export const UserList: React.FC = () => {
   const classes = useStyles();
   const { data, loading } = useQuery(USERS_QUERY, {
@@ -54,7 +35,7 @@ export const UserList: React.FC = () => {
   });
   const accessGrant = useProtectedPath();
 
-  const [removeUser, { error }] = useMutation(REMOVE_MUTATION);
+  const [removeUser, { error }] = useMutation(REMOVE_USER_MUTATION);
 
   if (!accessGrant) {
     return <Redirect to="/authorize" />;

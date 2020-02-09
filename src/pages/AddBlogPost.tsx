@@ -17,7 +17,7 @@ import { blue } from "@material-ui/core/colors";
 import { useProtectedPath } from "../components/useProtectedPath";
 import { Redirect } from "react-router";
 import { CircularLoading } from "../components/CircularLoading";
-import { ErrorLoading } from "../components/ErrorLoading";
+import { ModalError } from "../components/ModalError";
 import { BLOGS_QUERY } from "../queries/queries";
 import { ADD_BLOG_MUTATION } from "../queries/mutations";
 
@@ -63,10 +63,20 @@ export const AddBlogPost: React.FC = () => {
 
   const { data, loading } = useQuery(BLOGS_QUERY);
 
-  const [addBlogPost, { error }] = useMutation(ADD_BLOG_MUTATION);
+  const [addBlogPost, { error }] = useMutation(ADD_BLOG_MUTATION, {
+    errorPolicy: "all"
+  });
   if (error) {
     console.log("error", error);
-    return <ErrorLoading />;
+    return (
+      <div>
+        {error.graphQLErrors.map(({ message }, i) => (
+          <div key={i}>
+            <ModalError message={message} />
+          </div>
+        ))}
+      </div>
+    );
   }
 
   if (loading || !data) {
@@ -206,6 +216,8 @@ export const AddBlogPost: React.FC = () => {
                       }
                     },
                     refetchQueries: [{ query: BLOGS_QUERY }]
+                  }).catch(error => {
+                    console.log("ERROR ADD BLOG POST", error);
                   });
                 } catch (error) {
                   alert(error);

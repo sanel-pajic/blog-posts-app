@@ -19,6 +19,8 @@ import { ErrorLoading } from "./ErrorLoading";
 import { useHistory } from "react-router-dom";
 import { BLOGS_QUERY } from "../queries/queries";
 import { REMOVE_BLOG_MUTATION } from "../queries/mutations";
+import { useProtectedPath } from "./useProtectedPath";
+import { Redirect } from "react-router";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -66,7 +68,14 @@ export const BlogList: React.FC = () => {
     fetchPolicy: "network-only"
   });
 
+  const accessGrant = useProtectedPath();
+
   const [removeBlogPost, { error }] = useMutation(REMOVE_BLOG_MUTATION);
+
+  if (!accessGrant) {
+    return <Redirect to="/authorize" />;
+  }
+
   if (loading || !data) {
     return <CircularLoading />;
   }
@@ -74,6 +83,8 @@ export const BlogList: React.FC = () => {
     console.log("error", error);
     return <ErrorLoading />;
   }
+
+  console.log("ACCESS GRANT BLOGS LIST", accessGrant);
 
   return (
     <Grid container className={classes.root} spacing={2}>

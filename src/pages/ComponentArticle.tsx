@@ -94,7 +94,7 @@ export const ComponentArticle: React.FC = () => {
   const [description, setDescription] = useState("");
   const [quantity, setQuantity] = useState("");
   const [price, setPrice] = useState("");
-
+  const userId = localStorage.getItem("userId");
   const { data, loading } = useQuery(ARTICLES_QUERY);
 
   const [addComponentArticle, { error }] = useMutation(ADD_MUTATION_ARTICLE, {
@@ -132,11 +132,7 @@ export const ComponentArticle: React.FC = () => {
       }}
     >
       <Paper className={classes.paper}>
-        <Typography
-          variant="h4"
-          color="inherit"
-          className={classes.textHeader}
-        >
+        <Typography variant="h4" color="inherit" className={classes.textHeader}>
           Add New Component
         </Typography>
         <Paper className={classes.mainDiv}>
@@ -234,7 +230,8 @@ export const ComponentArticle: React.FC = () => {
                             code,
                             description,
                             quantity,
-                            price
+                            price,
+                            creator: userId
                           }
                         },
                         refetchQueries: [{ query: ARTICLES_QUERY }]
@@ -252,7 +249,9 @@ export const ComponentArticle: React.FC = () => {
             </Grid>
           </div>
         </Paper>
-        <Typography variant="h4" color="textSecondary">List of all components</Typography>
+        <Typography variant="h4" color="textSecondary">
+          List of all components
+        </Typography>
         <TableArticles />
       </Paper>
     </div>

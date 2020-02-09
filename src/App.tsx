@@ -30,10 +30,18 @@ export const client = new ApolloClient({
       );
 
     if (networkError) console.log(`[Network error]: ${networkError}`);
+  },
+  request: operation => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      operation.setContext({
+        headers: {
+          authorization: token ? `Bearer ${token}` : ""
+        }
+      });
+    }
   }
 });
-
-// Implementacija preko hooks, useMutation
 
 const App: React.FC = () => {
   return (

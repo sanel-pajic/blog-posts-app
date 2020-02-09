@@ -35,7 +35,16 @@ export const USERS_QUERY = gql`
       first_name
       last_name
       email
-      password
+    }
+  }
+`;
+
+export const CURRENT_USER_QUERY = gql`
+  query {
+    currentUser {
+      first_name
+      last_name
+      email
     }
   }
 `;

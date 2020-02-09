@@ -88,10 +88,11 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
           }}
         >
           <CardMedia
+            image={data.blogPost.image}
+            src="Image"
             title="Blog Post Image"
             className={classes.media}
             style={{ width: "90%", marginBottom: "1rem", marginTop: "1rem" }}
-            image={data.blogPost.image}
           />
         </div>
         <Typography

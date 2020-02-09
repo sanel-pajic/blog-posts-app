@@ -1,7 +1,6 @@
 import React from "react";
 import { useStore } from "react-stores";
 import { store } from "../components/store";
-import { logout } from "../components/authActions";
 import { LoginPage } from "./LoginPage";
 import { makeStyles, createStyles, Theme, withStyles } from "@material-ui/core";
 import { Button } from "@material-ui/core";
@@ -27,11 +26,22 @@ const ColorButton = withStyles((theme: Theme) => ({
   }
 }))(Button);
 
+function logout() {
+  store.setState({
+    authorized: false,
+    token: "",
+    userId: "",
+    tokenExpiration: 0
+  });
+  localStorage.clear();
+  window.location.reload();
+}
+
 export const AuthorizePage: React.FC = () => {
   const classes = useStyles();
   const authStoreState = useStore(store);
 
-  console.log("AUTH STATE STORE", authStoreState);
+  console.log("AUTH STATE STORE - Authorize Page", authStoreState);
 
   return authStoreState.authorized ? (
     <div>

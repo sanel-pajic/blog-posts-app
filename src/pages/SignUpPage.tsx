@@ -12,12 +12,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { Paper } from "@material-ui/core";
 import mongoID from "bson-objectid";
-import { useQuery, useMutation } from "@apollo/react-hooks";
+import { useMutation } from "@apollo/react-hooks";
 import * as yup from "yup";
-import { CircularLoading } from "../components/CircularLoading";
-import { USERS_QUERY } from "../queries/queries";
 import { ADD_MUTATION_USER } from "../queries/mutations";
 import { ModalError } from "../components/ModalError";
+import { useHistory } from "react-router-dom";
 
 let schema = yup.object().shape({
   first_name: yup
@@ -88,13 +87,11 @@ const useStyles = makeStyles(theme => ({
 
 export const SignUpPage: React.FC = () => {
   const classes = useStyles();
-
+  const history = useHistory();
   const [first_name, setFirstName] = useState("");
   const [last_name, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  const { data, loading } = useQuery(USERS_QUERY);
 
   const [addUser, { error }] = useMutation(ADD_MUTATION_USER, {
     errorPolicy: "all"
@@ -110,10 +107,6 @@ export const SignUpPage: React.FC = () => {
         ))}
       </div>
     );
-  }
-
-  if (loading || !data) {
-    return <CircularLoading />;
   }
 
   return (
@@ -196,6 +189,7 @@ export const SignUpPage: React.FC = () => {
                 setLastName("");
                 setEmail("");
                 setPassword("");
+                history.push("/authorize");
                 try {
                   const valid = schema.validateSync({
                     first_name,
@@ -214,8 +208,7 @@ export const SignUpPage: React.FC = () => {
                         email,
                         password
                       }
-                    },
-                    refetchQueries: [{ query: USERS_QUERY }]
+                    }
                   }).catch(error => {
                     console.log("ERROR ADD USER", error);
                   });

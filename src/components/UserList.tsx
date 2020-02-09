@@ -107,7 +107,6 @@ export const UserList: React.FC = () => {
                 first_name: string;
                 last_name: string;
                 email: string;
-                password: string;
               }) => (
                 <TableRow key={user._id}>
                   <TableCell component="th" scope="row">
@@ -115,7 +114,6 @@ export const UserList: React.FC = () => {
                   </TableCell>
                   <TableCell>{user.last_name}</TableCell>
                   <TableCell>{user.email}</TableCell>
-                  <TableCell>{user.password}</TableCell>
                   <TableCell align="right">
                     <IconButton>
                       <EditIcon />

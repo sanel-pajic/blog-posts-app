@@ -2,15 +2,17 @@ import { Store } from "react-stores";
 
 interface IStoreState {
   authorized: boolean;
-  email: string;
-  password: string;
+  token: string;
+  userId: string;
+  tokenExpiration: number;
 }
 
 export const store = new Store<IStoreState>(
   {
     authorized: false,
-    email: "",
-    password: ""
+    token: "",
+    userId: "",
+    tokenExpiration: 0
   },
   {
     persistence: true // This property does the magic

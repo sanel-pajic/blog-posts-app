@@ -3,9 +3,11 @@ import logo from "../images/blog.jpg";
 import { Link } from "react-router-dom";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import { Divider, Button, Typography } from "@material-ui/core";
-
 import Avatar from "@material-ui/core/Avatar";
 import { deepOrange } from "@material-ui/core/colors";
+import { CURRENT_USER_QUERY } from "../queries/queries";
+import { useQuery } from "@apollo/react-hooks";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) => ({
   header: {
@@ -21,9 +23,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   avatar: {
     color: theme.palette.getContrastText(deepOrange[500]),
     backgroundColor: deepOrange[400],
-    height: 45,
-    width: 45,
-    fontSize: "2.2rem",
+    height: 50,
+    width: 50,
+    fontSize: "1.7rem",
     marginRight: "3%"
   },
   typography: {
@@ -37,17 +39,56 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   divAvatarUser: {
     display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    width: 200,
+    "& > *": {
+      margin: theme.spacing(1)
+    }
+  },
+  login: {
     marginRight: "1%"
   }
 }));
 
 export const Header: React.FC = () => {
+  const history = useHistory();
   const classes = useStyles();
+  function handleClick() {
+    history.push("/authorize");
+  }
+  const { data, loading } = useQuery(CURRENT_USER_QUERY, {
+    fetchPolicy: "network-only"
+  });
+
+  if (loading || !data) {
+    return (
+      <div style={{ overflowX: "hidden" }}>
+        <header className={classes.header}>
+          <Button variant="outlined" className={classes.button}>
+            SUBSCRIBE
+          </Button>
+          <Link to="/">
+            <img src={logo} alt="Blog Logo" className="logo" />
+          </Link>
+          <div className={classes.login}>
+            <Button
+              variant="outlined"
+              className={classes.button}
+              onClick={handleClick}
+            >
+              LOGIN
+            </Button>
+          </div>
+        </header>
+      </div>
+    );
+  }
+  //console.log("DATA CURRENT USER QUERY", data);
+  const firstName = data.currentUser.first_name;
+  const lastName = data.currentUser.last_name;
+  const letterFN = firstName.charAt(0);
+  const letterLN = lastName.charAt(0);
+
   return (
-    <div>
+    <div style={{ overflow: "auto" }}>
       <header className={classes.header}>
         <Button variant="outlined" className={classes.button}>
           SUBSCRIBE
@@ -56,8 +97,15 @@ export const Header: React.FC = () => {
           <img src={logo} alt="Blog Logo" className="logo" />
         </Link>
         <div className={classes.divAvatarUser}>
-          <Avatar className={classes.avatar}>S</Avatar>
-          <Typography className={classes.typography}>Hello User</Typography>
+          <Avatar className={classes.avatar}>
+            {letterFN}
+            {letterLN}
+          </Avatar>
+          <div style={{ marginTop: "5%" }}>
+            <Typography className={classes.typography}>
+              {firstName} {lastName}
+            </Typography>
+          </div>
         </div>
       </header>
       <Divider variant="fullWidth" />

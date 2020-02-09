@@ -84,7 +84,7 @@ export const CommentComponent: React.FC<{ postId: string }> = ({ postId }) => {
           text: string;
           user_name: string;
         }) => (
-          <div>
+          <div key={comment._id}>
             <div
               style={{
                 display: "flex",

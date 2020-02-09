@@ -53,9 +53,9 @@ export const TableArticles: React.FC = () => {
         description: string;
         quantity: number;
         price: number;
-      }) => article.price
+      }) => article.price * article.quantity
     )
-    .reduce((sum: number, i: number) => sum + i, 0);
+    .reduce((acc: number, val: number) => acc + val, 0);
 
   const invoiceTaxes = TAX_RATE * invoiceSubtotal;
   const invoiceTotal = invoiceTaxes + invoiceSubtotal;

@@ -48,3 +48,13 @@ export const REMOVE_USER_MUTATION = gql`
     }
   }
 `;
+// Mutation for login
+export const LOGIN_MUTATION = gql`
+mutation ($email: String!, $password: String!) {
+  login(email: $email, password: $password) {
+    userId
+    token
+    tokenExpiration
+  }
+}
+`;

@@ -65,7 +65,7 @@ export const BlogList: React.FC = () => {
   }
 
   const { data, loading } = useQuery(BLOGS_QUERY, {
-    fetchPolicy: "network-only"
+    fetchPolicy: "cache-and-network"
   });
 
   const accessGrant = useProtectedPath();
@@ -83,8 +83,6 @@ export const BlogList: React.FC = () => {
     console.log("error", error);
     return <ErrorLoading />;
   }
-
-  console.log("ACCESS GRANT BLOGS LIST", accessGrant);
 
   return (
     <Grid container className={classes.root} spacing={2}>
@@ -131,6 +129,7 @@ export const BlogList: React.FC = () => {
                       variant="body2"
                       color="textSecondary"
                       component="p"
+                      style={{ wordWrap: "break-word" }}
                     >
                       {blog.description_short}
                     </Typography>

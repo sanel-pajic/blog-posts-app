@@ -38,13 +38,22 @@ export const USERS_QUERY = gql`
     }
   }
 `;
-
+// Query for displaying current logged user
 export const CURRENT_USER_QUERY = gql`
   query {
     currentUser {
       first_name
       last_name
       email
+    }
+  }
+`;
+
+export const DATA_USER_QUERY = gql`
+  query($_id: ID!) {
+    user(id: $_id) {
+      first_name
+      last_name
     }
   }
 `;

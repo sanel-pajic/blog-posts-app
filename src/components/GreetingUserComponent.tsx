@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) =>
 export const GreetingUserComponent: React.FC = () => {
   const classes = useStyles();
   const { data, loading } = useQuery(CURRENT_USER_QUERY, {
-    fetchPolicy: "network-only"
+    fetchPolicy: "cache-and-network"
   });
   if (loading || !data) {
     return <CircularLoading />;

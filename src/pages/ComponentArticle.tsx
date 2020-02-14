@@ -95,7 +95,9 @@ export const ComponentArticle: React.FC = () => {
   const [quantity, setQuantity] = useState("");
   const [price, setPrice] = useState("");
   const userId = localStorage.getItem("userId");
-  const { data, loading } = useQuery(ARTICLES_QUERY);
+  const { data, loading } = useQuery(ARTICLES_QUERY, {
+    fetchPolicy: "cache-and-network"
+  });
 
   const [addComponentArticle, { error }] = useMutation(ADD_MUTATION_ARTICLE, {
     errorPolicy: "all"
@@ -231,7 +233,7 @@ export const ComponentArticle: React.FC = () => {
                             description,
                             quantity,
                             price,
-                            creator: userId
+                            author: userId
                           }
                         },
                         refetchQueries: [{ query: ARTICLES_QUERY }]

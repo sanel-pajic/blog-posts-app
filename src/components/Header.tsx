@@ -51,11 +51,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 export const Header: React.FC = () => {
   const history = useHistory();
   const classes = useStyles();
+
   function handleClick() {
     history.push("/authorize");
   }
   const { data, loading } = useQuery(CURRENT_USER_QUERY, {
-    fetchPolicy: "network-only"
+    fetchPolicy: "cache-and-network"
   });
 
   if (loading || !data) {
@@ -82,8 +83,8 @@ export const Header: React.FC = () => {
     );
   }
   //console.log("DATA CURRENT USER QUERY", data);
-  const firstName = data.currentUser.first_name;
-  const lastName = data.currentUser.last_name;
+  const firstName: string = data.currentUser.first_name;
+  const lastName: string = data.currentUser.last_name;
   const letterFN = firstName.charAt(0);
   const letterLN = lastName.charAt(0);
 

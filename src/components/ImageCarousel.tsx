@@ -49,12 +49,12 @@ export const ImageCarousel: React.FC = () => {
   return (
     <div
       style={{
-        background: "#f5f5f5",
-        width: "75%",
-        height: "90%",
-        display: "block",
-        marginLeft: "auto",
-        marginRight: "auto"
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "#282c34",
+        width: "50vw",
+        height: "50vh"
       }}
     >
       <Gallery
@@ -64,7 +64,7 @@ export const ImageCarousel: React.FC = () => {
         }}
       >
         {images.map(img => (
-          <GalleryImage objectFit="contain" key={img.src} src={img.src} />
+          <GalleryImage key={img.src} src={img.src} objectFit="contain" />
         ))}
       </Gallery>
     </div>

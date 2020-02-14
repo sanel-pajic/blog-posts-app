@@ -42,8 +42,8 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     avatar: {
       backgroundColor: blue[800],
-      width: "4vw",
-      height: "8vh",
+      width: 60,
+      height: 60,
       marginRight: "0.5vw"
     },
     blogTitle: {
@@ -61,7 +61,9 @@ export const AddBlogPost: React.FC = () => {
   const [description, setDescription] = useState(EditorState.createEmpty());
   const [image, setImageURL] = useState("");
 
-  const { data, loading } = useQuery(BLOGS_QUERY);
+  const { data, loading } = useQuery(BLOGS_QUERY, {
+    fetchPolicy: "cache-and-network"
+  });
 
   const [addBlogPost, { error }] = useMutation(ADD_BLOG_MUTATION, {
     errorPolicy: "all"
@@ -212,7 +214,8 @@ export const AddBlogPost: React.FC = () => {
                         description: draftToHtml(
                           convertToRaw(description.getCurrentContent())
                         ),
-                        image
+                        image,
+                        date: new Date()
                       }
                     },
                     refetchQueries: [{ query: BLOGS_QUERY }]

@@ -10,7 +10,7 @@ import { REMOVE_USER_MUTATION } from "../queries/mutations";
 
 export const MUITableVjezba: React.FC = () => {
   const { data, loading } = useQuery(USERS_QUERY, {
-    fetchPolicy: "network-only"
+    fetchPolicy: "cache-and-network"
   });
 
   console.log("DOCS", data);

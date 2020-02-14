@@ -16,6 +16,7 @@ import PersonIcon from "@material-ui/icons/Person";
 import { green } from "@material-ui/core/colors";
 import ShareIcon from "@material-ui/icons/Share";
 import ReplyIcon from "@material-ui/icons/Reply";
+import { handleDate } from "../pages/SingleBlog";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -67,11 +68,14 @@ export const CommentComponent: React.FC<{ postId: string }> = ({ postId }) => {
       postId
       text
       user_name
+      date
     }
   }
 `;
   const classes = useStyles();
-  const { data, loading } = useQuery(COMMENTS_QUERY);
+  const { data, loading } = useQuery(COMMENTS_QUERY, {
+    fetchPolicy: "cache-and-network"
+  });
   if (loading || !data) {
     return null;
   }
@@ -83,6 +87,7 @@ export const CommentComponent: React.FC<{ postId: string }> = ({ postId }) => {
           postId: string;
           text: string;
           user_name: string;
+          date: string;
         }) => (
           <div key={comment._id}>
             <div
@@ -111,7 +116,7 @@ export const CommentComponent: React.FC<{ postId: string }> = ({ postId }) => {
                       color="textSecondary"
                       className={classes.textDateCreation}
                     >
-                      Created on: 15.12.2019
+                      Created on: {handleDate(comment.date)}
                     </Typography>
                     <Typography
                       key={comment._id}

@@ -31,7 +31,7 @@ function ccyFormat(num: number) {
 export const TableArticles: React.FC = () => {
   const classes = useStyles();
   const { data, loading } = useQuery(ARTICLES_QUERY, {
-    fetchPolicy: "network-only"
+    fetchPolicy: "cache-and-network"
   });
 
   const [removeComponentArticle, { error }] = useMutation(

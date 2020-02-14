@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import "./index.css";
-import { Navbar } from "./components/Navbar";
+import Navbar from "./components/Navbar";
 import { Home } from "./pages/Home";
 import { AuthorizePage } from "./pages/AuthorizePage";
 import ApolloClient from "apollo-boost";

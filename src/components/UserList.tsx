@@ -20,7 +20,7 @@ import { REMOVE_USER_MUTATION } from "../queries/mutations";
 
 const useStyles = makeStyles({
   root: {
-    width: "80%",
+    width: "60%",
     overflowX: "auto"
   },
   table: {
@@ -31,7 +31,7 @@ const useStyles = makeStyles({
 export const UserList: React.FC = () => {
   const classes = useStyles();
   const { data, loading } = useQuery(USERS_QUERY, {
-    fetchPolicy: "network-only"
+    fetchPolicy: "cache-and-network"
   });
   const accessGrant = useProtectedPath();
 
@@ -78,12 +78,6 @@ export const UserList: React.FC = () => {
                 {" "}
                 <Typography variant="h5" color="primary">
                   E-mail
-                </Typography>
-              </TableCell>
-              <TableCell>
-                {" "}
-                <Typography variant="h5" color="primary">
-                  Password
                 </Typography>
               </TableCell>
               <TableCell align="right">

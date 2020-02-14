@@ -18,6 +18,7 @@ import { useProtectedPath } from "./useProtectedPath";
 import { Redirect } from "react-router";
 import { CircularLoading } from "./CircularLoading";
 import { ErrorLoading } from "./ErrorLoading";
+import { ADD_COMMENT } from "../queries/mutations";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -49,7 +50,6 @@ export const AddCommentsComponent: React.FC<{ postId: string }> = ({
   postId
 }) => {
   const accessGrant = useProtectedPath();
-  console.log("ACCESS GRAND", accessGrant);
 
   const COMMENTS_QUERY = gql`
   query {
@@ -58,19 +58,17 @@ export const AddCommentsComponent: React.FC<{ postId: string }> = ({
       postId
       text
       user_name
+      date
     }
   }
 `;
 
-  const ADD_COMMENT = gql`
-    mutation($data: CommentInput!) {
-      addComment(data: $data)
-    }
-  `;
   const classes = useStyles();
   const [text, setText] = useState("");
   const [user_name, setUserName] = useState("");
-  const { data, loading } = useQuery(COMMENTS_QUERY);
+  const { data, loading } = useQuery(COMMENTS_QUERY, {
+    fetchPolicy: "cache-and-network"
+  });
   const [addComment, { error }] = useMutation(ADD_COMMENT);
   if (error) {
     console.log("error", error);
@@ -84,7 +82,7 @@ export const AddCommentsComponent: React.FC<{ postId: string }> = ({
   if (!accessGrant) {
     return <Redirect to="/authorize" />;
   }
-  console.log("ACCESS", accessGrant);
+
   return (
     <div>
       <div
@@ -154,7 +152,8 @@ export const AddCommentsComponent: React.FC<{ postId: string }> = ({
                       _id: mongoID.generate(),
                       postId: postId,
                       text,
-                      user_name
+                      user_name,
+                      date: new Date()
                     }
                   },
                   refetchQueries: [{ query: COMMENTS_QUERY }]

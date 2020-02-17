@@ -64,3 +64,10 @@ export const ADD_COMMENT = gql`
     addComment(data: $data)
   }
 `;
+
+// Mutation for liking the comment
+export const ADD_COMMENT_LIKE = gql`
+mutation ($data: LikeCommentInput!) {
+  addLikeComment(data: $data)
+}
+`;

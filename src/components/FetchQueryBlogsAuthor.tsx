@@ -15,7 +15,7 @@ export const FetchQueryBlogsAuthor: React.FC<Props> = ({ userID }) => {
   if (loading || !data) {
     return <CircularLoading />;
   }
-  console.log("DATA USER FQCreator", data);
+
   const dataFN = data.user.first_name;
   const dataLN = data.user.last_name;
   const dataUSER = dataFN + " " + dataLN;

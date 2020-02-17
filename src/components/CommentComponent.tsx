@@ -11,12 +11,16 @@ import {
 } from "@material-ui/core";
 import Like from "@material-ui/icons/ThumbUpAltOutlined";
 import gql from "graphql-tag";
-import { useQuery } from "@apollo/react-hooks";
+import { useQuery, useMutation } from "@apollo/react-hooks";
 import PersonIcon from "@material-ui/icons/Person";
 import { green } from "@material-ui/core/colors";
 import ShareIcon from "@material-ui/icons/Share";
 import ReplyIcon from "@material-ui/icons/Reply";
 import { handleDate } from "../pages/SingleBlog";
+import { CircularLoading } from "./CircularLoading";
+import { ErrorLoading } from "./ErrorLoading";
+import { ADD_COMMENT_LIKE } from "../queries/mutations";
+import mongoID from "bson-objectid";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -76,9 +80,18 @@ export const CommentComponent: React.FC<{ postId: string }> = ({ postId }) => {
   const { data, loading } = useQuery(COMMENTS_QUERY, {
     fetchPolicy: "cache-and-network"
   });
-  if (loading || !data) {
-    return null;
+  const [addCommentLike, { error }] = useMutation(ADD_COMMENT_LIKE);
+  if (error) {
+    console.log("error", error);
+    return <ErrorLoading />;
   }
+
+  if (loading || !data) {
+    return <CircularLoading />;
+  }
+
+  console.log("DATA COMMENT", data)
+
   return (
     <div>
       {data.comments.map(
@@ -149,7 +162,19 @@ export const CommentComponent: React.FC<{ postId: string }> = ({ postId }) => {
                       alignItems: "center"
                     }}
                   >
-                    <IconButton>
+                    <IconButton       
+                    onClick={() =>
+                      addCommentLike({
+                        variables: { 
+                          data: {
+                          _id: mongoID.generate(),
+                          commentId: comment._id
+                         },
+                        refetchQueries: [{ query: COMMENTS_QUERY }]
+                        }}).then(res => {
+                          console.log("DATA LIKE", res.data)
+                        })
+                    }>
                       <Like />
                     </IconButton>
                     <Typography

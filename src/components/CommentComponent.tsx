@@ -10,17 +10,25 @@ import {
   Divider
 } from "@material-ui/core";
 import Like from "@material-ui/icons/ThumbUpAltOutlined";
-import gql from "graphql-tag";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import PersonIcon from "@material-ui/icons/Person";
 import { green } from "@material-ui/core/colors";
-import ShareIcon from "@material-ui/icons/Share";
+import DeleteIcon from "@material-ui/icons/Delete";
 import ReplyIcon from "@material-ui/icons/Reply";
 import { handleDate } from "../pages/SingleBlog";
 import { CircularLoading } from "./CircularLoading";
-import { ErrorLoading } from "./ErrorLoading";
-import { ADD_COMMENT_LIKE } from "../queries/mutations";
+import {
+  ADD_COMMENT_LIKE,
+  REMOVE_COMMENT_MUTATION,
+  REMOVE_COMMENT_LIKE
+} from "../queries/mutations";
 import mongoID from "bson-objectid";
+import { FetchQueryAuthor } from "./FetchQueryAuthor";
+import { ModalError } from "./ModalError";
+import { CommentLikeData } from "./CommentLikeData";
+import { COMMENTS_QUERY } from "../queries/queries";
+import * as R from "ramda";
+import { useFetchQueryCurrentUser } from "./useFetchQueryCurrentUser";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -53,8 +61,9 @@ const useStyles = makeStyles((theme: Theme) =>
       bottom: "2.7rem"
     },
     numberOfLikes: {
-      fontSize: 18,
-      marginLeft: "1rem"
+      fontSize: 20,
+      marginLeft: "0.8rem",
+      fontWeight: "bold"
     },
     textComment: {
       marginLeft: "1rem",
@@ -65,44 +74,151 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export const CommentComponent: React.FC<{ postId: string }> = ({ postId }) => {
-  const COMMENTS_QUERY = gql`
-  query {
-    comments(postId: "${postId}") {
-      _id
-      postId
-      text
-      user_name
-      date
-    }
-  }
-`;
   const classes = useStyles();
+  const currentUserData = useFetchQueryCurrentUser();
   const { data, loading } = useQuery(COMMENTS_QUERY, {
-    fetchPolicy: "cache-and-network"
+    fetchPolicy: "cache-and-network",
+    variables: { postId }
   });
-  const [addCommentLike, { error }] = useMutation(ADD_COMMENT_LIKE);
+  const [removeComment] = useMutation(REMOVE_COMMENT_MUTATION);
+  const [addCommentLike, { error }] = useMutation(ADD_COMMENT_LIKE, {
+    update: (cache, { data }) => {
+      const previousData: any = cache.readQuery({
+        query: COMMENTS_QUERY,
+        variables: { postId }
+      });
+
+      console.log("DATA QUERY", data, "PREVIOUS QUERY", previousData);
+      const commentIdx: any = previousData.comments.findIndex(
+        (comment: { _id: any }) => {
+          return comment._id === data.addLikeComment.commentId;
+        }
+      );
+
+      cache.writeQuery({
+        query: COMMENTS_QUERY,
+        variables: { postId },
+        data: R.over(
+          R.lensProp("comments"),
+          R.over(
+            R.lensIndex(commentIdx),
+            R.over(R.lensProp("likes"), R.append(data.addLikeComment))
+          ),
+          previousData
+        )
+      });
+    }
+  });
+  const [removeCommentLike] = useMutation(REMOVE_COMMENT_LIKE, {
+    update: (cache, { data }) => {
+      const previousData: any = cache.readQuery({
+        query: COMMENTS_QUERY,
+        variables: { postId }
+      });
+
+      console.log(
+        "DATA QUERY REMOVE COMMENT LIKE",
+        data,
+        "PREVIOUS QUERY REMOVE COMMENT LIKE",
+        previousData
+      );
+      const commentIdx: any = previousData.comments.findIndex(
+        (comment: { _id: any }) => {
+          return comment._id === data.removeLikeComment.commentId;
+        }
+      );
+
+      console.log("COMMENT Idx REMOVE", commentIdx);
+
+      cache.writeQuery({
+        query: COMMENTS_QUERY,
+        variables: { postId },
+        data: R.over(
+          R.lensProp("comments"),
+          R.over(
+            R.lensIndex(commentIdx),
+            R.over(R.lensProp("likes"), R.append(data.addLikeComment))
+          ),
+          previousData
+        )
+      });
+    }
+  });
   if (error) {
     console.log("error", error);
-    return <ErrorLoading />;
+    return (
+      <div>
+        {error.graphQLErrors.map(({ message }, i) => (
+          <div key={i}>
+            <ModalError message={message} />
+          </div>
+        ))}
+      </div>
+    );
   }
 
   if (loading || !data) {
     return <CircularLoading />;
   }
 
-  console.log("DATA COMMENT", data)
+  const currentUser = currentUserData.toLocaleString();
+
+  //@ts-ignore
+  const dataLikeComments = data.comments.map((comment: any) => {
+    return {
+      numLikes: comment.likes.length,
+      isLikedByCurrentUser:
+        comment.likes.findIndex(
+          (like: { userId: string }) => like.userId === currentUser
+        ) >= 0,
+      commentId: comment._id
+    };
+  });
+  //console.log("DATA LIKE COMMENTS", dataLikeComments);
+  //console.log("DATA COMMENTS", data);
+  const dataDeleteComments = data.comments.map((comment: any) => {
+    return {
+      user: comment.author,
+      possibleDelete: comment.author === currentUser
+    };
+  });
+  console.log("DATA DELETE COMMENTS", dataDeleteComments);
+
+  const likeN = data.comments.map(
+    (comment: {
+      likes: { _id: string; commentId: string; userId: string }[];
+    }) => {
+      return comment.likes.map(
+        (like: { _id: string; commentId: string; userId: string }) => {
+          return {
+            idLike: like._id,
+            commentID: like.commentId,
+            user: like.userId
+          };
+        }
+      );
+    }
+  );
+  console.log("LIKE N", likeN);
+
+  const newLikeN = likeN.flat();
+
+  console.log("LIKE N NEW", newLikeN);
 
   return (
     <div>
       {data.comments.map(
-        (comment: {
-          _id: string;
-          postId: string;
-          text: string;
-          user_name: string;
-          date: string;
-        }) => (
-          <div key={comment._id}>
+        (
+          comment: {
+            _id: string;
+            postId: string;
+            text: string;
+            author: string;
+            date: string;
+          },
+          index: any
+        ) => (
+          <div key={comment._id} /*ref={refs[comment._id]}*/>
             <div
               style={{
                 display: "flex",
@@ -121,8 +237,23 @@ export const CommentComponent: React.FC<{ postId: string }> = ({ postId }) => {
                 </Avatar>
                 <div>
                   <div key={comment._id}>
-                    <Typography variant="body1" className={classes.textUser}>
-                      {comment.user_name} says...
+                    <Typography
+                      variant="body1"
+                      className={classes.textUser}
+                      component="span"
+                      style={{ display: "flex" }}
+                    >
+                      <FetchQueryAuthor userID={comment.author} />
+                      <Typography
+                        variant="body1"
+                        style={{
+                          color: "#e65100",
+                          fontSize: 18,
+                          marginLeft: "0.5rem"
+                        }}
+                      >
+                        says...
+                      </Typography>
                     </Typography>
                     <Typography
                       variant="caption"
@@ -159,29 +290,53 @@ export const CommentComponent: React.FC<{ postId: string }> = ({ postId }) => {
                     style={{
                       display: "flex",
                       justifyContent: "center",
-                      alignItems: "center"
+                      alignItems: "center",
+                      marginLeft: "2%"
                     }}
                   >
-                    <IconButton       
-                    onClick={() =>
-                      addCommentLike({
-                        variables: { 
-                          data: {
-                          _id: mongoID.generate(),
-                          commentId: comment._id
-                         },
-                        refetchQueries: [{ query: COMMENTS_QUERY }]
-                        }}).then(res => {
-                          console.log("DATA LIKE", res.data)
+                    <IconButton
+                      onClick={() => {
+                        addCommentLike({
+                          variables: {
+                            data: {
+                              _id: mongoID.generate(),
+                              commentId: comment._id
+                            }
+                          }
                         })
-                    }>
-                      <Like />
+                          .catch(error => {
+                            console.log("ERROR ADD LIKE", error);
+                          })
+                          .then(() =>
+                            removeCommentLike({
+                              variables: {
+                                _id: comment._id
+                              },
+                              refetchQueries: [
+                                { query: COMMENTS_QUERY, variables: { postId } }
+                              ]
+                            }).catch(error => {
+                              console.log("ERROR REMOVE COMMENT", error);
+                              alert(error);
+                            })
+                          );
+                      }}
+                    >
+                      <Like
+                        color={
+                          dataLikeComments[index].isLikedByCurrentUser
+                            ? "primary"
+                            : "inherit"
+                        }
+                      />
                     </IconButton>
+
                     <Typography
+                      component={"span"}
                       color="primary"
                       className={classes.numberOfLikes}
                     >
-                      100
+                      <CommentLikeData comment={comment} />
                     </Typography>
                   </div>
                   <div
@@ -189,12 +344,47 @@ export const CommentComponent: React.FC<{ postId: string }> = ({ postId }) => {
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center",
-                      marginRight: "3%"
+                      marginRight: "5%"
                     }}
                   >
-                    <IconButton>
-                      <ShareIcon />
-                    </IconButton>
+                    {dataDeleteComments[index].possibleDelete ? (
+                      <IconButton
+                        onClick={() => {
+                          removeComment({
+                            variables: { _id: comment._id },
+                            refetchQueries: [
+                              { query: COMMENTS_QUERY, variables: { postId } }
+                            ]
+                          }).catch(error => {
+                            console.log("ERROR REMOVE COMMENT", error);
+                            alert(error);
+                          });
+                        }}
+                      >
+                        <DeleteIcon
+                          color={
+                            dataDeleteComments[index].possibleDelete
+                              ? "primary"
+                              : "inherit"
+                          }
+                        />
+                      </IconButton>
+                    ) : (
+                      <IconButton
+                        onClick={() => {
+                          alert("You are not allowed to delete this comment!");
+                        }}
+                      >
+                        <DeleteIcon
+                          color={
+                            dataDeleteComments[index].possibleDelete
+                              ? "primary"
+                              : "inherit"
+                          }
+                        />
+                      </IconButton>
+                    )}
+
                     <Divider
                       style={{
                         transform: "rotate(90deg)",

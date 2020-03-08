@@ -8,7 +8,7 @@ import image5 from "../images/imagesGallery/image-5.jpg";
 import image6 from "../images/imagesGallery/image-6.jpg";
 import image7 from "../images/imagesGallery/image-7.jpg";
 import { GalleryImage, Gallery } from "react-gesture-gallery";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 const images = [
   {
@@ -36,16 +36,34 @@ const images = [
 
 export const ImageCarousel: React.FC = () => {
   const [index, setIndex] = useState(0);
-  React.useEffect(() => {
-    const timer = setInterval(() => {
-      if (index === images.length - 1) {
-        setIndex(0);
-      } else {
-        setIndex(prev => prev + 1);
+
+  useInterval(() => {
+    if (index === images.length - 1) {
+      setIndex(0);
+    } else {
+      setIndex(prev => prev + 1);
+    }
+  }, 5500);
+
+  function useInterval(callback: (() => void) | undefined, delay: number) {
+    const savedCallback = useRef();
+
+    useEffect(() => {
+      //@ts-ignore
+      savedCallback.current = callback;
+    });
+
+    useEffect(() => {
+      function tick() {
+        //@ts-ignore
+        savedCallback.current();
       }
-    }, 5500);
-    return () => clearInterval(timer);
-  }, [index]);
+
+      const id = setInterval(tick, delay);
+      return () => clearInterval(id);
+    }, [delay]);
+  }
+
   return (
     <div
       style={{

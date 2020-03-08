@@ -13,14 +13,16 @@ import CardActions from "@material-ui/core/CardActions";
 import Avatar from "@material-ui/core/Avatar";
 import { blue } from "@material-ui/core/colors";
 import FavoriteIcon from "@material-ui/icons/Favorite";
-import ShareIcon from "@material-ui/icons/Share";
 import { CircularLoading } from "./CircularLoading";
-import { ErrorLoading } from "./ErrorLoading";
 import { useHistory } from "react-router-dom";
 import { BLOGS_QUERY } from "../queries/queries";
-import { REMOVE_BLOG_MUTATION } from "../queries/mutations";
+import { REMOVE_BLOG_MUTATION, ADD_BLOG_LIKE } from "../queries/mutations";
 import { useProtectedPath } from "./useProtectedPath";
 import { Redirect } from "react-router";
+import mongoID from "bson-objectid";
+import * as R from "ramda";
+import { useFetchQueryCurrentUser } from "./useFetchQueryCurrentUser";
+import { ModalError } from "./ModalError";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -59,6 +61,7 @@ const useStyles = makeStyles((theme: Theme) =>
 export const BlogList: React.FC = () => {
   const classes = useStyles();
   let history = useHistory();
+  const currentUserData = useFetchQueryCurrentUser();
 
   function handleClick(id: string) {
     history.push(`singleblog/${id}`);
@@ -71,6 +74,32 @@ export const BlogList: React.FC = () => {
   const accessGrant = useProtectedPath();
 
   const [removeBlogPost, { error }] = useMutation(REMOVE_BLOG_MUTATION);
+  const [addBlogLike] = useMutation(ADD_BLOG_LIKE, {
+    update: (cache, { data }) => {
+      const previousData: any = cache.readQuery({
+        query: BLOGS_QUERY
+      });
+
+      console.log("DATA QUERY", data, "PREVIOUS QUERY", previousData);
+      const blogIdx: any = previousData.blogPosts.findIndex(
+        (blog: { _id: any }) => {
+          return blog._id === data.addLikeBlog.blogId;
+        }
+      );
+
+      cache.writeQuery({
+        query: BLOGS_QUERY,
+        data: R.over(
+          R.lensProp("blogPosts"),
+          R.over(
+            R.lensIndex(blogIdx),
+            R.over(R.lensProp("likes"), R.append(data.addLikeBlog))
+          ),
+          previousData
+        )
+      });
+    }
+  });
 
   if (!accessGrant) {
     return <Redirect to="/authorize" />;
@@ -81,21 +110,55 @@ export const BlogList: React.FC = () => {
   }
   if (error) {
     console.log("error", error);
-    return <ErrorLoading />;
+    return (
+      <div>
+        {error.graphQLErrors.map(({ message }, i) => (
+          <div key={i}>
+            <ModalError message={message} />
+          </div>
+        ))}
+      </div>
+    );
   }
+
+  const currentUser = currentUserData.toLocaleString();
+
+  //@ts-ignore
+  const dataBlogPosts = data.blogPosts.map((blog: any) => {
+    return {
+      numLikes: blog.likes.length,
+      isLikedByCurrentUser:
+        blog.likes.findIndex(
+          (like: { userId: string }) => like.userId === currentUser
+        ) >= 0,
+      blogId: blog._id
+    };
+  });
+  console.log("DATA BLOG POSTS", data);
+  const dataDeleteBlogs = data.blogPosts.map((blog: any) => {
+    return {
+      user: blog.author,
+      possibleDelete: blog.author === currentUser
+    };
+  });
+  console.log("DATA DELETE BLOG POSTS", dataDeleteBlogs);
 
   return (
     <Grid container className={classes.root} spacing={2}>
       <Grid item xs={12}>
         <Grid container justify="center" spacing={5}>
           {data.blogPosts.map(
-            (blog: {
-              _id: string;
-              title: string;
-              description_short: string;
-              description: string;
-              image: string;
-            }) => (
+            (
+              blog: {
+                _id: string;
+                title: string;
+                description_short: string;
+                description: string;
+                image: string;
+                likes: any;
+              },
+              index: any
+            ) => (
               <Grid key={blog._id} item>
                 <Card className={classes.card}>
                   <CardHeader
@@ -110,8 +173,7 @@ export const BlogList: React.FC = () => {
                   />
                   <CardMedia
                     className={classes.media}
-                    image={blog.image}
-                    src={`${blog.image}`}
+                    image={`${blog.image}`}
                     title="Blog Post Image"
                   />
                   <CardContent>
@@ -135,11 +197,34 @@ export const BlogList: React.FC = () => {
                     </Typography>
                   </CardContent>
                   <CardActions disableSpacing>
-                    <IconButton aria-label="add to favorites">
-                      <FavoriteIcon />
+                    <IconButton
+                      aria-label="add to favorites"
+                      onClick={() =>
+                        addBlogLike({
+                          variables: {
+                            data: {
+                              _id: mongoID.generate(),
+                              blogId: blog._id
+                            }
+                          }
+                        }).catch(error => {
+                          alert(error);
+                          console.log("ERROR ADD LIKE", error);
+                        })
+                      }
+                    >
+                      <FavoriteIcon
+                        color={
+                          dataBlogPosts[index].isLikedByCurrentUser
+                            ? "primary"
+                            : "inherit"
+                        }
+                      />
                     </IconButton>
                     <IconButton aria-label="share">
-                      <ShareIcon />
+                      <Typography variant="h6" color="primary">
+                        {blog.likes.length}
+                      </Typography>
                     </IconButton>
                     <IconButton
                       style={{ marginLeft: "1%" }}
@@ -147,10 +232,18 @@ export const BlogList: React.FC = () => {
                         removeBlogPost({
                           variables: { _id: blog._id },
                           refetchQueries: [{ query: BLOGS_QUERY }]
+                        }).catch(error => {
+                          console.log("ERROR REMOVE BLOG", error);
                         })
                       }
                     >
-                      <DeleteIcon />
+                      <DeleteIcon
+                        color={
+                          dataDeleteBlogs[index].possibleDelete
+                            ? "primary"
+                            : "inherit"
+                        }
+                      />
                     </IconButton>
 
                     <Button

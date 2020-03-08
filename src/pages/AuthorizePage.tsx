@@ -8,8 +8,6 @@ import { GreetingUserComponent } from "../components/GreetingUserComponent";
 export const AuthorizePage: React.FC = () => {
   const authStoreState = useStore(store);
 
-  console.log("AUTH STATE STORE - Authorize Page", authStoreState);
-
   return authStoreState.authorized ? (
     <div>
       <div

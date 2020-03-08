@@ -11,14 +11,16 @@ import { red } from "@material-ui/core/colors";
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     width: "100%",
-    backgroundColor: "#282c34"
+    backgroundColor: "#282c34",
+    minWidth: 1240
   },
   tabs: {
     color: theme.palette.background.paper,
     flexGrow: 1
   },
   margin: {
-    margin: theme.spacing(1)
+    margin: theme.spacing(1),
+    width: 150
   }
 }));
 
@@ -48,7 +50,6 @@ const Navbar: React.FC = () => {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const location = useLocation();
-  console.log("LOCATION", location);
 
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
@@ -69,7 +70,6 @@ const Navbar: React.FC = () => {
     });
     if (pathIndex >= 0) {
       setValue(pathIndex);
-      console.log("PATH INDEX", pathIndex);
     }
   }, [location, ROUTES]);
 
@@ -94,14 +94,14 @@ const Navbar: React.FC = () => {
           <Tab
             style={{ fontSize: 20, marginLeft: "10vw" }}
             label="Home"
-            component={NavLink}
+            component={React.memo(NavLink)}
             to={"/"}
             {...a11yProps(0)}
           />
           <Tab
             style={{ fontSize: 20 }}
             label="Add Blog Post"
-            component={NavLink}
+            component={React.memo(NavLink)}
             to={"/addblogpost"}
             {...a11yProps(1)}
           />
@@ -109,21 +109,21 @@ const Navbar: React.FC = () => {
           <Tab
             style={{ fontSize: 20 }}
             label="Component Article"
-            component={NavLink}
+            component={React.memo(NavLink)}
             to={"/article"}
             {...a11yProps(2)}
           />
           <Tab
             style={{ fontSize: 20 }}
             label="Blog List"
-            component={NavLink}
+            component={React.memo(NavLink)}
             to={"/bloglist"}
             {...a11yProps(3)}
           />
           <Tab
             style={{ fontSize: 20 }}
             label="User List"
-            component={NavLink}
+            component={React.memo(NavLink)}
             to={"/userlist"}
             {...a11yProps(4)}
           />

@@ -65,9 +65,41 @@ export const ADD_COMMENT = gql`
   }
 `;
 
+// Mutation for remove comment
+export const REMOVE_COMMENT_MUTATION = gql`
+  mutation($_id: ID!) {
+    removeComment(_id: $_id) {
+      _id
+    }
+  }
+`;
+
 // Mutation for liking the comment
 export const ADD_COMMENT_LIKE = gql`
-mutation ($data: LikeCommentInput!) {
-  addLikeComment(data: $data)
-}
+  mutation($data: LikeCommentInput!) {
+    addLikeComment(data: $data) {
+      _id
+      commentId
+      userId
+    }
+  }
+`;
+
+export const REMOVE_COMMENT_LIKE = gql`
+  mutation($_id: ID!) {
+    removeLikeComment(_id: $_id) {
+      _id
+    }
+  }
+`;
+
+// Mutation for liking blog
+export const ADD_BLOG_LIKE = gql`
+  mutation($data: LikeBlogInput!) {
+    addLikeBlog(data: $data) {
+      _id
+      blogId
+      userId
+    }
+  }
 `;

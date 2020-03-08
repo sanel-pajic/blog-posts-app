@@ -20,6 +20,7 @@ import { CircularLoading } from "../components/CircularLoading";
 import { ModalError } from "../components/ModalError";
 import { BLOGS_QUERY } from "../queries/queries";
 import { ADD_BLOG_MUTATION } from "../queries/mutations";
+import { DialogVisibleModal } from "../components/DialogVisibleModal";
 
 let schema = yup.object().shape({
   title: yup
@@ -60,6 +61,7 @@ export const AddBlogPost: React.FC = () => {
   const [description_short, setDescriptionShort] = useState("");
   const [description, setDescription] = useState(EditorState.createEmpty());
   const [image, setImageURL] = useState("");
+  const [dialogVisible, setDialogVisible] = useState(false);
 
   const { data, loading } = useQuery(BLOGS_QUERY, {
     fetchPolicy: "cache-and-network"
@@ -88,12 +90,11 @@ export const AddBlogPost: React.FC = () => {
   if (!accessGrant) {
     return <Redirect to="/authorize" />;
   }
-  console.log("ACCESS GRANT", accessGrant);
 
   const onChangeHandler = (description: EditorState) => {
-    const raw = convertToRaw(description.getCurrentContent());
+    // const raw = convertToRaw(description.getCurrentContent());
     setDescription(description);
-    console.log(draftToHtml(raw));
+    // console.log(draftToHtml(raw));
   };
 
   return (
@@ -219,9 +220,11 @@ export const AddBlogPost: React.FC = () => {
                       }
                     },
                     refetchQueries: [{ query: BLOGS_QUERY }]
-                  }).catch(error => {
-                    console.log("ERROR ADD BLOG POST", error);
-                  });
+                  })
+                    .then(() => setDialogVisible(true))
+                    .catch(error => {
+                      console.log("ERROR ADD BLOG POST", error);
+                    });
                 } catch (error) {
                   alert(error);
                 }
@@ -229,6 +232,10 @@ export const AddBlogPost: React.FC = () => {
             >
               ADD BLOG
             </Button>
+            <DialogVisibleModal
+              dialogVisible={dialogVisible}
+              message="Successful added new Blog."
+            />
           </div>
         </div>
       </Paper>

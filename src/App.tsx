@@ -1,7 +1,6 @@
 import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import "./index.css";
-import Navbar from "./components/Navbar";
 import { Home } from "./pages/Home";
 import { AuthorizePage } from "./pages/AuthorizePage";
 import ApolloClient from "apollo-boost";
@@ -15,7 +14,7 @@ import { UserList } from "./components/UserList";
 import { Error } from "./pages/Error";
 import { SingleBlog } from "./pages/SingleBlog";
 import { SignUpPage } from "./pages/SignUpPage";
-import { MUITableVjezba } from "./components/MUITableVjezba";
+import Navbar from "./components/Navbar";
 
 export const client = new ApolloClient({
   uri: "http://localhost:8080/graphql",
@@ -61,7 +60,6 @@ const App: React.FC = () => {
             <Route exact path="/bloglist" component={BlogList} />
             <Route exact path="/userlist" component={UserList} />
             <Route exact path="/signup" component={SignUpPage} />
-            <Route exact path="/muitable" component={MUITableVjezba} />
             <Route exact path="/authorize" component={AuthorizePage} />
             <Route render={() => <Error />} />
           </Switch>

@@ -1,19 +1,41 @@
 import React from "react";
-import { useQuery } from "@apollo/react-hooks";
-import gql from "graphql-tag";
+import { useQuery, useMutation } from "@apollo/react-hooks";
 import { CircularLoading } from "../components/CircularLoading";
-import { Paper, Typography, CardMedia, Divider } from "@material-ui/core";
+import {
+  Paper,
+  Typography,
+  CardMedia,
+  Divider,
+  IconButton
+} from "@material-ui/core";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import { RouteComponentProps } from "react-router-dom";
 import { CommentComponent } from "../components/CommentComponent";
 import { AddCommentsComponent } from "../components/AddCommentsComponent";
-import { FetchQueryBlogsAuthor } from "../components/FetchQueryBlogsAuthor";
+import { FetchQueryAuthor } from "../components/FetchQueryAuthor";
+import ThumbUpAltIcon from "@material-ui/icons/ThumbUpAlt";
+import { ADD_BLOG_LIKE } from "../queries/mutations";
+import * as R from "ramda";
+import { ModalError } from "../components/ModalError";
+import mongoID from "bson-objectid";
+import { grey } from "@material-ui/core/colors";
+import { SINGLE_BLOG_QUERY } from "../queries/queries";
+import { useFetchQueryCurrentUser } from "../components/useFetchQueryCurrentUser";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     media: {
       height: "50vh",
       width: "85vw"
+    },
+    likeBlog: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2),
+      boxShadow: "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)",
+      backgroundColor: grey[50]
     }
   })
 );
@@ -56,29 +78,61 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
 }) => {
   const idFromHistory = match.params.id;
 
-  const SINGLE_BLOG_QUERY = gql`
-  query {
-    blogPost(id: "${idFromHistory}") {
-      _id
-      title
-      description
-      description_short
-      image
-      date
-      author
-    }
-  }
-`;
-
   const classes = useStyles();
+  const currentUserData = useFetchQueryCurrentUser();
 
   const { data, loading } = useQuery(SINGLE_BLOG_QUERY, {
-    fetchPolicy: "cache-and-network"
+    fetchPolicy: "cache-and-network",
+    variables: { postId: idFromHistory }
   });
+  const [addBlogLike, { error }] = useMutation(ADD_BLOG_LIKE, {
+    update: (cache, { data }) => {
+      const previousData: any = cache.readQuery({
+        query: SINGLE_BLOG_QUERY,
+        variables: { postId: idFromHistory }
+      });
+
+      console.log("DATA QUERY", data, "PREVIOUS QUERY", previousData);
+
+      cache.writeQuery({
+        query: SINGLE_BLOG_QUERY,
+        variables: { postId: idFromHistory },
+        data: R.over(
+          R.lensPath(["blogPost", "likes"]),
+          R.append(data.addLikeBlog),
+          previousData
+        )
+      });
+    }
+  });
+  if (error) {
+    console.log("error", error);
+    return (
+      <div>
+        {error.graphQLErrors.map(({ message }, i) => (
+          <div key={i}>
+            <ModalError message={message} />
+          </div>
+        ))}
+      </div>
+    );
+  }
 
   if (loading || !data) {
-    return null || <CircularLoading />;
+    return <CircularLoading />;
   }
+  console.log("DATA ", data);
+
+  const currentUser = currentUserData.toLocaleString();
+
+  //@ts-ignore
+
+  const dataBlogPost =
+    data.blogPost.likes.findIndex(
+      (like: { userId: string }) => like.userId === currentUser
+    ) >= 0;
+
+  console.log("DATA BLOG POST LIKE", dataBlogPost);
 
   return (
     <div
@@ -152,7 +206,7 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
               color: "#ff8a80"
             }}
           >
-            <FetchQueryBlogsAuthor userID={data.blogPost.author} />
+            <FetchQueryAuthor userID={data.blogPost.author} />
           </Typography>
         </div>
         <Typography
@@ -189,7 +243,6 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
         >
           <CardMedia
             image={data.blogPost.image}
-            src="Image"
             title="Blog Post Image"
             className={classes.media}
             style={{ width: "90%", marginBottom: "1rem", marginTop: "1rem" }}
@@ -204,6 +257,70 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
           }}
           dangerouslySetInnerHTML={{ __html: data.blogPost.description }}
         ></Typography>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            marginBottom: "5vh"
+          }}
+        >
+          <Paper className={classes.likeBlog}>
+            <Typography color="textSecondary" variant="h6">
+              If you like this post please press like!
+            </Typography>
+            <IconButton
+              aria-label="add to favorites"
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                marginLeft: "2vw"
+              }}
+              onClick={() =>
+                addBlogLike({
+                  variables: {
+                    data: {
+                      _id: mongoID.generate(),
+                      blogId: idFromHistory
+                    }
+                  }
+                }).catch(error => {
+                  console.log("ERROR ADD LIKE", error);
+                })
+              }
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: 60,
+                  height: 60
+                }}
+              >
+                {" "}
+                <ThumbUpAltIcon color={dataBlogPost ? "primary" : "inherit"} />
+                <Typography
+                  color={dataBlogPost ? "primary" : "inherit"}
+                  variant="h6"
+                >
+                  LIKE
+                </Typography>
+              </div>
+            </IconButton>
+            <Typography
+              style={{ marginLeft: "1.5vw", marginRight: "2vw" }}
+              color="primary"
+              variant="h4"
+            >
+              {data.blogPost.likes.length}
+            </Typography>
+          </Paper>
+        </div>
+
         <Divider variant="fullWidth" style={{ marginBottom: "5%" }} />
         <AddCommentsComponent postId={idFromHistory} />
         <CommentComponent postId={idFromHistory} />

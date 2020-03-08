@@ -17,8 +17,8 @@ import { teal } from "@material-ui/core/colors";
 import { useProtectedPath } from "./useProtectedPath";
 import { Redirect } from "react-router";
 import { CircularLoading } from "./CircularLoading";
-import { ErrorLoading } from "./ErrorLoading";
 import { ADD_COMMENT } from "../queries/mutations";
+import { ModalError } from "./ModalError";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -57,22 +57,34 @@ export const AddCommentsComponent: React.FC<{ postId: string }> = ({
       _id
       postId
       text
-      user_name
+      author
       date
+      likes {
+        _id
+        commentId
+        userId
+      }
     }
   }
 `;
 
   const classes = useStyles();
   const [text, setText] = useState("");
-  const [user_name, setUserName] = useState("");
   const { data, loading } = useQuery(COMMENTS_QUERY, {
     fetchPolicy: "cache-and-network"
   });
   const [addComment, { error }] = useMutation(ADD_COMMENT);
   if (error) {
     console.log("error", error);
-    return <ErrorLoading />;
+    return (
+      <div>
+        {error.graphQLErrors.map(({ message }, i) => (
+          <div key={i}>
+            <ModalError message={message} />
+          </div>
+        ))}
+      </div>
+    );
   }
 
   if (loading || !data) {
@@ -82,6 +94,28 @@ export const AddCommentsComponent: React.FC<{ postId: string }> = ({
   if (!accessGrant) {
     return <Redirect to="/authorize" />;
   }
+
+  const refs = data.comments.reduce(
+    (
+      acc: { [x: string]: React.RefObject<unknown> },
+      val: { _id: React.ReactText }
+    ) => {
+      acc[val._id] = React.createRef();
+      return acc;
+    },
+    {}
+  );
+
+  console.log("REFS", refs);
+
+  const handleClick = (id: string) => {
+    setText("");
+    console.log("CLG HANDLE CLICK", id);
+    refs[id].current.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  };
 
   return (
     <div>
@@ -112,27 +146,6 @@ export const AddCommentsComponent: React.FC<{ postId: string }> = ({
               width: "100%"
             }}
           />
-          <Typography
-            variant="subtitle2"
-            color="textSecondary"
-            style={{
-              marginLeft: "1rem",
-              marginTop: "1.5rem",
-              marginBottom: "0.5rem"
-            }}
-          >
-            NAME
-          </Typography>
-          <TextField
-            id="name"
-            placeholder="Name"
-            variant="outlined"
-            value={user_name}
-            onChange={e => setUserName(e.target.value)}
-            style={{
-              width: "100%"
-            }}
-          />
           <div
             style={{
               display: "flex",
@@ -146,18 +159,23 @@ export const AddCommentsComponent: React.FC<{ postId: string }> = ({
               color="inherit"
               className={classes.margin}
               onClick={() => {
+                const id = mongoID.generate();
                 addComment({
                   variables: {
                     data: {
-                      _id: mongoID.generate(),
+                      _id: id,
                       postId: postId,
                       text,
-                      user_name,
                       date: new Date()
                     }
                   },
                   refetchQueries: [{ query: COMMENTS_QUERY }]
-                });
+                })
+                  .then(() => handleClick(id))
+                  .catch(error => {
+                    console.log("ERROR ADD COMMENT", error);
+                 
+                  });
               }}
             >
               POST A COMMENT

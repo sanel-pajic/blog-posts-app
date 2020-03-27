@@ -16,8 +16,9 @@ import { useQuery } from "@apollo/react-hooks";
 import { BLOGS_QUERY } from "../queries/queries";
 import Grid from "@material-ui/core/Grid";
 import { blue, yellow } from "@material-ui/core/colors";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import StarsIcon from "@material-ui/icons/Stars";
+import { ColorButtonTeal } from "../components/AddCommentsComponent";
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -58,7 +59,7 @@ export const Home: React.FC = () => {
     return <CircularLoading />;
   }
 
-  console.log("DATA BLOGS FROM HOME", data);
+  // console.log("DATA BLOGS FROM HOME", data);
 
   const dataBlogPostsHome = data.blogPosts.map(
     (blog: {
@@ -79,7 +80,7 @@ export const Home: React.FC = () => {
       };
     }
   );
-  console.log("DATA BLOG FILTERED", dataBlogPostsHome);
+  // console.log("DATA BLOG FILTERED", dataBlogPostsHome);
 
   const likeNumbers = dataBlogPostsHome.map((x: any) => {
     return {
@@ -92,7 +93,7 @@ export const Home: React.FC = () => {
     };
   });
 
-  console.log("LIKES NUMBERS", likeNumbers);
+  // console.log("LIKES NUMBERS", likeNumbers);
 
   const threeHighestLike = likeNumbers
     .sort(function(a: number, b: number) {
@@ -106,7 +107,7 @@ export const Home: React.FC = () => {
     })
     .slice(0, 3);
 
-  console.log("THREE HIGHEST LIKES", threeHighestLike);
+  // console.log("THREE HIGHEST LIKES", threeHighestLike);
 
   function handleClick(id: string) {
     history.push(`singleblog/${id}`);
@@ -202,7 +203,7 @@ export const Home: React.FC = () => {
                       <CardMedia
                         className={classes.media}
                         image={`${blog.image}`}
-                        title="Blog Post Image"
+                        title="Blog Po  t Image"
                       />
                       <CardContent>
                         <Typography
@@ -245,6 +246,44 @@ export const Home: React.FC = () => {
             </Grid>
           </Grid>
         </Grid>
+      </div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          marginTop: "10vh"
+        }}
+      >
+        <Typography
+          variant="h2"
+          color="initial"
+          style={{ marginLeft: 20, marginRight: 20 }}
+        >
+          Expand your knowledge.
+        </Typography>
+        <Typography
+          variant="h2"
+          color="initial"
+          style={{ marginLeft: 20, marginRight: 20 }}
+        >
+          Expand your mind.
+        </Typography>
+        <Link to="/signup" style={{ textDecoration: "none" }}>
+          <ColorButtonTeal
+            style={{
+              width: 200,
+              height: 50,
+              fontSize: 20,
+              textTransform: "initial",
+              marginTop: "5vh",
+              marginBottom: "2vh"
+            }}
+          >
+            Get started
+          </ColorButtonTeal>
+        </Link>
       </div>
     </div>
   );

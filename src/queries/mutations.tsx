@@ -17,10 +17,23 @@ export const REMOVE_ARTICLE_MUTATION = gql`
   }
 `;
 // BLOG POST MUTATIONS
-// Mutatuion for add new blog post
+// Mutation for add new blog post
 export const ADD_BLOG_MUTATION = gql`
   mutation($data: BlogPostInput!) {
-    addBlogPost(data: $data)
+    addBlogPost(data: $data) {
+      _id
+      title
+      description_short
+      description
+      image
+      date
+      author
+      likes {
+        _id
+        blogId
+        userId
+      }
+    }
   }
 `;
 
@@ -36,7 +49,11 @@ export const REMOVE_BLOG_MUTATION = gql`
 // Mutation for add user
 export const ADD_MUTATION_USER = gql`
   mutation($data: UserInput!) {
-    addUser(data: $data)
+    addUser(data: $data) {
+      userId
+      token
+      tokenExpiration
+    }
   }
 `;
 
@@ -61,7 +78,12 @@ export const LOGIN_MUTATION = gql`
 // Mutation for comment
 export const ADD_COMMENT = gql`
   mutation($data: CommentInput!) {
-    addComment(data: $data)
+    addComment(data: $data) {
+      _id
+      postId
+      text
+      author
+    }
   }
 `;
 
@@ -85,6 +107,7 @@ export const ADD_COMMENT_LIKE = gql`
   }
 `;
 
+// Mutation for remove like of a comment
 export const REMOVE_COMMENT_LIKE = gql`
   mutation($_id: ID!) {
     removeLikeComment(_id: $_id) {
@@ -100,6 +123,37 @@ export const ADD_BLOG_LIKE = gql`
       _id
       blogId
       userId
+    }
+  }
+`;
+
+// Mutation for remove like of a comment
+export const REMOVE_BLOG_LIKE = gql`
+  mutation($_id: ID!) {
+    removeLikeBlog(_id: $_id) {
+      _id
+    }
+  }
+`;
+
+// Mutation for update text of a comment
+export const UPDATE_COMMENT = gql`
+  mutation($data: CommentInput!) {
+    updateComment(data: $data) {
+      _id
+      text
+    }
+  }
+`;
+
+// Mutation for user data
+export const UPDATE_USER = gql`
+  mutation($data: UserInput!) {
+    updateUser(data: $data) {
+      _id
+      first_name
+      last_name
+      email
     }
   }
 `;

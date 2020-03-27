@@ -14,7 +14,7 @@ import { CommentComponent } from "../components/CommentComponent";
 import { AddCommentsComponent } from "../components/AddCommentsComponent";
 import { FetchQueryAuthor } from "../components/FetchQueryAuthor";
 import ThumbUpAltIcon from "@material-ui/icons/ThumbUpAlt";
-import { ADD_BLOG_LIKE } from "../queries/mutations";
+import { ADD_BLOG_LIKE, REMOVE_BLOG_LIKE } from "../queries/mutations";
 import * as R from "ramda";
 import { ModalError } from "../components/ModalError";
 import mongoID from "bson-objectid";
@@ -92,7 +92,7 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
         variables: { postId: idFromHistory }
       });
 
-      console.log("DATA QUERY", data, "PREVIOUS QUERY", previousData);
+      // console.log("DATA QUERY", data, "PREVIOUS QUERY", previousData);
 
       cache.writeQuery({
         query: SINGLE_BLOG_QUERY,
@@ -105,6 +105,26 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
       });
     }
   });
+
+  const [removeBlogLike, { error: errorRemoveBlogLike }] = useMutation(
+    REMOVE_BLOG_LIKE,
+    {
+      update: (cache, { data }) => {
+        const previousData: any = cache.readQuery({
+          query: SINGLE_BLOG_QUERY
+        });
+
+        // Napraviti casche write query
+        console.log(
+          "DATA QUERY REMOVE BLOG LIKE",
+          data,
+          "PREVIOUS QUERY REMOVE BLOG LIKE",
+          previousData
+        );
+      }
+    }
+  );
+
   if (error) {
     console.log("error", error);
     return (
@@ -118,21 +138,48 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
     );
   }
 
+  if (errorRemoveBlogLike) {
+    console.log("error", errorRemoveBlogLike);
+    return (
+      <div>
+        {errorRemoveBlogLike.graphQLErrors.map(({ message }, i) => (
+          <div key={i}>
+            <ModalError message={message} />
+          </div>
+        ))}
+      </div>
+    );
+  }
+
   if (loading || !data) {
     return <CircularLoading />;
   }
-  console.log("DATA ", data);
+  // console.log("DATA ", data);
 
   const currentUser = currentUserData.toLocaleString();
 
+  console.log("CURRENT USER", currentUser);
+
   //@ts-ignore
 
-  const dataBlogPost =
+  const likeSingleBlog =
     data.blogPost.likes.findIndex(
       (like: { userId: string }) => like.userId === currentUser
     ) >= 0;
 
-  console.log("DATA BLOG POST LIKE", dataBlogPost);
+  console.log("SINGLE BLOG LIKE", likeSingleBlog);
+
+  const like = data.blogPost.likes.find((like: any) => {
+    return like.userId === currentUser;
+  });
+
+  const dataBLOG = {
+    numLikes: data.blogPost.likes.length,
+    isLikedByCurrentUser: like != null,
+    userLikeID: like ? like._id : null
+  };
+
+  console.log("DATA BLOG", dataBLOG);
 
   return (
     <div
@@ -147,7 +194,8 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
     >
       <Paper
         style={{
-          width: "50vw"
+          width: "50vw",
+          minWidth: 600
         }}
       >
         <Typography
@@ -279,16 +327,31 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
                 marginLeft: "2vw"
               }}
               onClick={() =>
-                addBlogLike({
-                  variables: {
-                    data: {
-                      _id: mongoID.generate(),
-                      blogId: idFromHistory
-                    }
-                  }
-                }).catch(error => {
-                  console.log("ERROR ADD LIKE", error);
-                })
+                dataBLOG.isLikedByCurrentUser
+                  ? removeBlogLike({
+                      variables: {
+                        _id: dataBLOG.userLikeID
+                      },
+                      refetchQueries: [
+                        {
+                          query: SINGLE_BLOG_QUERY,
+                          variables: { postId: data.blogPost._id }
+                        }
+                      ]
+                    }).catch(error => {
+                      console.log("ERROR REMOVE BLOG LIKE", error);
+                      alert(error);
+                    })
+                  : addBlogLike({
+                      variables: {
+                        data: {
+                          _id: mongoID.generate(),
+                          blogId: idFromHistory
+                        }
+                      }
+                    }).catch(error => {
+                      console.log("ERROR ADD LIKE", error);
+                    })
               }
             >
               <div
@@ -302,9 +365,11 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
                 }}
               >
                 {" "}
-                <ThumbUpAltIcon color={dataBlogPost ? "primary" : "inherit"} />
+                <ThumbUpAltIcon
+                  color={likeSingleBlog ? "primary" : "inherit"}
+                />
                 <Typography
-                  color={dataBlogPost ? "primary" : "inherit"}
+                  color={likeSingleBlog ? "primary" : "inherit"}
                   variant="h6"
                 >
                   LIKE

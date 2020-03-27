@@ -29,7 +29,7 @@ export const Error: React.FC = () => {
       >
         <img src={logoError} alt="Error Logo" style={{ marginTop: "3vh" }} />
 
-        <Link to="/">
+        <Link to="/" style={{ textDecoration: "none" }}>
           <Button
             variant="outlined"
             color="default"

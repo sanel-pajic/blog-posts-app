@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export const ColorButton = withStyles((theme: Theme) => ({
+export const ColorButtonTeal = withStyles((theme: Theme) => ({
   root: {
     color: theme.palette.getContrastText(teal[500]),
     backgroundColor: teal[300],
@@ -45,6 +45,10 @@ export const ColorButton = withStyles((theme: Theme) => ({
     }
   }
 }))(Button);
+
+function scrollToForm(id: string) {
+  document?.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+}
 
 export const AddCommentsComponent: React.FC<{ postId: string }> = ({
   postId
@@ -95,26 +99,12 @@ export const AddCommentsComponent: React.FC<{ postId: string }> = ({
     return <Redirect to="/authorize" />;
   }
 
-  const refs = data.comments.reduce(
-    (
-      acc: { [x: string]: React.RefObject<unknown> },
-      val: { _id: React.ReactText }
-    ) => {
-      acc[val._id] = React.createRef();
-      return acc;
-    },
-    {}
-  );
-
-  console.log("REFS", refs);
-
   const handleClick = (id: string) => {
     setText("");
     console.log("CLG HANDLE CLICK", id);
-    refs[id].current.scrollIntoView({
-      behavior: "smooth",
-      block: "start"
-    });
+    setTimeout(() => {
+      scrollToForm(id);
+    }, 100);
   };
 
   return (
@@ -154,7 +144,7 @@ export const AddCommentsComponent: React.FC<{ postId: string }> = ({
               marginTop: "5%"
             }}
           >
-            <ColorButton
+            <ColorButtonTeal
               variant="text"
               color="inherit"
               className={classes.margin}
@@ -171,15 +161,14 @@ export const AddCommentsComponent: React.FC<{ postId: string }> = ({
                   },
                   refetchQueries: [{ query: COMMENTS_QUERY }]
                 })
-                  .then(() => handleClick(id))
+                  .then(res => handleClick(res.data.addComment._id))
                   .catch(error => {
                     console.log("ERROR ADD COMMENT", error);
-                 
                   });
               }}
             >
               POST A COMMENT
-            </ColorButton>
+            </ColorButtonTeal>
           </div>
         </Paper>
       </div>

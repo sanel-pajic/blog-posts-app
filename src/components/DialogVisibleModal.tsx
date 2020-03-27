@@ -8,7 +8,8 @@ import {
 import Modal from "@material-ui/core/Modal";
 import { Typography, Button, Paper } from "@material-ui/core";
 import CheckCircleRoundedIcon from "@material-ui/icons/CheckCircleRounded";
-import { green } from "@material-ui/core/colors";
+import { green, deepOrange } from "@material-ui/core/colors";
+import { useHistory } from "react-router-dom";
 
 function rand() {
   return Math.round(Math.random() * 2) - 1;
@@ -29,34 +30,50 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     paper: {
       position: "absolute",
-      width: 600,
+      width: 800,
       height: 340,
       backgroundColor: theme.palette.background.paper,
       border: "2px solid #000",
       boxShadow: theme.shadows[5],
       padding: theme.spacing(2, 4, 3)
     },
-    margin: {
+    btnAdd: {
       margin: theme.spacing(1),
-      width: 130
+      width: 150
+    },
+    btnShow: {
+      margin: theme.spacing(1),
+      width: 180
     }
   })
 );
 
-const ColorButton = withStyles((theme: Theme) => ({
+const ColorButtonAdd = withStyles((theme: Theme) => ({
   root: {
     backgroundColor: green[500]
+  }
+}))(Button);
+
+const ColorButtonShow = withStyles((theme: Theme) => ({
+  root: {
+    backgroundColor: deepOrange[500]
   }
 }))(Button);
 
 export const DialogVisibleModal: React.FC<{
   dialogVisible: boolean;
   message: string;
-}> = ({ dialogVisible, message }) => {
+  blogID: string;
+}> = ({ dialogVisible, message, blogID }) => {
+  let history = useHistory();
   const classes = useStyles();
 
   const [modalStyle] = React.useState(getModalStyle);
 
+  const handleClickShowBlog = (id: string) => {
+    history.push(`singleblog/${id}`);
+  };
+  //console.log("BLOG ID", blogID);
   return (
     <div>
       <Modal
@@ -103,14 +120,22 @@ export const DialogVisibleModal: React.FC<{
               >
                 {message}
               </Typography>
-              <ColorButton
+              <ColorButtonAdd
                 variant="contained"
                 color="primary"
-                className={classes.margin}
+                className={classes.btnAdd}
                 onClick={() => window.location.reload()}
               >
-                OK
-              </ColorButton>
+                Add New Blog
+              </ColorButtonAdd>
+              <ColorButtonShow
+                variant="contained"
+                color="primary"
+                className={classes.btnShow}
+                onClick={() => handleClickShowBlog(blogID)}
+              >
+                Show Added Blog
+              </ColorButtonShow>
             </Paper>
           </div>
         </div>

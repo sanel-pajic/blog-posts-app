@@ -16,7 +16,11 @@ import FavoriteIcon from "@material-ui/icons/Favorite";
 import { CircularLoading } from "./CircularLoading";
 import { useHistory } from "react-router-dom";
 import { BLOGS_QUERY } from "../queries/queries";
-import { REMOVE_BLOG_MUTATION, ADD_BLOG_LIKE } from "../queries/mutations";
+import {
+  REMOVE_BLOG_MUTATION,
+  ADD_BLOG_LIKE,
+  REMOVE_BLOG_LIKE
+} from "../queries/mutations";
 import { useProtectedPath } from "./useProtectedPath";
 import { Redirect } from "react-router";
 import mongoID from "bson-objectid";
@@ -74,32 +78,54 @@ export const BlogList: React.FC = () => {
   const accessGrant = useProtectedPath();
 
   const [removeBlogPost, { error }] = useMutation(REMOVE_BLOG_MUTATION);
-  const [addBlogLike] = useMutation(ADD_BLOG_LIKE, {
-    update: (cache, { data }) => {
-      const previousData: any = cache.readQuery({
-        query: BLOGS_QUERY
-      });
 
-      console.log("DATA QUERY", data, "PREVIOUS QUERY", previousData);
-      const blogIdx: any = previousData.blogPosts.findIndex(
-        (blog: { _id: any }) => {
-          return blog._id === data.addLikeBlog.blogId;
-        }
-      );
+  const [addBlogLike, { error: addBlogLikeError }] = useMutation(
+    ADD_BLOG_LIKE,
+    {
+      update: (cache, { data }) => {
+        const previousData: any = cache.readQuery({
+          query: BLOGS_QUERY
+        });
 
-      cache.writeQuery({
-        query: BLOGS_QUERY,
-        data: R.over(
-          R.lensProp("blogPosts"),
-          R.over(
-            R.lensIndex(blogIdx),
-            R.over(R.lensProp("likes"), R.append(data.addLikeBlog))
-          ),
-          previousData
-        )
-      });
+        // console.log("DATA QUERY", data, "PREVIOUS QUERY", previousData);
+        const blogIdx: any = previousData.blogPosts.findIndex(
+          (blog: { _id: any }) => {
+            return blog._id === data.addLikeBlog.blogId;
+          }
+        );
+
+        cache.writeQuery({
+          query: BLOGS_QUERY,
+          data: R.over(
+            R.lensProp("blogPosts"),
+            R.over(
+              R.lensIndex(blogIdx),
+              R.over(R.lensProp("likes"), R.append(data.addLikeBlog))
+            ),
+            previousData
+          )
+        });
+      }
     }
-  });
+  );
+
+  const [removeBlogLike, { error: errorRemoveBlogLike }] = useMutation(
+    REMOVE_BLOG_LIKE,
+    {
+      update: (cache, { data }) => {
+        const previousData: any = cache.readQuery({
+          query: BLOGS_QUERY
+        });
+
+        console.log(
+          "DATA QUERY REMOVE BLOG LIKE",
+          data,
+          "PREVIOUS QUERY REMOVE BLOG LIKE",
+          previousData
+        );
+      }
+    }
+  );
 
   if (!accessGrant) {
     return <Redirect to="/authorize" />;
@@ -121,27 +147,58 @@ export const BlogList: React.FC = () => {
     );
   }
 
+  if (addBlogLikeError) {
+    console.log("error", addBlogLikeError);
+    return (
+      <div>
+        {addBlogLikeError.graphQLErrors.map(({ message }, i) => (
+          <div key={i}>
+            <ModalError message={message} />
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  if (errorRemoveBlogLike) {
+    console.log("error", errorRemoveBlogLike);
+    return (
+      <div>
+        {errorRemoveBlogLike.graphQLErrors.map(({ message }, i) => (
+          <div key={i}>
+            <ModalError message={message} />
+          </div>
+        ))}
+      </div>
+    );
+  }
+
   const currentUser = currentUserData.toLocaleString();
 
   //@ts-ignore
   const dataBlogPosts = data.blogPosts.map((blog: any) => {
+    const like = blog.likes.find(
+      (like: { userId: string }) => like.userId === currentUser
+    );
     return {
       numLikes: blog.likes.length,
-      isLikedByCurrentUser:
-        blog.likes.findIndex(
-          (like: { userId: string }) => like.userId === currentUser
-        ) >= 0,
-      blogId: blog._id
+      isLikedByCurrentUser: like != null,
+      blogId: blog._id,
+      userLikeID: like ? like._id : null
     };
   });
-  console.log("DATA BLOG POSTS", data);
-  const dataDeleteBlogs = data.blogPosts.map((blog: any) => {
+
+  console.log("DATA BLOG POSTS", dataBlogPosts);
+  console.log("DATA LIST", data);
+
+  const possibleDeleteBlogs = data.blogPosts.map((blog: any) => {
     return {
       user: blog.author,
       possibleDelete: blog.author === currentUser
     };
   });
-  console.log("DATA DELETE BLOG POSTS", dataDeleteBlogs);
+
+  //console.log("DATA DELETE BLOG POSTS", possibleDeleteBlogs);
 
   return (
     <Grid container className={classes.root} spacing={2}>
@@ -199,19 +256,28 @@ export const BlogList: React.FC = () => {
                   <CardActions disableSpacing>
                     <IconButton
                       aria-label="add to favorites"
-                      onClick={() =>
-                        addBlogLike({
-                          variables: {
-                            data: {
-                              _id: mongoID.generate(),
-                              blogId: blog._id
-                            }
-                          }
-                        }).catch(error => {
-                          alert(error);
-                          console.log("ERROR ADD LIKE", error);
-                        })
-                      }
+                      onClick={() => {
+                        dataBlogPosts[index].isLikedByCurrentUser
+                          ? removeBlogLike({
+                              variables: {
+                                _id: dataBlogPosts[index].userLikeID
+                              },
+                              refetchQueries: [{ query: BLOGS_QUERY }]
+                            }).catch(error => {
+                              console.log("ERROR REMOVE BLOG LIKE", error);
+                              alert(error);
+                            })
+                          : addBlogLike({
+                              variables: {
+                                data: {
+                                  _id: mongoID.generate(),
+                                  blogId: blog._id
+                                }
+                              }
+                            }).catch(error => {
+                              console.log("ERROR ADD LIKE", error);
+                            });
+                      }}
                     >
                       <FavoriteIcon
                         color={
@@ -237,13 +303,9 @@ export const BlogList: React.FC = () => {
                         })
                       }
                     >
-                      <DeleteIcon
-                        color={
-                          dataDeleteBlogs[index].possibleDelete
-                            ? "primary"
-                            : "inherit"
-                        }
-                      />
+                      {possibleDeleteBlogs[index].possibleDelete ? (
+                        <DeleteIcon color={"primary"} />
+                      ) : null}
                     </IconButton>
 
                     <Button

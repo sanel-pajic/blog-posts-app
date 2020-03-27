@@ -62,19 +62,34 @@ export const AddBlogPost: React.FC = () => {
   const [description, setDescription] = useState(EditorState.createEmpty());
   const [image, setImageURL] = useState("");
   const [dialogVisible, setDialogVisible] = useState(false);
+  const [blogIDState, setBlogIDState] = useState("");
 
   const { data, loading } = useQuery(BLOGS_QUERY, {
     fetchPolicy: "cache-and-network"
   });
 
-  const [addBlogPost, { error }] = useMutation(ADD_BLOG_MUTATION, {
-    errorPolicy: "all"
-  });
-  if (error) {
-    console.log("error", error);
+  const [addBlogPost, { error: errorAddBlogPost }] = useMutation(
+    ADD_BLOG_MUTATION,
+    {
+      errorPolicy: "all",
+      update: (cache, { data }) => {
+        const previousData: any = cache.readQuery({
+          query: BLOGS_QUERY
+        });
+        console.log(
+          "DATA QUERY ADD BLOG POST",
+          data,
+          "PREVIOUS QUERY ADD BLOG POST",
+          previousData
+        );
+      }
+    }
+  );
+  if (errorAddBlogPost) {
+    console.log("error", errorAddBlogPost);
     return (
       <div>
-        {error.graphQLErrors.map(({ message }, i) => (
+        {errorAddBlogPost.graphQLErrors.map(({ message }, i) => (
           <div key={i}>
             <ModalError message={message} />
           </div>
@@ -194,6 +209,8 @@ export const AddBlogPost: React.FC = () => {
               size="large"
               style={{ width: "8vw", marginLeft: "5vw" }}
               onClick={e => {
+                const idBlog = mongoID.generate();
+                setBlogIDState(idBlog);
                 e.preventDefault();
                 setTitle("");
                 setDescriptionShort("");
@@ -209,7 +226,7 @@ export const AddBlogPost: React.FC = () => {
                   addBlogPost({
                     variables: {
                       data: {
-                        _id: mongoID.generate(),
+                        _id: idBlog,
                         title,
                         description_short,
                         description: draftToHtml(
@@ -235,6 +252,7 @@ export const AddBlogPost: React.FC = () => {
             <DialogVisibleModal
               dialogVisible={dialogVisible}
               message="Successful added new Blog."
+              blogID={blogIDState}
             />
           </div>
         </div>

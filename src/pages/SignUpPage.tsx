@@ -12,11 +12,14 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { Paper } from "@material-ui/core";
 import mongoID from "bson-objectid";
-import { useMutation } from "@apollo/react-hooks";
+import { useMutation, useQuery } from "@apollo/react-hooks";
 import * as yup from "yup";
 import { ADD_MUTATION_USER } from "../queries/mutations";
-import { ModalError } from "../components/ModalError";
 import { useHistory } from "react-router-dom";
+import { store } from "../components/store";
+import { CircularLoading } from "../components/CircularLoading";
+import { USERS_QUERY } from "../queries/queries";
+import * as R from "ramda";
 
 let schema = yup.object().shape({
   first_name: yup
@@ -93,21 +96,34 @@ export const SignUpPage: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const [addUser, { error }] = useMutation(ADD_MUTATION_USER, {
-    errorPolicy: "all"
+  const { data, loading } = useQuery(USERS_QUERY, {
+    fetchPolicy: "cache-and-network"
   });
+
+  const [addUser, { error }] = useMutation(ADD_MUTATION_USER, {
+    update: (cache, { data }) => {
+      const previousData: any = cache.readQuery({
+        query: USERS_QUERY
+      });
+
+      console.log("DATA USERS", data, "PREVIOUS DATA USERS", previousData);
+
+      cache.writeQuery({
+        query: USERS_QUERY,
+        data: R.over(R.lensProp("users"), R.append(data.addUser), previousData)
+      });
+    }
+  });
+
+  if (loading || !data) {
+    return <CircularLoading />;
+  }
+
   if (error) {
     console.log("error", error);
-    return (
-      <div>
-        {error.graphQLErrors.map(({ message }, i) => (
-          <div key={i}>
-            <ModalError message={message} />
-          </div>
-        ))}
-      </div>
-    );
   }
+
+  console.log("DATA USERS", data);
 
   return (
     <Paper className={classes.root}>
@@ -189,7 +205,6 @@ export const SignUpPage: React.FC = () => {
                 setLastName("");
                 setEmail("");
                 setPassword("");
-                history.push("/authorize");
                 try {
                   const valid = schema.validateSync({
                     first_name,
@@ -209,9 +224,23 @@ export const SignUpPage: React.FC = () => {
                         password
                       }
                     }
-                  }).catch(error => {
-                    console.log("ERROR ADD USER", error);
-                  });
+                  })
+                    .then(res => {
+                      console.log("DATA", res);
+                      localStorage.setItem("token", res.data.token);
+                      history.push("/authorize");
+                      store.setState({
+                        authorized: true,
+                        token: res.data.token,
+                        userId: res.data.userId,
+                        tokenExpiration: res.data.tokenExpiration
+                      });
+                      console.log("STORE DATA", store);
+                    })
+                    .catch(error => {
+                      alert(error);
+                      history.push("/signup");
+                    });
                 } catch (error) {
                   alert(error);
                 }

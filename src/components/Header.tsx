@@ -1,13 +1,17 @@
 import React from "react";
 import logo from "../images/blog.jpg";
-import { Link } from "react-router-dom";
+import LinkMaterialUI from "@material-ui/core/Link";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import { Divider, Button, Typography } from "@material-ui/core";
 import Avatar from "@material-ui/core/Avatar";
-import { deepOrange } from "@material-ui/core/colors";
+import { deepOrange, grey } from "@material-ui/core/colors";
 import { CURRENT_USER_QUERY } from "../queries/queries";
 import { useQuery } from "@apollo/react-hooks";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
+import FacebookIcon from "@material-ui/icons/Facebook";
+import TwitterIcon from "@material-ui/icons/Twitter";
+import PinterestIcon from "@material-ui/icons/Pinterest";
+import InstagramIcon from "@material-ui/icons/Instagram";
 
 const useStyles = makeStyles((theme: Theme) => ({
   header: {
@@ -37,6 +41,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 100,
     marginLeft: "1%"
   },
+  buttonMedia: {
+    height: 35,
+    width: 160,
+    marginLeft: "1%"
+  },
   divAvatarUser: {
     display: "flex",
     "& > *": {
@@ -45,6 +54,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   login: {
     marginRight: "1%"
+  },
+  mediaIcon: {
+    width: 35,
+    height: 35,
+    marginLeft: "2%",
+    backgroundColor: "white",
+    "&:hover": {
+      backgroundColor: grey[300]
+    },
+    borderRadius: 35
   }
 }));
 
@@ -63,9 +82,23 @@ export const Header: React.FC = () => {
     return (
       <div style={{ overflowX: "hidden" }}>
         <header className={classes.header}>
-          <Button variant="outlined" className={classes.button}>
-            SUBSCRIBE
-          </Button>
+          <div className={classes.buttonMedia}>
+            <LinkMaterialUI href="https://www.facebook.com/" color="inherit">
+              <FacebookIcon className={classes.mediaIcon} />
+            </LinkMaterialUI>
+
+            <LinkMaterialUI href="https://twitter.com/" color="inherit">
+              <TwitterIcon className={classes.mediaIcon} />
+            </LinkMaterialUI>
+
+            <LinkMaterialUI href="https://www.pinterest.com/" color="inherit">
+              <PinterestIcon className={classes.mediaIcon} />
+            </LinkMaterialUI>
+
+            <LinkMaterialUI href="https://www.instagram.com/" color="inherit">
+              <InstagramIcon className={classes.mediaIcon} />
+            </LinkMaterialUI>
+          </div>
           <Link to="/">
             <img src={logo} alt="Blog Logo" className="logo" />
           </Link>
@@ -91,9 +124,24 @@ export const Header: React.FC = () => {
   return (
     <div style={{ overflow: "auto" }}>
       <header className={classes.header}>
-        <Button variant="outlined" className={classes.button}>
-          SUBSCRIBE
-        </Button>
+        <div className={classes.buttonMedia}>
+          <LinkMaterialUI href="https://www.facebook.com/" color="inherit">
+            <FacebookIcon className={classes.mediaIcon} />
+          </LinkMaterialUI>
+
+          <LinkMaterialUI href="https://twitter.com/" color="inherit">
+            <TwitterIcon className={classes.mediaIcon} />
+          </LinkMaterialUI>
+
+          <LinkMaterialUI href="https://www.pinterest.com/" color="inherit">
+            <PinterestIcon className={classes.mediaIcon} />
+          </LinkMaterialUI>
+
+          <LinkMaterialUI href="https://www.instagram.com/" color="inherit">
+            <InstagramIcon className={classes.mediaIcon} />
+          </LinkMaterialUI>
+        </div>
+
         <Link to="/">
           <img src={logo} alt="Blog Logo" className="logo" />
         </Link>

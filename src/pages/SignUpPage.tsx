@@ -19,7 +19,6 @@ import { useHistory } from "react-router-dom";
 import { store } from "../components/store";
 import { CircularLoading } from "../components/CircularLoading";
 import { USERS_QUERY } from "../queries/queries";
-import * as R from "ramda";
 
 let schema = yup.object().shape({
   first_name: yup
@@ -101,18 +100,7 @@ export const SignUpPage: React.FC = () => {
   });
 
   const [addUser, { error }] = useMutation(ADD_MUTATION_USER, {
-    update: (cache, { data }) => {
-      const previousData: any = cache.readQuery({
-        query: USERS_QUERY
-      });
-
-      console.log("DATA USERS", data, "PREVIOUS DATA USERS", previousData);
-
-      cache.writeQuery({
-        query: USERS_QUERY,
-        data: R.over(R.lensProp("users"), R.append(data.addUser), previousData)
-      });
-    }
+    refetchQueries: [{ query: USERS_QUERY }]
   });
 
   if (loading || !data) {
@@ -227,13 +215,13 @@ export const SignUpPage: React.FC = () => {
                   })
                     .then(res => {
                       console.log("DATA", res);
-                      localStorage.setItem("token", res.data.token);
+                      localStorage.setItem("token", res.data.addUser.token);
                       history.push("/authorize");
                       store.setState({
                         authorized: true,
-                        token: res.data.token,
-                        userId: res.data.userId,
-                        tokenExpiration: res.data.tokenExpiration
+                        token: res.data.addUser.token,
+                        userId: res.data.addUser.userId,
+                        tokenExpiration: res.data.addUser.tokenExpiration
                       });
                       console.log("STORE DATA", store);
                     })

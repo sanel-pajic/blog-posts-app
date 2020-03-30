@@ -172,17 +172,14 @@ export const Home: React.FC = () => {
           <Grid item xs={12}>
             <Grid container justify="center" spacing={5}>
               {threeHighestLike.map(
-                (
-                  blog: {
-                    blogID: string;
-                    title: string;
-                    description_short: string;
-                    description: string;
-                    image: string;
-                    likes: any;
-                  },
-                  index: any
-                ) => (
+                (blog: {
+                  blogID: string;
+                  title: string;
+                  description_short: string;
+                  description: string;
+                  image: string;
+                  likes: any;
+                }) => (
                   <Grid key={blog.blogID} item>
                     <Card className={classes.card}>
                       <CardHeader

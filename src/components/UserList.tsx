@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import { CircularLoading } from "./CircularLoading";
 import { ErrorLoading } from "./ErrorLoading";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -18,16 +18,24 @@ import { Redirect } from "react-router";
 import { USERS_QUERY } from "../queries/queries";
 import { REMOVE_USER_MUTATION, UPDATE_USER } from "../queries/mutations";
 import CheckIcon from "@material-ui/icons/Check";
+import { green, red } from "@material-ui/core/colors";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
 
-const useStyles = makeStyles({
-  root: {
-    width: "60%",
-    overflowX: "auto"
-  },
-  table: {
-    minWidth: 650
-  }
-});
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      width: "70%",
+      overflowX: "auto"
+    },
+    table: {
+      minWidth: 650
+    }
+  })
+);
 
 export const UserList: React.FC = () => {
   const classes = useStyles();
@@ -35,6 +43,7 @@ export const UserList: React.FC = () => {
   const [editedFirstName, setEditedFirstName] = useState("");
   const [editedLastName, setEditedLastName] = useState("");
   const [editedEmail, setEditedEmail] = useState("");
+  const [isAdmin, setIsAdmin] = React.useState("false");
   const { data, loading } = useQuery(USERS_QUERY, {
     fetchPolicy: "cache-and-network"
   });
@@ -99,6 +108,14 @@ export const UserList: React.FC = () => {
     step: 300
   };
 
+  const handleChangeIsAdmin = (
+    event: React.ChangeEvent<{ value: unknown }>
+  ) => {
+    setIsAdmin(event.target.value as string);
+  };
+
+  // console.log("USERS DATA", data);
+
   return (
     <div
       style={{
@@ -130,6 +147,12 @@ export const UserList: React.FC = () => {
                   E-mail
                 </Typography>
               </TableCell>
+              <TableCell align="center">
+                {" "}
+                <Typography variant="h5" style={{ color: green[600] }}>
+                  Is Admin
+                </Typography>
+              </TableCell>
               <TableCell align="right">
                 {" "}
                 <Typography variant="h5" color="error">
@@ -151,6 +174,7 @@ export const UserList: React.FC = () => {
                 first_name: string;
                 last_name: string;
                 email: string;
+                isAdmin: boolean;
               }) => (
                 <TableRow key={user._id}>
                   {editingID !== user._id ? (
@@ -195,6 +219,35 @@ export const UserList: React.FC = () => {
                     </TableCell>
                   )}
 
+                  {editingID !== user._id ? (
+                    <TableCell component="th" scope="row" align="center">
+                      {user.isAdmin === true ? (
+                        <Typography style={{ color: green[500] }}>
+                          YES
+                        </Typography>
+                      ) : (
+                        <Typography style={{ color: red[500] }}>NO</Typography>
+                      )}
+                    </TableCell>
+                  ) : (
+                    <TableCell>
+                      <FormControl fullWidth>
+                        <InputLabel style={{ marginRight: 15 }} id={user._id}>
+                          Is Admin
+                        </InputLabel>
+                        <Select
+                          variant="outlined"
+                          value={isAdmin}
+                          onChange={handleChangeIsAdmin}
+                        >
+                          <MenuItem value={"true"}>YES</MenuItem>
+                          <MenuItem value={"false"}>NO</MenuItem>
+                        </Select>
+                        <FormHelperText>Choose admin option.</FormHelperText>
+                      </FormControl>
+                    </TableCell>
+                  )}
+
                   <TableCell align="right">
                     <IconButton>
                       {editingID === user._id ? (
@@ -206,7 +259,8 @@ export const UserList: React.FC = () => {
                                   _id: user._id,
                                   first_name: editedFirstName,
                                   last_name: editedLastName,
-                                  email: editedEmail
+                                  email: editedEmail,
+                                  isAdmin: isAdmin === "true" ? true : false
                                 }
                               }
                             }).catch(error => console.log("error", error));
@@ -220,6 +274,7 @@ export const UserList: React.FC = () => {
                             setEditedFirstName(user.first_name);
                             setEditedLastName(user.last_name);
                             setEditedEmail(user.email);
+                            setIsAdmin(user.isAdmin ? "true" : "false");
                           }}
                         />
                       )}

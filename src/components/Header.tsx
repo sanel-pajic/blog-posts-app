@@ -6,12 +6,14 @@ import { Divider, Button, Typography } from "@material-ui/core";
 import Avatar from "@material-ui/core/Avatar";
 import { deepOrange, grey } from "@material-ui/core/colors";
 import { CURRENT_USER_QUERY } from "../queries/queries";
-import { useQuery } from "@apollo/react-hooks";
+import { useQuery, useApolloClient } from "@apollo/react-hooks";
 import { useHistory, Link } from "react-router-dom";
 import FacebookIcon from "@material-ui/icons/Facebook";
 import TwitterIcon from "@material-ui/icons/Twitter";
 import PinterestIcon from "@material-ui/icons/Pinterest";
 import InstagramIcon from "@material-ui/icons/Instagram";
+import { store } from "./store";
+import { ApolloClient } from "apollo-boost";
 
 const useStyles = makeStyles((theme: Theme) => ({
   header: {
@@ -27,14 +29,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   avatar: {
     color: theme.palette.getContrastText(deepOrange[500]),
     backgroundColor: deepOrange[400],
-    height: 50,
-    width: 50,
-    fontSize: "1.7rem",
+    height: 40,
+    width: 40,
+    fontSize: "1.3rem",
     marginRight: "3%"
   },
   typography: {
     color: "#212121",
-    fontSize: "1.6rem"
+    fontSize: "1.4rem",
+    height: 50,
+    marginTop: 15
   },
   button: {
     height: 35,
@@ -46,12 +50,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 160,
     marginLeft: "1%"
   },
-  divAvatarUser: {
-    display: "flex",
-    "& > *": {
-      margin: theme.spacing(1)
-    }
-  },
+
   login: {
     marginRight: "1%"
   },
@@ -64,12 +63,30 @@ const useStyles = makeStyles((theme: Theme) => ({
       backgroundColor: grey[300]
     },
     borderRadius: 35
+  },
+  margin: {
+    width: 120,
+    height: 35,
+    alignSelf: "center"
   }
 }));
+
+function logout(apolloclient: ApolloClient<any>) {
+  store.setState({
+    authorized: false,
+    token: "",
+    userId: "",
+    tokenExpiration: 0
+  });
+  localStorage.clear();
+  window.location.reload();
+  apolloclient.clearStore();
+}
 
 export const Header: React.FC = () => {
   const history = useHistory();
   const classes = useStyles();
+  const apolloclient = useApolloClient();
 
   function handleClick() {
     history.push("/authorize");
@@ -145,16 +162,38 @@ export const Header: React.FC = () => {
         <Link to="/">
           <img src={logo} alt="Blog Logo" className="logo" />
         </Link>
-        <div className={classes.divAvatarUser}>
-          <Avatar className={classes.avatar}>
-            {letterFN}
-            {letterLN}
-          </Avatar>
-          <div style={{ marginTop: "5%" }}>
+        <div
+          style={{
+            marginRight: 20,
+            width: 200,
+            display: "flex",
+            flexDirection: "column"
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center"
+            }}
+          >
+            {" "}
+            <Avatar className={classes.avatar}>
+              {letterFN}
+              {letterLN}
+            </Avatar>
             <Typography className={classes.typography}>
               {firstName} {lastName}
             </Typography>
           </div>
+
+          <Button
+            variant="outlined"
+            color="default"
+            className={classes.margin}
+            onClick={() => logout(apolloclient)}
+          >
+            Logout
+          </Button>
         </div>
       </header>
       <Divider variant="fullWidth" />

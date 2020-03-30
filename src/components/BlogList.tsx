@@ -188,8 +188,8 @@ export const BlogList: React.FC = () => {
     };
   });
 
-  console.log("DATA BLOG POSTS", dataBlogPosts);
-  console.log("DATA LIST", data);
+  // console.log("DATA BLOG POSTS", dataBlogPosts);
+  // console.log("DATA LIST", data);
 
   const possibleDeleteBlogs = data.blogPosts.map((blog: any) => {
     return {

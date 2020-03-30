@@ -154,6 +154,7 @@ export const UPDATE_USER = gql`
       first_name
       last_name
       email
+      isAdmin
     }
   }
 `;

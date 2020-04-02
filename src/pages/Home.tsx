@@ -200,7 +200,7 @@ export const Home: React.FC = () => {
                       <CardMedia
                         className={classes.media}
                         image={`${blog.image}`}
-                        title="Blog Po  t Image"
+                        title="Blog Post Image"
                       />
                       <CardContent>
                         <Typography

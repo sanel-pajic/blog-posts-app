@@ -1,6 +1,11 @@
 import React from "react";
 import { Button, Typography } from "@material-ui/core";
 
+require("dotenv").config();
+
+const CLOUD_NAME = process.env.REACT_APP_CLOUD_NAME;
+const UPLOAD_PRESET = process.env.REACT_APP_UPLOAD_PRESET;
+
 type Props = {
   onUploadSuccess: (image: string) => void;
 };
@@ -9,8 +14,8 @@ export const CloudinaryWidget: React.FC<Props> = ({ onUploadSuccess }) => {
   // @ts-ignore
   const widget = cloudinary.createUploadWidget(
     {
-      cloudName: "dz2f3jhr6",
-      uploadPreset: "df3ezjvs"
+      cloudName: CLOUD_NAME,
+      uploadPreset: UPLOAD_PRESET
     },
     (error: any, result: any) => {
       if (!error && result && result.event === "success") {

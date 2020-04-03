@@ -207,7 +207,7 @@ export const AddBlogPost: React.FC = () => {
               color="primary"
               variant="contained"
               size="large"
-              style={{ width: "8vw", marginLeft: "5vw" }}
+              style={{ width: 140, marginLeft: "5vw" }}
               onClick={e => {
                 const idBlog = mongoID.generate();
                 setBlogIDState(idBlog);

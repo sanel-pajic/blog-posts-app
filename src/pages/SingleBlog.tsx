@@ -158,7 +158,7 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
 
   const currentUser = currentUserData.toLocaleString();
 
-  console.log("CURRENT USER", currentUser);
+  // console.log("CURRENT USER", currentUser);
 
   //@ts-ignore
 
@@ -167,7 +167,7 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
       (like: { userId: string }) => like.userId === currentUser
     ) >= 0;
 
-  console.log("SINGLE BLOG LIKE", likeSingleBlog);
+  // console.log("SINGLE BLOG LIKE", likeSingleBlog);
 
   const like = data.blogPost.likes.find((like: any) => {
     return like.userId === currentUser;
@@ -179,7 +179,7 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
     userLikeID: like ? like._id : null
   };
 
-  console.log("DATA BLOG", dataBLOG);
+  // console.log("DATA BLOG", dataBLOG);
 
   return (
     <div
@@ -294,6 +294,7 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
             title="Blog Post Image"
             className={classes.media}
             style={{ width: "90%", marginBottom: "1rem", marginTop: "1rem" }}
+            component="div"
           />
         </div>
         <Typography

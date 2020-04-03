@@ -76,6 +76,8 @@ export const ImageCarousel: React.FC = () => {
       }}
     >
       <Gallery
+        enableControls={true}
+        enableKeyboard={true}
         index={index}
         onRequestChange={i => {
           setIndex(i);

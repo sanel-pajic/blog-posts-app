@@ -2,7 +2,7 @@ import React from "react";
 import { Paper, Typography } from "@material-ui/core";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import Avatar from "@material-ui/core/Avatar";
-import image from "../images/dog.jpg";
+import image from "../images/blog1.jpg";
 import { useQuery } from "@apollo/react-hooks";
 import { CURRENT_USER_QUERY } from "../queries/queries";
 import { CircularLoading } from "./CircularLoading";
@@ -16,10 +16,10 @@ const useStyles = makeStyles((theme: Theme) =>
       }
     },
     large: {
-      width: theme.spacing(20),
-      height: theme.spacing(20),
-      marginTop: "5%",
-      marginBottom: "15%"
+      width: 250,
+      height: 200,
+      marginTop: "4%",
+      marginBottom: "4%"
     }
   })
 );
@@ -45,16 +45,20 @@ export const GreetingUserComponent: React.FC = () => {
     >
       <Paper
         style={{
-          width: "30%",
-          height: "50vh",
+          width: "62vw",
+          height: "60vh",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          flexDirection: "column"
+          flexDirection: "column",
+          marginTop: "1%"
         }}
       >
-        <Typography variant="h3">
-          Hello {firstName} {lastName}
+        <Typography variant="h5" color="textSecondary">
+          Successfully Signed Up!
+        </Typography>
+        <Typography variant="h4">
+          Nice to meet you {firstName} {lastName}
         </Typography>
         <Avatar alt="User Image" src={image} className={classes.large} />
         <Typography variant="h5" color="textSecondary">

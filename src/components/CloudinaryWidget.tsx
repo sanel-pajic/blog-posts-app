@@ -39,9 +39,37 @@ export const CloudinaryWidget: React.FC<Props> = ({ onUploadSuccess }) => {
         alignItems: "center"
       }}
     >
-      <Typography variant="h6" style={{ marginBottom: "4%" }}>
-        Here you can upload a image for your blog.
-      </Typography>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          marginTop: 20,
+          marginBottom: 40
+        }}
+      >
+        <img
+          src="https://res.cloudinary.com/dz2f3jhr6/image/upload/v1576156104/samples/cloudinary-icon.png"
+          alt="img-widget"
+          style={{ width: 70, height: 50, marginLeft: 10, marginRight: 20 }}
+        />
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center"
+          }}
+        >
+          <Typography variant="h6" style={{}}>
+            Here you can upload a image
+          </Typography>
+          <Typography variant="h6" style={{}}>
+            for your blog.
+          </Typography>
+        </div>
+      </div>
+
       <Button
         onClick={showWidget}
         variant="outlined"

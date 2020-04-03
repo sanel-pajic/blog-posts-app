@@ -104,7 +104,8 @@ export const LoginPage: React.FC = () => {
         alignItems: "center",
         marginBottom: "40vh",
         marginTop: "1%",
-        width: 1000
+        width: 1000,
+        minWidth: 500
       }}
     >
       <Grid container component="main" className={classes.root}>

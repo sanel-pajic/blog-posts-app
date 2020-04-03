@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: lightBlue[400]
   },
   success: {
-    backgroundColor: green[600]
+    backgroundColor: green[500]
   },
   icon: {
     fontSize: 35
@@ -29,6 +29,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: "flex",
     alignItems: "center",
     fontSize: 18
+  },
+  snackbarDiv: {
+    width: "62vw",
+    minWidth: 500,
+    marginBottom: "2vh"
   }
 }));
 
@@ -44,16 +49,18 @@ function MySnackbarContentWrapper(props: Props) {
   const Icon = variantIcon[variant];
 
   return (
-    <SnackbarContent
-      className={clsx(classes[variant], className)}
-      aria-describedby="client-snackbar"
-      message={
-        <span id="client-snackbar" className={classes.message}>
-          <Icon className={clsx(classes.icon, classes.iconVariant)} />
-          {message}
-        </span>
-      }
-    />
+    <div className={classes.snackbarDiv}>
+      <SnackbarContent
+        className={clsx(classes[variant], className)}
+        aria-describedby="client-snackbar"
+        message={
+          <span id="client-snackbar" className={classes.message}>
+            <Icon className={clsx(classes.icon, classes.iconVariant)} />
+            {message}
+          </span>
+        }
+      />
+    </div>
   );
 }
 type PropsMessage = {

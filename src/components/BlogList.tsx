@@ -232,6 +232,7 @@ export const BlogList: React.FC = () => {
                     className={classes.media}
                     image={`${blog.image}`}
                     title="Blog Post Image"
+                    component="div"
                   />
                   <CardContent>
                     <Typography

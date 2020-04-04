@@ -1,6 +1,5 @@
 import gql from "graphql-tag";
 
-// ARTICLE MUTATIONS
 // Mutation for add new article
 export const ADD_MUTATION_ARTICLE = gql`
   mutation($data: ComponentArticleInput!) {
@@ -16,7 +15,7 @@ export const REMOVE_ARTICLE_MUTATION = gql`
     }
   }
 `;
-// BLOG POST MUTATIONS
+
 // Mutation for add new blog post
 export const ADD_BLOG_MUTATION = gql`
   mutation($data: BlogPostInput!) {

@@ -1,7 +1,7 @@
 import gql from "graphql-tag";
 
-// BLOG POST QUERIES
 // Query for displaying all blog posts
+
 export const BLOGS_QUERY = gql`
   query {
     blogPosts {
@@ -19,7 +19,7 @@ export const BLOGS_QUERY = gql`
     }
   }
 `;
-// ARTICLES QUERIES
+
 // Query for displaying all articles component
 export const ARTICLES_QUERY = gql`
   query {
@@ -32,8 +32,9 @@ export const ARTICLES_QUERY = gql`
     }
   }
 `;
-//USERS QUERIES
+
 // Query for displaying all users
+
 export const USERS_QUERY = gql`
   query {
     users {
@@ -86,6 +87,7 @@ export const LIKES_QUERY = gql`
   }
 `;
 
+// Query for displaying all comments
 export const COMMENTS_QUERY = gql`
   query($postId: ID!) {
     comments(postId: $postId) {
@@ -103,6 +105,7 @@ export const COMMENTS_QUERY = gql`
   }
 `;
 
+// Query for single blog
 export const SINGLE_BLOG_QUERY = gql`
   query($postId: ID!) {
     blogPost(id: $postId) {

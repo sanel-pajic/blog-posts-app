@@ -105,7 +105,7 @@ export const AddBlogPost: React.FC = () => {
     // console.log(draftToHtml(raw));
   };
 
-  // console.log("MUTATION DATA", mutationData);
+  console.log("MUTATION DATA", mutationData);
 
   return (
     <div

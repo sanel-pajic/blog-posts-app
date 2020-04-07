@@ -8,7 +8,7 @@ import {
   Avatar,
   Typography,
   Divider,
-  TextField
+  TextField,
 } from "@material-ui/core";
 import Like from "@material-ui/icons/ThumbUpAltOutlined";
 import { useQuery, useMutation } from "@apollo/react-hooks";
@@ -22,11 +22,10 @@ import {
   ADD_COMMENT_LIKE,
   REMOVE_COMMENT_MUTATION,
   REMOVE_COMMENT_LIKE,
-  UPDATE_COMMENT
+  UPDATE_COMMENT,
 } from "../queries/mutations";
 import mongoID from "bson-objectid";
 import { FetchQueryAuthor } from "./FetchQueryAuthor";
-import { ModalError } from "./ModalError";
 import { CommentLikeData } from "./CommentLikeData";
 import { COMMENTS_QUERY } from "../queries/queries";
 import * as R from "ramda";
@@ -43,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) =>
       minWidth: 300,
       marginTop: "1%",
       marginBottom: "5%",
-      boxShadow: "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)"
+      boxShadow: "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)",
     },
     green: {
       color: "#fff",
@@ -51,7 +50,7 @@ const useStyles = makeStyles((theme: Theme) =>
       height: 45,
       width: 45,
       marginTop: "1rem",
-      marginLeft: "1rem"
+      marginLeft: "1rem",
     },
     textUser: {
       color: "#e65100",
@@ -60,23 +59,23 @@ const useStyles = makeStyles((theme: Theme) =>
       position: "relative",
       left: "4.5rem",
       bottom: "2.7rem",
-      width: "fit-content"
+      width: "fit-content",
     },
     textDateCreation: {
       position: "relative",
       left: "4.5rem",
-      bottom: "2.7rem"
+      bottom: "2.7rem",
     },
     numberOfLikes: {
       fontSize: 20,
       marginLeft: "0.8rem",
-      fontWeight: "bold"
+      fontWeight: "bold",
     },
     textComment: {
       marginLeft: "1rem",
       marginRight: "0.6rem",
-      paddingLeft: "0.2rem"
-    }
+      paddingLeft: "0.2rem",
+    },
   })
 );
 
@@ -89,7 +88,7 @@ export const CommentComponent: React.FC<{
   const [editedText, setEditedText] = useState("");
   const { data, loading } = useQuery(COMMENTS_QUERY, {
     fetchPolicy: "cache-and-network",
-    variables: { postId }
+    variables: { postId },
   });
   const [removeComment, { error: errorRemoveComment }] = useMutation(
     REMOVE_COMMENT_MUTATION,
@@ -97,7 +96,7 @@ export const CommentComponent: React.FC<{
       update: (cache, { data }) => {
         const previousData: any = cache.readQuery({
           query: COMMENTS_QUERY,
-          variables: { postId }
+          variables: { postId },
         });
 
         console.log(
@@ -106,14 +105,14 @@ export const CommentComponent: React.FC<{
           "PREVIOUS QUERY REMOVE COMMENT",
           previousData
         );
-      }
+      },
     }
   );
   const [addCommentLike, { error }] = useMutation(ADD_COMMENT_LIKE, {
     update: (cache, { data }) => {
       const previousData: any = cache.readQuery({
         query: COMMENTS_QUERY,
-        variables: { postId }
+        variables: { postId },
       });
 
       console.log("DATA QUERY", data, "PREVIOUS QUERY", previousData);
@@ -133,9 +132,9 @@ export const CommentComponent: React.FC<{
             R.over(R.lensProp("likes"), R.append(data.addLikeComment))
           ),
           previousData
-        )
+        ),
       });
-    }
+    },
   });
   const [removeCommentLike, { error: errorRemoveCommentLike }] = useMutation(
     REMOVE_COMMENT_LIKE,
@@ -143,7 +142,7 @@ export const CommentComponent: React.FC<{
       update: (cache, { data }) => {
         const previousData: any = cache.readQuery({
           query: COMMENTS_QUERY,
-          variables: { postId }
+          variables: { postId },
         });
 
         console.log(
@@ -152,7 +151,7 @@ export const CommentComponent: React.FC<{
           "PREVIOUS QUERY REMOVE COMMENT LIKE",
           previousData
         );
-      }
+      },
     }
   );
 
@@ -162,7 +161,7 @@ export const CommentComponent: React.FC<{
       update: (cache, { data }) => {
         const previousData: any = cache.readQuery({
           query: COMMENTS_QUERY,
-          variables: { postId }
+          variables: { postId },
         });
 
         console.log(
@@ -187,23 +186,14 @@ export const CommentComponent: React.FC<{
               R.set(R.lensProp("text"), data.updateComment.text)
             ),
             previousData
-          )
+          ),
         });
-      }
+      },
     }
   );
 
   if (error) {
     console.log("error", error);
-    return (
-      <div>
-        {error.graphQLErrors.map(({ message }, i) => (
-          <div key={i}>
-            <ModalError message={message} />
-          </div>
-        ))}
-      </div>
-    );
   }
 
   if (errorRemoveComment) {
@@ -234,7 +224,7 @@ export const CommentComponent: React.FC<{
       numLikes: comment.likes.length,
       isLikedByCurrentUser: like != null,
       commentId: comment._id,
-      userLikeID: like ? like._id : null
+      userLikeID: like ? like._id : null,
     };
   });
   // console.log("DATA LIKE COMMENTS", dataLikeComments);
@@ -243,7 +233,7 @@ export const CommentComponent: React.FC<{
   const possibleDeleteEditComments = data.comments.map((comment: any) => {
     return {
       user: comment.author,
-      possibleDeleteEdit: comment.author === currentUser
+      possibleDeleteEdit: comment.author === currentUser,
     };
   });
   // console.log("POSSIBLE DELETE COMMENTS", possibleDeleteEditComments);
@@ -274,7 +264,7 @@ export const CommentComponent: React.FC<{
               style={{
                 display: "flex",
                 justifyContent: "center",
-                alignItems: "center"
+                alignItems: "center",
               }}
             >
               <Paper className={classes.root1}>
@@ -284,7 +274,7 @@ export const CommentComponent: React.FC<{
                     <PersonIcon
                       style={{
                         height: 40,
-                        width: 40
+                        width: 40,
                       }}
                     />
                   </Avatar>
@@ -295,16 +285,16 @@ export const CommentComponent: React.FC<{
                         left: 380,
                         top: 5,
                         width: 50,
-                        height: 50
+                        height: 50,
                       }}
                       onClick={() => {
                         console.log("COMMENT ID U REMOVE COMMENT", comment._id);
                         removeComment({
                           variables: { _id: comment._id },
                           refetchQueries: [
-                            { query: COMMENTS_QUERY, variables: { postId } }
-                          ]
-                        }).catch(error => {
+                            { query: COMMENTS_QUERY, variables: { postId } },
+                          ],
+                        }).catch((error) => {
                           console.log("ERROR REMOVE COMMENT", error);
                           alert(error);
                         });
@@ -329,7 +319,7 @@ export const CommentComponent: React.FC<{
                         style={{
                           color: "#e65100",
                           fontSize: 18,
-                          marginLeft: "0.5rem"
+                          marginLeft: "0.5rem",
                         }}
                       >
                         says...
@@ -373,7 +363,7 @@ export const CommentComponent: React.FC<{
                     padding: "0.2%",
                     display: "flex",
                     alignItems: "center",
-                    justifyContent: "space-between"
+                    justifyContent: "space-between",
                   }}
                 >
                   <div
@@ -381,7 +371,7 @@ export const CommentComponent: React.FC<{
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center",
-                      marginLeft: 10
+                      marginLeft: 10,
                     }}
                   >
                     <IconButton
@@ -389,12 +379,15 @@ export const CommentComponent: React.FC<{
                         dataLikeComments[index].isLikedByCurrentUser
                           ? removeCommentLike({
                               variables: {
-                                _id: dataLikeComments[index].userLikeID
+                                _id: dataLikeComments[index].userLikeID,
                               },
                               refetchQueries: [
-                                { query: COMMENTS_QUERY, variables: { postId } }
-                              ]
-                            }).catch(error => {
+                                {
+                                  query: COMMENTS_QUERY,
+                                  variables: { postId },
+                                },
+                              ],
+                            }).catch((error) => {
                               console.log("ERROR REMOVE COMMENT", error);
                               alert(error);
                             })
@@ -402,12 +395,15 @@ export const CommentComponent: React.FC<{
                               variables: {
                                 data: {
                                   _id: mongoID.generate(),
-                                  commentId: comment._id
-                                }
-                              }
-                            }).catch(error => {
-                              console.log("ERROR ADD LIKE", error);
-                            });
+                                  commentId: comment._id,
+                                },
+                              },
+                            })
+                              .catch((error) => {
+                                console.log("ERROR ADD LIKE", error);
+                                alert(error);
+                              })
+                              .finally(() => window.location.reload());
                       }}
                     >
                       <Like
@@ -432,35 +428,41 @@ export const CommentComponent: React.FC<{
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center",
-                      marginRight: 10
+                      marginRight: 10,
                     }}
                   >
                     <div>
                       {possibleDeleteEditComments[index].possibleDeleteEdit ? (
                         <IconButton>
                           {editingID === comment._id ? (
-                            <CheckIcon
-                              color="primary"
-                              onClick={() => {
-                                editComment({
-                                  variables: {
-                                    data: {
-                                      _id: comment._id,
-                                      text: editedText
-                                    }
-                                  }
-                                }).catch(error => console.log("error", error));
-                                setEditingID(null);
-                              }}
-                            />
+                            <div>
+                              <CheckIcon
+                                color="primary"
+                                onClick={() => {
+                                  editComment({
+                                    variables: {
+                                      data: {
+                                        _id: comment._id,
+                                        text: editedText,
+                                      },
+                                    },
+                                  }).catch((error) =>
+                                    console.log("error", error)
+                                  );
+                                  setEditingID(null);
+                                }}
+                              />
+                            </div>
                           ) : (
-                            <EditIcon
-                              onClick={() => {
-                                setEditingID(comment._id);
-                                setEditedText(comment.text);
-                              }}
-                              color="primary"
-                            />
+                            <div>
+                              <EditIcon
+                                onClick={() => {
+                                  setEditingID(comment._id);
+                                  setEditedText(comment.text);
+                                }}
+                                color="primary"
+                              />
+                            </div>
                           )}
                         </IconButton>
                       ) : null}
@@ -468,7 +470,7 @@ export const CommentComponent: React.FC<{
                     <Divider
                       style={{
                         transform: "rotate(90deg)",
-                        width: 35
+                        width: 35,
                       }}
                     />
                     <IconButton>

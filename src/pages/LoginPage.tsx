@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
@@ -16,29 +15,41 @@ import { useMutation } from "@apollo/react-hooks";
 import { LOGIN_MUTATION } from "../queries/mutations";
 import { useHistory } from "react-router-dom";
 import { store } from "../components/store";
-import { ModalError } from "../components/ModalError";
+import { ValidationTextField } from "./SignUpPage";
 
 function Copyright() {
   return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {"Copyright © "}
-      <Link
-        color="primary"
-        href="https://react-beach-resort-sanel-recording.netlify.com/"
+    <div>
+      <Typography variant="body2" color="textSecondary" align="center">
+        {"Copyright © "}
+        <Link
+          color="primary"
+          href="https://react-beach-resort-sanel-recording.netlify.com/"
+        >
+          Sanel Pajic
+        </Link>{" "}
+        {new Date().getFullYear()}
+        {"."}
+      </Typography>
+      <Typography
+        variant="body2"
+        color="textSecondary"
+        align="center"
+        style={{ position: "relative", top: 30 }}
       >
-        Sanel Pajic
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
+        <Link color="primary" href="/">
+          Go Back
+        </Link>
+      </Typography>
+    </div>
   );
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     height: "45vh",
     width: "100%",
-    marginTop: "1%"
+    marginTop: "1%",
   },
   image: {
     backgroundImage: "url(https://source.unsplash.com/random)",
@@ -48,7 +59,7 @@ const useStyles = makeStyles(theme => ({
         ? theme.palette.grey[900]
         : theme.palette.grey[50],
     backgroundSize: "cover",
-    backgroundPosition: "center"
+    backgroundPosition: "center",
   },
   paper: {
     padding: "10%",
@@ -57,20 +68,20 @@ const useStyles = makeStyles(theme => ({
     alignItems: "center",
     justifyContent: "space-around",
     width: "100%",
-    margin: "2%"
+    margin: "2%",
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main
+    backgroundColor: theme.palette.secondary.main,
   },
   form: {
     width: "100%",
-    marginTop: theme.spacing(1)
+    marginTop: theme.spacing(1),
   },
   submitButton: {
     margin: theme.spacing(3, 0, 2),
-    width: "68%"
-  }
+    width: "68%",
+  },
 }));
 
 export const LoginPage: React.FC = () => {
@@ -84,16 +95,6 @@ export const LoginPage: React.FC = () => {
 
   if (error) {
     console.log("error", error);
-
-    return (
-      <div>
-        {error.graphQLErrors.map(({ message }, i) => (
-          <div key={i}>
-            <ModalError message={message} />
-          </div>
-        ))}
-      </div>
-    );
   }
 
   return (
@@ -105,7 +106,7 @@ export const LoginPage: React.FC = () => {
         marginBottom: "40vh",
         marginTop: "1%",
         width: 1000,
-        minWidth: 500
+        minWidth: 500,
       }}
     >
       <Grid container component="main" className={classes.root}>
@@ -120,31 +121,32 @@ export const LoginPage: React.FC = () => {
               Sign in
             </Typography>
             <form className={classes.form} noValidate>
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
+              <ValidationTextField
                 autoComplete="email"
+                margin="normal"
+                name="email"
+                label="Email Address"
+                required
+                variant="outlined"
+                id="email"
+                fullWidth
                 autoFocus
                 value={email}
-                onChange={e => setEmail(e.target.value)}
+                onChange={(e) => setEmail(e.target.value)}
               />
-              <TextField
-                variant="outlined"
+              <ValidationTextField
+                autoComplete="current-password"
                 margin="normal"
-                required
-                fullWidth
                 name="password"
                 label="Password"
                 type="password"
+                required
+                variant="outlined"
                 id="password"
-                autoComplete="current-password"
+                fullWidth
+                autoFocus
                 value={password}
-                onChange={e => setPassword(e.target.value)}
+                onChange={(e) => setPassword(e.target.value)}
               />
               <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
@@ -154,7 +156,7 @@ export const LoginPage: React.FC = () => {
                 style={{
                   display: "flex",
                   justifyContent: "center",
-                  alignItems: "center"
+                  alignItems: "center",
                 }}
               >
                 <Button
@@ -163,17 +165,17 @@ export const LoginPage: React.FC = () => {
                   variant="contained"
                   color="primary"
                   className={classes.submitButton}
-                  onClick={e => {
+                  onClick={(e) => {
                     e.preventDefault();
                     setEmail("");
                     setPassword("");
                     login({
                       variables: {
                         email: email,
-                        password: password
-                      }
+                        password: password,
+                      },
                     })
-                      .then(res => {
+                      .then((res) => {
                         console.log("DATA", res);
                         localStorage.setItem("token", res.data.login.token);
                         history.push("/authorize");
@@ -181,14 +183,15 @@ export const LoginPage: React.FC = () => {
                           authorized: true,
                           token: res.data.login.token,
                           userId: res.data.login.userId,
-                          tokenExpiration: res.data.login.tokenExpiration
+                          tokenExpiration: res.data.login.tokenExpiration,
                         });
                         console.log("STORE DATA", store);
                       })
-                      .catch(error => {
+                      .catch((error) => {
                         console.log("ERROR", error);
-                        // Modal ili nešto izbaciti
-                      });
+                        alert(error);
+                      })
+                      .finally(() => window.location.reload());
                   }}
                 >
                   Sign In - PRESS TO LOGIN
@@ -196,7 +199,7 @@ export const LoginPage: React.FC = () => {
               </div>
               <Grid container>
                 <Grid item xs>
-                  <Link href="#" variant="body2">
+                  <Link href="/forgot" variant="body2">
                     Forgot password?
                   </Link>
                 </Grid>

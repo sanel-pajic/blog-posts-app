@@ -15,6 +15,7 @@ import { Error } from "./pages/Error";
 import { SingleBlog } from "./pages/SingleBlog";
 import { SignUpPage } from "./pages/SignUpPage";
 import Navbar from "./components/Navbar";
+import { ForgotPage } from "./pages/ForgotPage";
 
 export const client = new ApolloClient({
   uri: "http://localhost:8080/graphql",
@@ -30,16 +31,16 @@ export const client = new ApolloClient({
 
     if (networkError) console.log(`[Network error]: ${networkError}`);
   },
-  request: operation => {
+  request: (operation) => {
     const token = localStorage.getItem("token");
     if (token) {
       operation.setContext({
         headers: {
-          authorization: token ? `Bearer ${token}` : ""
-        }
+          authorization: token ? `Bearer ${token}` : "",
+        },
       });
     }
-  }
+  },
 });
 
 const App: React.FC = () => {
@@ -47,7 +48,12 @@ const App: React.FC = () => {
     <ApolloProvider client={client}>
       <div
         className="App"
-        style={{ background: "#edf1f5af", overflow: "hidden" }}
+        style={{
+          background: "#edf1f5af",
+          overflow: "hidden",
+          position: "relative",
+          minHeight: "100%",
+        }}
       >
         <BrowserRouter>
           <Header />
@@ -60,6 +66,7 @@ const App: React.FC = () => {
             <Route exact path="/bloglist" component={BlogList} />
             <Route exact path="/userlist" component={UserList} />
             <Route exact path="/signup" component={SignUpPage} />
+            <Route exact path="/forgot" component={ForgotPage} />
             <Route exact path="/authorize" component={AuthorizePage} />
             <Route render={() => <Error />} />
           </Switch>

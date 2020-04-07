@@ -12,22 +12,22 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       display: "flex",
       "& > *": {
-        margin: theme.spacing(1)
-      }
+        margin: theme.spacing(1),
+      },
     },
     large: {
       width: 250,
       height: 200,
       marginTop: "4%",
-      marginBottom: "4%"
-    }
+      marginBottom: "4%",
+    },
   })
 );
 
 export const GreetingUserComponent: React.FC = () => {
   const classes = useStyles();
   const { data, loading } = useQuery(CURRENT_USER_QUERY, {
-    fetchPolicy: "cache-and-network"
+    fetchPolicy: "cache-and-network",
   });
   if (loading || !data) {
     return <CircularLoading />;
@@ -40,7 +40,7 @@ export const GreetingUserComponent: React.FC = () => {
       style={{
         display: "flex",
         justifyContent: "space-around",
-        alignItems: "center"
+        alignItems: "center",
       }}
     >
       <Paper
@@ -51,13 +51,13 @@ export const GreetingUserComponent: React.FC = () => {
           justifyContent: "center",
           alignItems: "center",
           flexDirection: "column",
-          marginTop: "1%"
+          marginTop: "1%",
         }}
       >
         <Typography variant="h5" color="textSecondary">
           Successfully Signed Up!
         </Typography>
-        <Typography variant="h4">
+        <Typography style={{ fontSize: 29, color: "#ff9800" }}>
           Nice to meet you {firstName} {lastName}
         </Typography>
         <Avatar alt="User Image" src={image} className={classes.large} />

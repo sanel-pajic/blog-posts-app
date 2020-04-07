@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: theme.palette.background.paper
+    backgroundColor: theme.palette.background.paper,
   },
   avatar: {
     color: theme.palette.getContrastText(deepOrange[500]),
@@ -32,27 +32,27 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 40,
     width: 40,
     fontSize: "1.3rem",
-    marginRight: "3%"
+    marginRight: "3%",
   },
   typography: {
     color: "#212121",
     fontSize: "1.4rem",
     height: 50,
-    marginTop: 15
+    marginTop: 15,
   },
   button: {
     height: 35,
     width: 100,
-    marginLeft: "1%"
+    marginLeft: "1%",
   },
   buttonMedia: {
     height: 35,
     width: 160,
-    marginLeft: "1%"
+    marginLeft: "1%",
   },
 
   login: {
-    marginRight: "1%"
+    marginRight: "1%",
   },
   mediaIcon: {
     width: 35,
@@ -60,15 +60,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: "2%",
     backgroundColor: "white",
     "&:hover": {
-      backgroundColor: grey[300]
+      backgroundColor: grey[300],
     },
-    borderRadius: 35
+    borderRadius: 35,
   },
   margin: {
     width: 120,
     height: 35,
-    alignSelf: "center"
-  }
+    alignSelf: "center",
+  },
 }));
 
 function logout(apolloclient: ApolloClient<any>) {
@@ -76,7 +76,7 @@ function logout(apolloclient: ApolloClient<any>) {
     authorized: false,
     token: "",
     userId: "",
-    tokenExpiration: 0
+    tokenExpiration: 0,
   });
   localStorage.clear();
   window.location.reload();
@@ -92,7 +92,7 @@ export const Header: React.FC = () => {
     history.push("/authorize");
   }
   const { data, loading } = useQuery(CURRENT_USER_QUERY, {
-    fetchPolicy: "cache-and-network"
+    fetchPolicy: "cache-and-network",
   });
 
   if (loading || !data) {
@@ -167,13 +167,13 @@ export const Header: React.FC = () => {
             marginRight: 20,
             width: 200,
             display: "flex",
-            flexDirection: "column"
+            flexDirection: "column",
           }}
         >
           <div
             style={{
               display: "flex",
-              alignItems: "center"
+              alignItems: "center",
             }}
           >
             {" "}

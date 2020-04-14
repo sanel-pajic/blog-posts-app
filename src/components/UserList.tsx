@@ -13,7 +13,7 @@ import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import { Typography, TextField } from "@material-ui/core";
-import { useProtectedPath } from "../components/useProtectedPath";
+import { useProtectedPath } from "../hooks/useProtectedPath";
 import { Redirect } from "react-router";
 import { USERS_QUERY } from "../queries/queries";
 import { REMOVE_USER_MUTATION, UPDATE_USER } from "../queries/mutations";
@@ -29,11 +29,11 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       width: "70%",
-      overflowX: "auto"
+      overflowX: "auto",
     },
     table: {
-      minWidth: 650
-    }
+      minWidth: 650,
+    },
   })
 );
 
@@ -45,7 +45,7 @@ export const UserList: React.FC = () => {
   const [editedEmail, setEditedEmail] = useState("");
   const [isAdmin, setIsAdmin] = React.useState("false");
   const { data, loading } = useQuery(USERS_QUERY, {
-    fetchPolicy: "cache-and-network"
+    fetchPolicy: "cache-and-network",
   });
   const accessGrant = useProtectedPath();
 
@@ -54,7 +54,7 @@ export const UserList: React.FC = () => {
   const [editUser, { error: errorEditUser }] = useMutation(UPDATE_USER, {
     update: (cache, { data }) => {
       const previousData: any = cache.readQuery({
-        query: USERS_QUERY
+        query: USERS_QUERY,
       });
 
       console.log(
@@ -63,7 +63,7 @@ export const UserList: React.FC = () => {
         "PREVIOUS QUERY REMOVE COMMENT LIKE",
         previousData
       );
-    }
+    },
   });
 
   if (!accessGrant) {
@@ -105,7 +105,7 @@ export const UserList: React.FC = () => {
   };
 
   const inputProps = {
-    step: 300
+    step: 300,
   };
 
   const handleChangeIsAdmin = (
@@ -123,7 +123,7 @@ export const UserList: React.FC = () => {
         justifyContent: "center",
         alignItems: "center",
         marginTop: "2%",
-        marginBottom: "15%"
+        marginBottom: "15%",
       }}
     >
       <Paper className={classes.root}>
@@ -251,32 +251,36 @@ export const UserList: React.FC = () => {
                   <TableCell align="right">
                     <IconButton>
                       {editingID === user._id ? (
-                        <CheckIcon
-                          onClick={() => {
-                            editUser({
-                              variables: {
-                                data: {
-                                  _id: user._id,
-                                  first_name: editedFirstName,
-                                  last_name: editedLastName,
-                                  email: editedEmail,
-                                  isAdmin: isAdmin === "true" ? true : false
-                                }
-                              }
-                            }).catch(error => console.log("error", error));
-                            setEditingID(null);
-                          }}
-                        />
+                        <div>
+                          <CheckIcon
+                            onClick={() => {
+                              editUser({
+                                variables: {
+                                  data: {
+                                    _id: user._id,
+                                    first_name: editedFirstName,
+                                    last_name: editedLastName,
+                                    email: editedEmail,
+                                    isAdmin: isAdmin === "true" ? true : false,
+                                  },
+                                },
+                              }).catch((error) => console.log("error", error));
+                              setEditingID(null);
+                            }}
+                          />
+                        </div>
                       ) : (
-                        <EditIcon
-                          onClick={() => {
-                            setEditingID(user._id);
-                            setEditedFirstName(user.first_name);
-                            setEditedLastName(user.last_name);
-                            setEditedEmail(user.email);
-                            setIsAdmin(user.isAdmin ? "true" : "false");
-                          }}
-                        />
+                        <div>
+                          <EditIcon
+                            onClick={() => {
+                              setEditingID(user._id);
+                              setEditedFirstName(user.first_name);
+                              setEditedLastName(user.last_name);
+                              setEditedEmail(user.email);
+                              setIsAdmin(user.isAdmin ? "true" : "false");
+                            }}
+                          />
+                        </div>
                       )}
                     </IconButton>
                   </TableCell>
@@ -285,7 +289,7 @@ export const UserList: React.FC = () => {
                       onClick={() =>
                         removeUser({
                           variables: { _id: user._id },
-                          refetchQueries: [{ query: USERS_QUERY }]
+                          refetchQueries: [{ query: USERS_QUERY }],
                         })
                       }
                     >

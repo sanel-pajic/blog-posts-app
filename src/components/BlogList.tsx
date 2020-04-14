@@ -21,11 +21,11 @@ import {
   ADD_BLOG_LIKE,
   REMOVE_BLOG_LIKE
 } from "../queries/mutations";
-import { useProtectedPath } from "./useProtectedPath";
+import { useProtectedPath } from "../hooks/useProtectedPath";
 import { Redirect } from "react-router";
 import mongoID from "bson-objectid";
 import * as R from "ramda";
-import { useFetchQueryCurrentUser } from "./useFetchQueryCurrentUser";
+import { useFetchQueryCurrentUser } from "../hooks/useFetchQueryCurrentUser";
 import { ModalError } from "./ModalError";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -87,7 +87,7 @@ export const BlogList: React.FC = () => {
           query: BLOGS_QUERY
         });
 
-        // console.log("DATA QUERY", data, "PREVIOUS QUERY", previousData);
+        console.log("DATA QUERY", data, "PREVIOUS QUERY", previousData);
         const blogIdx: any = previousData.blogPosts.findIndex(
           (blog: { _id: any }) => {
             return blog._id === data.addLikeBlog.blogId;

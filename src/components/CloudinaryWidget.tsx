@@ -3,7 +3,7 @@ import { Button, Typography } from "@material-ui/core";
 
 require("dotenv").config();
 
-const CLOUD_NAME = process.env.REACT_APP_CLOUD_NAME;
+export const CLOUD_NAME = process.env.REACT_APP_CLOUD_NAME;
 const UPLOAD_PRESET = process.env.REACT_APP_UPLOAD_PRESET;
 
 type Props = {
@@ -15,7 +15,8 @@ export const CloudinaryWidget: React.FC<Props> = ({ onUploadSuccess }) => {
   const widget = cloudinary.createUploadWidget(
     {
       cloudName: CLOUD_NAME,
-      uploadPreset: UPLOAD_PRESET
+      uploadPreset: UPLOAD_PRESET,
+      tags: ["blog-post-app"],
     },
     (error: any, result: any) => {
       if (!error && result && result.event === "success") {
@@ -36,7 +37,7 @@ export const CloudinaryWidget: React.FC<Props> = ({ onUploadSuccess }) => {
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
-        alignItems: "center"
+        alignItems: "center",
       }}
     >
       <div
@@ -45,11 +46,11 @@ export const CloudinaryWidget: React.FC<Props> = ({ onUploadSuccess }) => {
           justifyContent: "center",
           alignItems: "center",
           marginTop: 20,
-          marginBottom: 40
+          marginBottom: 40,
         }}
       >
         <img
-          src="https://res.cloudinary.com/dz2f3jhr6/image/upload/v1576156104/samples/cloudinary-icon.png"
+          src={`https://res.cloudinary.com/${CLOUD_NAME}/image/upload/v1576156104/samples/cloudinary-icon.png`}
           alt="img-widget"
           style={{ width: 70, height: 50, marginLeft: 10, marginRight: 20 }}
         />
@@ -58,7 +59,7 @@ export const CloudinaryWidget: React.FC<Props> = ({ onUploadSuccess }) => {
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
-            alignItems: "center"
+            alignItems: "center",
           }}
         >
           <Typography variant="h6" style={{}}>

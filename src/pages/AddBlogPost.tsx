@@ -14,7 +14,7 @@ import { CloudinaryWidget } from "../components/CloudinaryWidget";
 import draftToHtml from "draftjs-to-html";
 import Avatar from "@material-ui/core/Avatar";
 import { blue } from "@material-ui/core/colors";
-import { useProtectedPath } from "../components/useProtectedPath";
+import { useProtectedPath } from "../hooks/useProtectedPath";
 import { Redirect } from "react-router";
 import { CircularLoading } from "../components/CircularLoading";
 import { ModalError } from "../components/ModalError";

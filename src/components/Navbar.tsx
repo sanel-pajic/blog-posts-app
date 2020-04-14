@@ -8,7 +8,7 @@ import { useStore } from "react-stores";
 import { useQuery } from "@apollo/react-hooks";
 import { USERS_QUERY } from "../queries/queries";
 import { CircularLoading } from "./CircularLoading";
-import { useFetchQueryCurrentUser } from "./useFetchQueryCurrentUser";
+import { useFetchQueryCurrentUser } from "../hooks/useFetchQueryCurrentUser";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -157,13 +157,6 @@ const Navbar: React.FC = () => {
               {...a11yProps(1)}
             />
             )}
-            <Tab
-              style={{ fontSize: 20 }}
-              label="Component Article"
-              component={React.memo(NavLink)}
-              to={"/article"}
-              {...a11yProps(2)}
-            />
             <Tab
               style={{ fontSize: 20 }}
               label="Blog List"

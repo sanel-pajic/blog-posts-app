@@ -71,7 +71,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-function logout(apolloclient: ApolloClient<any>) {
+function logout(apolloclient: ApolloClient<any>, history: any) {
   store.setState({
     authorized: false,
     token: "",
@@ -81,6 +81,7 @@ function logout(apolloclient: ApolloClient<any>) {
   localStorage.clear();
   window.location.reload();
   apolloclient.clearStore();
+  history.push("/authorize");
 }
 
 export const Header: React.FC = () => {
@@ -190,7 +191,7 @@ export const Header: React.FC = () => {
             variant="outlined"
             color="default"
             className={classes.margin}
-            onClick={() => logout(apolloclient)}
+            onClick={() => logout(apolloclient, history)}
           >
             Logout
           </Button>

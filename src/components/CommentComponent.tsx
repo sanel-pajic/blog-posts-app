@@ -29,7 +29,7 @@ import { FetchQueryAuthor } from "./FetchQueryAuthor";
 import { CommentLikeData } from "./CommentLikeData";
 import { COMMENTS_QUERY } from "../queries/queries";
 import * as R from "ramda";
-import { useFetchQueryCurrentUser } from "./useFetchQueryCurrentUser";
+import { useFetchQueryCurrentUser } from "../hooks/useFetchQueryCurrentUser";
 import EditIcon from "@material-ui/icons/Edit";
 import CheckIcon from "@material-ui/icons/Check";
 
@@ -398,12 +398,10 @@ export const CommentComponent: React.FC<{
                                   commentId: comment._id,
                                 },
                               },
-                            })
-                              .catch((error) => {
-                                console.log("ERROR ADD LIKE", error);
-                                alert(error);
-                              })
-                              .finally(() => window.location.reload());
+                            }).catch((error) => {
+                              console.log("ERROR ADD LIKE", error);
+                              alert(error);
+                            });
                       }}
                     >
                       <Like

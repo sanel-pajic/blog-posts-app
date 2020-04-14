@@ -14,7 +14,7 @@ import gql from "graphql-tag";
 import mongoID from "bson-objectid";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import { teal } from "@material-ui/core/colors";
-import { useProtectedPath } from "./useProtectedPath";
+import { useProtectedPath } from "../hooks/useProtectedPath";
 import { Redirect } from "react-router";
 import { CircularLoading } from "./CircularLoading";
 import { ADD_COMMENT } from "../queries/mutations";

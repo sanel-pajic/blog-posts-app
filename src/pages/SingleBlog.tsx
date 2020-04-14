@@ -6,7 +6,7 @@ import {
   Typography,
   CardMedia,
   Divider,
-  IconButton
+  IconButton,
 } from "@material-ui/core";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import { RouteComponentProps } from "react-router-dom";
@@ -20,13 +20,13 @@ import { ModalError } from "../components/ModalError";
 import mongoID from "bson-objectid";
 import { grey } from "@material-ui/core/colors";
 import { SINGLE_BLOG_QUERY } from "../queries/queries";
-import { useFetchQueryCurrentUser } from "../components/useFetchQueryCurrentUser";
+import { useFetchQueryCurrentUser } from "../hooks/useFetchQueryCurrentUser";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     media: {
       height: "50vh",
-      width: "85vw"
+      width: "85vw",
     },
     likeBlog: {
       display: "flex",
@@ -35,8 +35,8 @@ const useStyles = makeStyles((theme: Theme) =>
       paddingLeft: theme.spacing(2),
       paddingRight: theme.spacing(2),
       boxShadow: "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)",
-      backgroundColor: grey[50]
-    }
+      backgroundColor: grey[50],
+    },
   })
 );
 
@@ -55,7 +55,7 @@ export function handleDate(dateString: string) {
     "September",
     "October",
     "November",
-    "December"
+    "December",
   ];
   let mm = date.getMonth() + 1;
   let month = monthNames[date.getMonth()];
@@ -74,7 +74,7 @@ export function handleDate(dateString: string) {
 }
 
 export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
-  match
+  match,
 }) => {
   const idFromHistory = match.params.id;
 
@@ -83,16 +83,16 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
 
   const { data, loading } = useQuery(SINGLE_BLOG_QUERY, {
     fetchPolicy: "cache-and-network",
-    variables: { postId: idFromHistory }
+    variables: { postId: idFromHistory },
   });
   const [addBlogLike, { error }] = useMutation(ADD_BLOG_LIKE, {
     update: (cache, { data }) => {
       const previousData: any = cache.readQuery({
         query: SINGLE_BLOG_QUERY,
-        variables: { postId: idFromHistory }
+        variables: { postId: idFromHistory },
       });
 
-      // console.log("DATA QUERY", data, "PREVIOUS QUERY", previousData);
+      console.log("DATA QUERY", data, "PREVIOUS QUERY", previousData);
 
       cache.writeQuery({
         query: SINGLE_BLOG_QUERY,
@@ -101,9 +101,9 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
           R.lensPath(["blogPost", "likes"]),
           R.append(data.addLikeBlog),
           previousData
-        )
+        ),
       });
-    }
+    },
   });
 
   const [removeBlogLike, { error: errorRemoveBlogLike }] = useMutation(
@@ -111,17 +111,17 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
     {
       update: (cache, { data }) => {
         const previousData: any = cache.readQuery({
-          query: SINGLE_BLOG_QUERY
+          query: SINGLE_BLOG_QUERY,
+          variables: { postId: idFromHistory },
         });
 
-        // Napraviti casche write query
         console.log(
           "DATA QUERY REMOVE BLOG LIKE",
           data,
           "PREVIOUS QUERY REMOVE BLOG LIKE",
           previousData
         );
-      }
+      },
     }
   );
 
@@ -176,7 +176,7 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
   const dataBLOG = {
     numLikes: data.blogPost.likes.length,
     isLikedByCurrentUser: like != null,
-    userLikeID: like ? like._id : null
+    userLikeID: like ? like._id : null,
   };
 
   // console.log("DATA BLOG", dataBLOG);
@@ -189,13 +189,13 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
         justifyContent: "center",
         alignItems: "center",
         marginTop: "2%",
-        marginBottom: "2%"
+        marginBottom: "2%",
       }}
     >
       <Paper
         style={{
           width: "50vw",
-          minWidth: 600
+          minWidth: 600,
         }}
       >
         <Typography
@@ -206,7 +206,7 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
             justifyContent: "center",
             alignItems: "center",
             marginTop: "5%",
-            wordWrap: "break-word"
+            wordWrap: "break-word",
           }}
         >
           {data.blogPost.title}
@@ -216,7 +216,7 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
             marginLeft: "5rem",
             position: "relative",
             top: "6vh",
-            display: "flex"
+            display: "flex",
           }}
         >
           <Typography
@@ -230,7 +230,7 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
             style={{
               fontWeight: "bolder",
               marginLeft: "0.5rem",
-              color: "#ff8a80"
+              color: "#ff8a80",
             }}
           >
             {handleDate(data.blogPost.date)}
@@ -240,7 +240,7 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
             style={{
               fontWeight: "bolder",
               marginLeft: "0.5rem",
-              color: "#ff8a80"
+              color: "#ff8a80",
             }}
           >
             by
@@ -251,7 +251,7 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
             style={{
               fontWeight: "bolder",
               marginLeft: "0.2rem",
-              color: "#ff8a80"
+              color: "#ff8a80",
             }}
           >
             <FetchQueryAuthor userID={data.blogPost.author} />
@@ -264,7 +264,7 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
             paddingTop: "3.5rem",
             paddingLeft: "3rem",
             marginTop: "0.5%",
-            marginBottom: "0.5%"
+            marginBottom: "0.5%",
           }}
         >
           Short description: To read more scroll down!
@@ -275,7 +275,7 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
           style={{
             paddingLeft: "3rem",
             wordWrap: "break-word",
-            paddingRight: "3rem"
+            paddingRight: "3rem",
           }}
         >
           {data.blogPost.description_short}
@@ -286,7 +286,7 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            padding: "1rem"
+            padding: "1rem",
           }}
         >
           <CardMedia
@@ -302,7 +302,7 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
           variant="h5"
           style={{
             padding: "3rem",
-            wordWrap: "break-word"
+            wordWrap: "break-word",
           }}
           dangerouslySetInnerHTML={{ __html: data.blogPost.description }}
         ></Typography>
@@ -311,7 +311,7 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            marginBottom: "5vh"
+            marginBottom: "5vh",
           }}
         >
           <Paper className={classes.likeBlog}>
@@ -325,21 +325,21 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
                 flexDirection: "column",
                 justifyContent: "center",
                 alignItems: "center",
-                marginLeft: "2vw"
+                marginLeft: "2vw",
               }}
               onClick={() =>
                 dataBLOG.isLikedByCurrentUser
                   ? removeBlogLike({
                       variables: {
-                        _id: dataBLOG.userLikeID
+                        _id: dataBLOG.userLikeID,
                       },
                       refetchQueries: [
                         {
                           query: SINGLE_BLOG_QUERY,
-                          variables: { postId: data.blogPost._id }
-                        }
-                      ]
-                    }).catch(error => {
+                          variables: { postId: data.blogPost._id },
+                        },
+                      ],
+                    }).catch((error) => {
                       console.log("ERROR REMOVE BLOG LIKE", error);
                       alert(error);
                     })
@@ -347,10 +347,10 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
                       variables: {
                         data: {
                           _id: mongoID.generate(),
-                          blogId: idFromHistory
-                        }
-                      }
-                    }).catch(error => {
+                          blogId: idFromHistory,
+                        },
+                      },
+                    }).catch((error) => {
                       console.log("ERROR ADD LIKE", error);
                     })
               }
@@ -362,7 +362,7 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
                   justifyContent: "center",
                   alignItems: "center",
                   width: 60,
-                  height: 60
+                  height: 60,
                 }}
               >
                 {" "}

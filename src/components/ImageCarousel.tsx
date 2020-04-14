@@ -1,47 +1,29 @@
 import * as React from "react";
-//import * as images from '../images/imagesGallery';
-import image1 from "../images/imagesGallery/image-1.jpg";
-import image2 from "../images/imagesGallery/image-2.jpg";
-import image3 from "../images/imagesGallery/image-3.jpg";
-import image4 from "../images/imagesGallery/image-4.jpg";
-import image5 from "../images/imagesGallery/image-5.jpg";
-import image6 from "../images/imagesGallery/image-6.jpg";
-import image7 from "../images/imagesGallery/image-7.jpg";
 import { GalleryImage, Gallery } from "react-gesture-gallery";
 import { useState, useRef, useEffect } from "react";
-
-const images = [
-  {
-    src: image1
-  },
-  {
-    src: image2
-  },
-  {
-    src: image3
-  },
-  {
-    src: image4
-  },
-  {
-    src: image5
-  },
-  {
-    src: image6
-  },
-  {
-    src: image7
-  }
-];
+import axios from "axios";
+import { CLOUD_NAME } from "./CloudinaryWidget";
 
 export const ImageCarousel: React.FC = () => {
+  const [listImages, setListImages] = useState([]);
   const [index, setIndex] = useState(0);
 
+  useEffect(() => {
+    axios
+      .get(
+        `http://res.cloudinary.com/${CLOUD_NAME}/image/list/blog-post-app.json
+      `
+      )
+      .then((result) => setListImages(result.data.resources));
+  }, []);
+
+  //console.log("DATA IMAGES", listImages);
+
   useInterval(() => {
-    if (index === images.length - 1) {
+    if (index === listImages.length - 1) {
       setIndex(0);
     } else {
-      setIndex(prev => prev + 1);
+      setIndex((prev) => prev + 1);
     }
   }, 5500);
 
@@ -65,28 +47,41 @@ export const ImageCarousel: React.FC = () => {
   }
 
   return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        background: "#282c34",
-        width: "50vw",
-        height: "50vh"
-      }}
-    >
-      <Gallery
-        enableControls={true}
-        enableKeyboard={true}
-        index={index}
-        onRequestChange={i => {
-          setIndex(i);
+    <div>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          background: "#282c34",
+          width: "50vw",
+          height: "50vh",
         }}
       >
-        {images.map(img => (
-          <GalleryImage key={img.src} src={img.src} objectFit="contain" />
-        ))}
-      </Gallery>
+        <Gallery
+          enableControls={true}
+          enableKeyboard={true}
+          index={index}
+          onRequestChange={(i) => {
+            setIndex(i);
+          }}
+        >
+          {listImages.map((img: any) => (
+            <a
+              key={img.public_id}
+              // eslint-disable-next-line react/jsx-no-target-blank
+              target="_blank"
+              href={`https://res.cloudinary.com/${CLOUD_NAME}/image/upload/v${img.version}/${img.public_id}.jpg`}
+              style={{ width: "100%", height: "100%" }}
+            >
+              <GalleryImage
+                src={`https://res.cloudinary.com/${CLOUD_NAME}/image/upload/v${img.version}/${img.public_id}.jpg`}
+                objectFit="contain"
+              />
+            </a>
+          ))}
+        </Gallery>
+      </div>
     </div>
   );
 };

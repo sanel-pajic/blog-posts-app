@@ -5,7 +5,7 @@ import TextField from "@material-ui/core/TextField";
 import mongoID from "bson-objectid";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import * as yup from "yup";
-import { useProtectedPath } from "../components/useProtectedPath";
+import { useProtectedPath } from "../hooks/useProtectedPath";
 import { Redirect } from "react-router";
 import { CircularLoading } from "../components/CircularLoading";
 import { TableArticles } from "../components/TableArticles";

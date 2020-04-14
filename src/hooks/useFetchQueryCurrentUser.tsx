@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/react-hooks";
 import { CURRENT_USER_QUERY_ID } from "../queries/queries";
-import { CircularLoading } from "./CircularLoading";
+import { CircularLoading } from "../components/CircularLoading";
 import React from "react";
 
 export const useFetchQueryCurrentUser = () => {

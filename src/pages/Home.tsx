@@ -9,7 +9,7 @@ import {
   CardMedia,
   CardContent,
   CardActions,
-  Button
+  Button,
 } from "@material-ui/core";
 import { CircularLoading } from "../components/CircularLoading";
 import { useQuery } from "@apollo/react-hooks";
@@ -20,22 +20,22 @@ import { useHistory, Link } from "react-router-dom";
 import StarsIcon from "@material-ui/icons/Stars";
 import { ColorButtonTeal } from "../components/AddCommentsComponent";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   card: {
     height: "auto",
     width: 450,
-    marginTop: "5vh"
+    marginTop: "5vh",
   },
   avatar: {
     backgroundColor: blue[800],
     width: 60,
-    height: 60
+    height: 60,
   },
   root: {
-    flexGrow: 1
+    flexGrow: 1,
   },
   media: {
-    paddingTop: "56.25%"
+    paddingTop: "56.25%",
   },
   star: {
     marginLeft: 10,
@@ -44,15 +44,16 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: yellow[300],
     height: 40,
     width: 40,
-    borderRadius: 40
-  }
+    borderRadius: 40,
+  },
 }));
 
 export const Home: React.FC = () => {
   let history = useHistory();
   const classes = useStyles();
+
   const { data, loading } = useQuery(BLOGS_QUERY, {
-    fetchPolicy: "cache-and-network"
+    fetchPolicy: "cache-and-network",
   });
 
   if (loading || !data) {
@@ -76,7 +77,7 @@ export const Home: React.FC = () => {
         title: blog.title,
         description_short: blog.description_short,
         description: blog.description,
-        image: blog.image
+        image: blog.image,
       };
     }
   );
@@ -89,14 +90,14 @@ export const Home: React.FC = () => {
       title: x.title,
       description_short: x.description_short,
       description: x.description,
-      image: x.image
+      image: x.image,
     };
   });
 
   // console.log("LIKES NUMBERS", likeNumbers);
 
   const threeHighestLike = likeNumbers
-    .sort(function(a: number, b: number) {
+    .sort(function (a: number, b: number) {
       if (a < b) {
         return 1;
       } else if (a === b) {
@@ -122,7 +123,7 @@ export const Home: React.FC = () => {
           justifyContent: "center",
           width: "100%",
           marginTop: "2vh",
-          marginBottom: "5vh"
+          marginBottom: "5vh",
         }}
       >
         <div
@@ -132,7 +133,7 @@ export const Home: React.FC = () => {
             width: "80%",
             display: "flex",
             alignItems: "center",
-            justifyContent: "center"
+            justifyContent: "center",
           }}
         >
           <ImageCarousel />
@@ -143,14 +144,14 @@ export const Home: React.FC = () => {
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
-          alignItems: "center"
+          alignItems: "center",
         }}
       >
         <div
           style={{
             display: "flex",
             justifyContent: "center",
-            alignItems: "center"
+            alignItems: "center",
           }}
         >
           <StarsIcon className={classes.star} />
@@ -209,7 +210,7 @@ export const Home: React.FC = () => {
                           variant="h6"
                           style={{
                             marginLeft: 20,
-                            textDecoration: "underline"
+                            textDecoration: "underline",
                           }}
                         >
                           Description
@@ -230,7 +231,7 @@ export const Home: React.FC = () => {
                           style={{
                             color: "#1565c0",
                             textTransform: "none",
-                            fontSize: "20px"
+                            fontSize: "20px",
                           }}
                           onClick={() => handleClick(blog.blogID)}
                         >
@@ -251,7 +252,7 @@ export const Home: React.FC = () => {
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          marginTop: "10vh"
+          marginTop: "10vh",
         }}
       >
         <Typography
@@ -276,7 +277,7 @@ export const Home: React.FC = () => {
               fontSize: 20,
               textTransform: "initial",
               marginTop: "5vh",
-              marginBottom: "2vh"
+              marginBottom: "2vh",
             }}
           >
             Get started

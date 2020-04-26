@@ -14,12 +14,12 @@ import { CommentComponent } from "../components/CommentComponent";
 import { AddCommentsComponent } from "../components/AddCommentsComponent";
 import { FetchQueryAuthor } from "../components/FetchQueryAuthor";
 import ThumbUpAltIcon from "@material-ui/icons/ThumbUpAlt";
-import { ADD_BLOG_LIKE, REMOVE_BLOG_LIKE } from "../queries/mutations";
+import { ADD_BLOG_LIKE, REMOVE_BLOG_LIKE } from "../graphql-queries-mutations/mutations";
 import * as R from "ramda";
 import { ModalError } from "../components/ModalError";
 import mongoID from "bson-objectid";
 import { grey } from "@material-ui/core/colors";
-import { SINGLE_BLOG_QUERY } from "../queries/queries";
+import { SINGLE_BLOG_QUERY } from "../graphql-queries-mutations/queries";
 import { useFetchQueryCurrentUser } from "../hooks/useFetchQueryCurrentUser";
 
 const useStyles = makeStyles((theme: Theme) =>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import "./index.css";
 import { Home } from "./pages/Home";
@@ -16,6 +16,8 @@ import { SingleBlog } from "./pages/SingleBlog";
 import { SignUpPage } from "./pages/SignUpPage";
 import Navbar from "./components/Navbar";
 import { ForgotPage } from "./pages/ForgotPage";
+import { ResetPage } from "./pages/ResetPage";
+import { CheckResetEmailPage } from "./pages/CheckResetEmailPage";
 
 export const client = new ApolloClient({
   uri: "http://localhost:8080/graphql",
@@ -43,40 +45,55 @@ export const client = new ApolloClient({
   },
 });
 
+export const TabContext = React.createContext<{
+  tabIndex: number;
+  setTabIndex: Function;
+}>({ tabIndex: 0, setTabIndex: () => {} });
+
 const App: React.FC = () => {
+  const [tabIndex, setTabIndex] = useState(0);
+  console.log("TAB INDEX APP", tabIndex);
   return (
-    <ApolloProvider client={client}>
-      <div
-        className="App"
-        style={{
-          background: "#edf1f5af",
-          overflow: "hidden",
-          position: "relative",
-          minHeight: "100%",
-        }}
-      >
-        <BrowserRouter>
-          <Header />
-          <Navbar />
-          <Switch>
-            <Route exact path="/" component={Home} />
-            <Route exact path="/article" component={ComponentArticle} />
-            <Route exact path="/addblogpost" component={AddBlogPost} />
-            <Route exact path="/singleblog/:id" component={SingleBlog} />
-            <Route exact path="/bloglist" component={BlogList} />
-            <Route exact path="/userlist" component={UserList} />
-            <Route exact path="/signup" component={SignUpPage} />
-            <Route exact path="/forgot" component={ForgotPage} />
-            <Route exact path="/authorize" component={AuthorizePage} />
-            <Route render={() => <Error />} />
-          </Switch>
-          <Footer
-            title="Created by Sanel Pajic"
-            description="Blog Posts React App"
-          />
-        </BrowserRouter>
-      </div>
-    </ApolloProvider>
+    <TabContext.Provider value={{ tabIndex, setTabIndex }}>
+      <ApolloProvider client={client}>
+        <div
+          className="App"
+          style={{
+            background: "#edf1f5af",
+            overflow: "hidden",
+            position: "relative",
+            minHeight: "100%",
+          }}
+        >
+          <BrowserRouter>
+            <Header />
+            <Navbar />
+            <Switch>
+              <Route exact path="/" component={Home} />
+              <Route exact path="/article" component={ComponentArticle} />
+              <Route exact path="/addblogpost" component={AddBlogPost} />
+              <Route exact path="/singleblog/:id" component={SingleBlog} />
+              <Route exact path="/bloglist" component={BlogList} />
+              <Route exact path="/userlist" component={UserList} />
+              <Route exact path="/signup" component={SignUpPage} />
+              <Route exact path="/forgot" component={ForgotPage} />
+              <Route exact path="/authorize" component={AuthorizePage} />
+              <Route
+                exact
+                path="/resetcheck/:token"
+                component={CheckResetEmailPage}
+              />
+              <Route exact path="/reset" component={ResetPage} />
+              <Route render={() => <Error />} />
+            </Switch>
+            <Footer
+              title="Created by Sanel Pajic"
+              description="Blog Posts React App"
+            />
+          </BrowserRouter>
+        </div>
+      </ApolloProvider>
+    </TabContext.Provider>
   );
 };
 

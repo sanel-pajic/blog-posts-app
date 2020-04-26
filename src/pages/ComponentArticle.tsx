@@ -9,8 +9,8 @@ import { useProtectedPath } from "../hooks/useProtectedPath";
 import { Redirect } from "react-router";
 import { CircularLoading } from "../components/CircularLoading";
 import { TableArticles } from "../components/TableArticles";
-import { ARTICLES_QUERY } from "../queries/queries";
-import { ADD_MUTATION_ARTICLE } from "../queries/mutations";
+import { ARTICLES_QUERY } from "../graphql-queries-mutations/queries";
+import { ADD_MUTATION_ARTICLE } from "../graphql-queries-mutations/mutations";
 import { ModalError } from "../components/ModalError";
 
 let schema = yup.object().shape({

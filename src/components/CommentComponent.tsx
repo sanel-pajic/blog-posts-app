@@ -23,11 +23,11 @@ import {
   REMOVE_COMMENT_MUTATION,
   REMOVE_COMMENT_LIKE,
   UPDATE_COMMENT,
-} from "../queries/mutations";
+} from "../graphql-queries-mutations/mutations";
 import mongoID from "bson-objectid";
 import { FetchQueryAuthor } from "./FetchQueryAuthor";
 import { CommentLikeData } from "./CommentLikeData";
-import { COMMENTS_QUERY } from "../queries/queries";
+import { COMMENTS_QUERY } from "../graphql-queries-mutations/queries";
 import * as R from "ramda";
 import { useFetchQueryCurrentUser } from "../hooks/useFetchQueryCurrentUser";
 import EditIcon from "@material-ui/icons/Edit";

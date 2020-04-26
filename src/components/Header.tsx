@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import logo from "../images/blog.jpg";
 import LinkMaterialUI from "@material-ui/core/Link";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import { Divider, Button, Typography } from "@material-ui/core";
 import Avatar from "@material-ui/core/Avatar";
 import { deepOrange, grey } from "@material-ui/core/colors";
-import { CURRENT_USER_QUERY } from "../queries/queries";
+import { CURRENT_USER_QUERY } from "../graphql-queries-mutations/queries";
 import { useQuery, useApolloClient } from "@apollo/react-hooks";
 import { useHistory, Link } from "react-router-dom";
 import FacebookIcon from "@material-ui/icons/Facebook";
@@ -14,6 +14,7 @@ import PinterestIcon from "@material-ui/icons/Pinterest";
 import InstagramIcon from "@material-ui/icons/Instagram";
 import { store } from "./store";
 import { ApolloClient } from "apollo-boost";
+import { TabContext } from "../App";
 
 const useStyles = makeStyles((theme: Theme) => ({
   header: {
@@ -85,6 +86,7 @@ function logout(apolloclient: ApolloClient<any>, history: any) {
 }
 
 export const Header: React.FC = () => {
+  const { setTabIndex } = useContext(TabContext);
   const history = useHistory();
   const classes = useStyles();
   const apolloclient = useApolloClient();
@@ -191,7 +193,10 @@ export const Header: React.FC = () => {
             variant="outlined"
             color="default"
             className={classes.margin}
-            onClick={() => logout(apolloclient, history)}
+            onClick={() => {
+              setTabIndex(0);
+              logout(apolloclient, history);
+            }}
           >
             Logout
           </Button>

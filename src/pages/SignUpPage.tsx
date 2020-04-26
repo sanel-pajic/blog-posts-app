@@ -14,11 +14,11 @@ import { Paper } from "@material-ui/core";
 import mongoID from "bson-objectid";
 import { useMutation, useQuery } from "@apollo/react-hooks";
 import * as yup from "yup";
-import { ADD_MUTATION_USER } from "../queries/mutations";
+import { ADD_MUTATION_USER } from "../graphql-queries-mutations/mutations";
 import { useHistory } from "react-router-dom";
 import { store } from "../components/store";
 import { CircularLoading } from "../components/CircularLoading";
-import { USERS_QUERY } from "../queries/queries";
+import { USERS_QUERY } from "../graphql-queries-mutations/queries";
 
 let schema = yup.object().shape({
   first_name: yup.string().required().min(3),

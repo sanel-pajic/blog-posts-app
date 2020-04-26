@@ -157,3 +157,42 @@ export const UPDATE_USER = gql`
     }
   }
 `;
+
+//Mutation for forgot email
+export const FORGOT_EMAIL_MUTATION = gql`
+  mutation($email: String!) {
+    forgot(email: $email) {
+      message
+    }
+  }
+`;
+
+//Mutation for check reset email token
+export const CHECK_VALID_TOKEN_RESET_MUTATION = gql`
+  mutation($resetToken: String!) {
+    checkEmailResetToken(resetToken: $resetToken) {
+      userId
+      token
+      tokenExpiration
+    }
+  }
+`;
+
+//Mutation for reset email
+export const RESET_EMAIL_MUTATION = gql`
+  mutation(
+    $newPassword: String!
+    $confirmPassword: String!
+    $resetToken: String!
+  ) {
+    resetPassword(
+      newPassword: $newPassword
+      confirmPassword: $confirmPassword
+      resetToken: $resetToken
+    ) {
+      userId
+      token
+      tokenExpiration
+    }
+  }
+`;

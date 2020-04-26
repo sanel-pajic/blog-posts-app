@@ -5,8 +5,8 @@ import { CircularLoading } from "./CircularLoading";
 import { ErrorLoading } from "./ErrorLoading";
 import { Button } from "@material-ui/core";
 import * as R from "ramda";
-import { USERS_QUERY } from "../queries/queries";
-import { REMOVE_USER_MUTATION } from "../queries/mutations";
+import { USERS_QUERY } from "../graphql-queries-mutations/queries";
+import { REMOVE_USER_MUTATION } from "../graphql-queries-mutations/mutations";
 
 export const MUITableVjezba: React.FC = () => {
   const { data, loading } = useQuery(USERS_QUERY, {

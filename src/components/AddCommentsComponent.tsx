@@ -8,7 +8,7 @@ import {
   Button,
   Typography,
   Divider,
-  withStyles
+  withStyles,
 } from "@material-ui/core";
 import gql from "graphql-tag";
 import mongoID from "bson-objectid";
@@ -17,7 +17,7 @@ import { teal } from "@material-ui/core/colors";
 import { useProtectedPath } from "../hooks/useProtectedPath";
 import { Redirect } from "react-router";
 import { CircularLoading } from "./CircularLoading";
-import { ADD_COMMENT } from "../queries/mutations";
+import { ADD_COMMENT } from "../graphql-queries-mutations/mutations";
 import { ModalError } from "./ModalError";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -27,12 +27,12 @@ const useStyles = makeStyles((theme: Theme) =>
       width: "60%",
       marginTop: "3%",
       marginBottom: "4%",
-      boxShadow: "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)"
+      boxShadow: "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)",
     },
 
     margin: {
-      margin: theme.spacing(1)
-    }
+      margin: theme.spacing(1),
+    },
   })
 );
 
@@ -41,9 +41,9 @@ export const ColorButtonTeal = withStyles((theme: Theme) => ({
     color: theme.palette.getContrastText(teal[500]),
     backgroundColor: teal[300],
     "&:hover": {
-      backgroundColor: teal[500]
-    }
-  }
+      backgroundColor: teal[500],
+    },
+  },
 }))(Button);
 
 function scrollToForm(id: string) {
@@ -51,7 +51,7 @@ function scrollToForm(id: string) {
 }
 
 export const AddCommentsComponent: React.FC<{ postId: string }> = ({
-  postId
+  postId,
 }) => {
   const accessGrant = useProtectedPath();
 
@@ -75,7 +75,7 @@ export const AddCommentsComponent: React.FC<{ postId: string }> = ({
   const classes = useStyles();
   const [text, setText] = useState("");
   const { data, loading } = useQuery(COMMENTS_QUERY, {
-    fetchPolicy: "cache-and-network"
+    fetchPolicy: "cache-and-network",
   });
   const [addComment, { error }] = useMutation(ADD_COMMENT);
   if (error) {
@@ -113,7 +113,7 @@ export const AddCommentsComponent: React.FC<{ postId: string }> = ({
         style={{
           display: "flex",
           justifyContent: "center",
-          alignItems: "center"
+          alignItems: "center",
         }}
       >
         <Paper className={classes.root}>
@@ -131,9 +131,9 @@ export const AddCommentsComponent: React.FC<{ postId: string }> = ({
             rows="4"
             variant="outlined"
             value={text}
-            onChange={e => setText(e.target.value)}
+            onChange={(e) => setText(e.target.value)}
             style={{
-              width: "100%"
+              width: "100%",
             }}
           />
           <div
@@ -141,7 +141,7 @@ export const AddCommentsComponent: React.FC<{ postId: string }> = ({
               display: "flex",
               justifyContent: "flex-end",
               alignItems: "center",
-              marginTop: "5%"
+              marginTop: "5%",
             }}
           >
             <ColorButtonTeal
@@ -156,13 +156,13 @@ export const AddCommentsComponent: React.FC<{ postId: string }> = ({
                       _id: id,
                       postId: postId,
                       text,
-                      date: new Date()
-                    }
+                      date: new Date(),
+                    },
                   },
-                  refetchQueries: [{ query: COMMENTS_QUERY }]
+                  refetchQueries: [{ query: COMMENTS_QUERY }],
                 })
-                  .then(res => handleClick(res.data.addComment._id))
-                  .catch(error => {
+                  .then((res) => handleClick(res.data.addComment._id))
+                  .catch((error) => {
                     console.log("ERROR ADD COMMENT", error);
                   });
               }}

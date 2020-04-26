@@ -18,8 +18,8 @@ import { useProtectedPath } from "../hooks/useProtectedPath";
 import { Redirect } from "react-router";
 import { CircularLoading } from "../components/CircularLoading";
 import { ModalError } from "../components/ModalError";
-import { BLOGS_QUERY } from "../queries/queries";
-import { ADD_BLOG_MUTATION } from "../queries/mutations";
+import { BLOGS_QUERY } from "../graphql-queries-mutations/queries";
+import { ADD_BLOG_MUTATION } from "../graphql-queries-mutations/mutations";
 import { DialogVisibleModal } from "../components/DialogVisibleModal";
 
 let schema = yup.object().shape({
@@ -99,13 +99,15 @@ export const AddBlogPost: React.FC = () => {
     return <Redirect to="/authorize" />;
   }
 
+  //console.log("ACCESS GRANT", accessGrant);
+
   const onChangeHandler = (description: EditorState) => {
     // const raw = convertToRaw(description.getCurrentContent());
     setDescription(description);
     // console.log(draftToHtml(raw));
   };
 
-  console.log("MUTATION DATA", mutationData);
+  //console.log("MUTATION DATA", mutationData);
 
   return (
     <div

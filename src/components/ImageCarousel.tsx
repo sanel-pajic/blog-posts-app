@@ -9,12 +9,19 @@ export const ImageCarousel: React.FC = () => {
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
+    let ignore = false;
+
     axios
       .get(
         `http://res.cloudinary.com/${CLOUD_NAME}/image/list/blog-post-app.json
       `
       )
-      .then((result) => setListImages(result.data.resources));
+      .then((result) => {
+        if (!ignore) setListImages(result.data.resources);
+      });
+    return () => {
+      ignore = true;
+    };
   }, []);
 
   //console.log("DATA IMAGES", listImages);

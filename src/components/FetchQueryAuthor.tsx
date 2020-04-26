@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/react-hooks";
-import { DATA_USER_QUERY } from "../queries/queries";
+import { DATA_USER_QUERY } from "../graphql-queries-mutations/queries";
 import { CircularLoading } from "./CircularLoading";
 import React from "react";
 

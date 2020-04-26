@@ -4,7 +4,7 @@ import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import Avatar from "@material-ui/core/Avatar";
 import image from "../images/blog1.jpg";
 import { useQuery } from "@apollo/react-hooks";
-import { CURRENT_USER_QUERY } from "../queries/queries";
+import { CURRENT_USER_QUERY } from "../graphql-queries-mutations/queries";
 import { CircularLoading } from "./CircularLoading";
 
 const useStyles = makeStyles((theme: Theme) =>

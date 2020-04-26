@@ -15,12 +15,12 @@ import { blue } from "@material-ui/core/colors";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import { CircularLoading } from "./CircularLoading";
 import { useHistory } from "react-router-dom";
-import { BLOGS_QUERY } from "../queries/queries";
+import { BLOGS_QUERY } from "../graphql-queries-mutations/queries";
 import {
   REMOVE_BLOG_MUTATION,
   ADD_BLOG_LIKE,
   REMOVE_BLOG_LIKE
-} from "../queries/mutations";
+} from "../graphql-queries-mutations/mutations";
 import { useProtectedPath } from "../hooks/useProtectedPath";
 import { Redirect } from "react-router";
 import mongoID from "bson-objectid";

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Typography,
   Divider,
@@ -12,6 +12,14 @@ import {
   InputLabel,
   Button,
 } from "@material-ui/core";
+import { useMutation } from "@apollo/react-hooks";
+import { FORGOT_EMAIL_MUTATION } from "../graphql-queries-mutations/mutations";
+import * as yup from "yup";
+import Alert from "@material-ui/lab/Alert";
+
+let schema = yup.object().shape({
+  forgotEmail: yup.string().required().min(5).email(),
+});
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -28,10 +36,16 @@ const useStyles = makeStyles((theme: Theme) =>
       textTransform: "none",
       marginTop: "1.5%",
     },
+    snackbar: {
+      display: "flex",
+      marginTop: "2vh",
+      justifyContent: "center",
+      alignItems: "center",
+    },
   })
 );
 
-const BootstrapInput = withStyles((theme: Theme) =>
+export const BootstrapInput = withStyles((theme: Theme) =>
   createStyles({
     root: {
       "label + &": {
@@ -46,7 +60,6 @@ const BootstrapInput = withStyles((theme: Theme) =>
       fontSize: 16,
       padding: "10px",
       transition: theme.transitions.create(["border-color", "box-shadow"]),
-      // Use the system font instead of the default Roboto font.
       fontFamily: [
         "-apple-system",
         "BlinkMacSystemFont",
@@ -69,6 +82,13 @@ const BootstrapInput = withStyles((theme: Theme) =>
 
 export const ForgotPage: React.FC = () => {
   const classes = useStyles();
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [success, setSuccess] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+
+  const [forgotEmailMutation, { error }] = useMutation(FORGOT_EMAIL_MUTATION, {
+    errorPolicy: "all",
+  });
 
   return (
     <div
@@ -84,7 +104,24 @@ export const ForgotPage: React.FC = () => {
         marginBottom: "12.7%",
       }}
     >
-      <Typography variant="h5">Forgot Password</Typography>
+      {!success ? (
+        error &&
+        error.graphQLErrors.map(({ message }, i) => (
+          <div key={i}>
+            <Alert color="error" variant="filled">
+              {message}
+            </Alert>
+          </div>
+        ))
+      ) : (
+        <Alert color="success" variant="filled">
+          {alertMessage}
+        </Alert>
+      )}
+
+      <Typography variant="h5" style={{ marginTop: "1%" }}>
+        Forgot Password
+      </Typography>
       <Divider style={{ width: "100%", marginTop: "1%" }} />
 
       <FormControl className={classes.margin}>
@@ -95,12 +132,44 @@ export const ForgotPage: React.FC = () => {
         >
           Email
         </InputLabel>
-        <BootstrapInput placeholder="Email Address *" id="forgot-input" />
+        <BootstrapInput
+          placeholder="Email Address *"
+          id="forgot-input"
+          value={forgotEmail}
+          onChange={(e) => setForgotEmail(e.target.value)}
+        />
       </FormControl>
       <Button
         variant="contained"
         color="primary"
         className={classes.buttonReset}
+        onClick={(e) => {
+          e.preventDefault();
+          setForgotEmail("");
+          try {
+            const valid = schema.validateSync({
+              forgotEmail,
+            });
+            console.log("VALID", valid);
+
+            forgotEmailMutation({
+              variables: {
+                email: forgotEmail,
+              },
+            })
+              .then((res) => {
+                console.log("DATA", res);
+                setAlertMessage(res.data.forgot.message);
+                console.log(res.data.forgot.message);
+                setSuccess(true);
+              })
+              .catch((error) => {
+                console.log("ERROR SEND EMAIL", error);
+              });
+          } catch (error) {
+            alert(error);
+          }
+        }}
       >
         Reset Password
       </Button>

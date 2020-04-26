@@ -12,8 +12,8 @@ import { CircularLoading } from "../components/CircularLoading";
 import { ErrorLoading } from "./ErrorLoading";
 import { IconButton, Typography } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { ARTICLES_QUERY } from "../queries/queries";
-import { REMOVE_ARTICLE_MUTATION } from "../queries/mutations";
+import { ARTICLES_QUERY } from "../graphql-queries-mutations/queries";
+import { REMOVE_ARTICLE_MUTATION } from "../graphql-queries-mutations/mutations";
 
 const TAX_RATE = 0.1;
 

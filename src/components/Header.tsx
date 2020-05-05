@@ -14,7 +14,7 @@ import PinterestIcon from "@material-ui/icons/Pinterest";
 import InstagramIcon from "@material-ui/icons/Instagram";
 import { store } from "./store";
 import { ApolloClient } from "apollo-boost";
-import { TabContext } from "../App";
+import { TabContext, CurrentUserContext } from "../App";
 
 const useStyles = makeStyles((theme: Theme) => ({
   header: {
@@ -75,18 +75,16 @@ const useStyles = makeStyles((theme: Theme) => ({
 function logout(apolloclient: ApolloClient<any>, history: any) {
   store.setState({
     authorized: false,
-    token: "",
-    userId: "",
-    tokenExpiration: 0,
   });
   localStorage.clear();
-  window.location.reload();
   apolloclient.clearStore();
-  history.push("/authorize");
+  history.push("/");
+  window.location.reload();
 }
 
 export const Header: React.FC = () => {
   const { setTabIndex } = useContext(TabContext);
+  const { setAuthorized } = useContext(CurrentUserContext);
   const history = useHistory();
   const classes = useStyles();
   const apolloclient = useApolloClient();
@@ -195,6 +193,7 @@ export const Header: React.FC = () => {
             className={classes.margin}
             onClick={() => {
               setTabIndex(0);
+              setAuthorized(false);
               logout(apolloclient, history);
             }}
           >

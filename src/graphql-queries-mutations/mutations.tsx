@@ -171,9 +171,9 @@ export const FORGOT_EMAIL_MUTATION = gql`
 export const CHECK_VALID_TOKEN_RESET_MUTATION = gql`
   mutation($resetToken: String!) {
     checkEmailResetToken(resetToken: $resetToken) {
-      userId
-      token
-      tokenExpiration
+      _id
+      first_name
+      last_name
     }
   }
 `;

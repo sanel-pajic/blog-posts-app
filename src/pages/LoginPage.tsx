@@ -178,12 +178,10 @@ export const LoginPage: React.FC = () => {
                       .then((res) => {
                         console.log("DATA", res);
                         localStorage.setItem("token", res.data.login.token);
+                        localStorage.setItem("userId", res.data.login.userId);
                         history.push("/authorize");
                         store.setState({
                           authorized: true,
-                          token: res.data.login.token,
-                          userId: res.data.login.userId,
-                          tokenExpiration: res.data.login.tokenExpiration,
                         });
                         console.log("STORE DATA", store);
                       })

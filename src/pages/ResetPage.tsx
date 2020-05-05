@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   Typography,
   Divider,
@@ -18,6 +18,7 @@ import { store } from "../components/store";
 import { useHistory } from "react-router-dom";
 import { CircularLoading } from "../components/CircularLoading";
 import { USERS_QUERY } from "../graphql-queries-mutations/queries";
+import { CurrentUserContext } from "../App";
 
 let schema = yup.object().shape({
   newPassword: yup.string().required("Password is required!").min(5),
@@ -92,7 +93,7 @@ export const ResetPage: React.FC = () => {
     return <CircularLoading />;
   }
 
-  console.log("DATA USERS", data);
+  // console.log("DATA USERS", data);
 
   return (
     <div className={classes.rootDiv}>
@@ -170,24 +171,23 @@ export const ResetPage: React.FC = () => {
                 confirmPassword: confirmPassword,
                 resetToken: resetToken,
               },
-              refetchQueries: [{ query: USERS_QUERY }],
             })
               .then((res) => {
                 console.log("DATA", res);
+                localStorage.removeItem("resetToken");
+                localStorage.setItem("token", res.data.resetPassword.token);
+                localStorage.setItem("userId", res.data.resetPassword.userId);
                 setAlertMessage("Success - Your password has been changed.");
                 setSuccess(true);
-                localStorage.setItem("token", res.data.resetPassword.token);
-                // history.push("/authorize");
                 store.setState({
                   authorized: true,
-                  token: res.data.resetPassword.token,
-                  userId: res.data.resetPassword.userId,
-                  tokenExpiration: res.data.resetPassword.tokenExpiration,
                 });
                 console.log("STORE DATA", store);
+                setTimeout(() => {
+                  history.push("/authorize");
+                }, 3000);
               })
               .catch((error) => {
-                console.log("ERROR SEND CONFIRMATION EMAIL", error);
                 alert(error);
                 history.push("/signup");
               });

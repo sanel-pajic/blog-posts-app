@@ -50,50 +50,88 @@ export const TabContext = React.createContext<{
   setTabIndex: Function;
 }>({ tabIndex: 0, setTabIndex: () => {} });
 
+export const CurrentUserContext = React.createContext<{
+  userId: string;
+  token: string;
+  authorized: boolean;
+  first_name: string;
+  last_name: string;
+  setAuthorized: Function;
+}>({
+  userId: "",
+  token: "",
+  first_name: "",
+  last_name: "",
+  authorized: false,
+  setAuthorized: () => {},
+});
+
 const App: React.FC = () => {
   const [tabIndex, setTabIndex] = useState(0);
-  console.log("TAB INDEX APP", tabIndex);
+  const [
+    { userId, token, first_name, last_name, authorized },
+    setAuthorized,
+  ] = useState({
+    userId: "",
+    token: "",
+    first_name: "",
+    last_name: "",
+    authorized: false,
+  });
+  // console.log("TAB INDEX APP", tabIndex);
+  console.log("USER CONTEXT", userId, token, first_name, last_name, authorized);
   return (
-    <TabContext.Provider value={{ tabIndex, setTabIndex }}>
-      <ApolloProvider client={client}>
-        <div
-          className="App"
-          style={{
-            background: "#edf1f5af",
-            overflow: "hidden",
-            position: "relative",
-            minHeight: "100%",
-          }}
-        >
-          <BrowserRouter>
-            <Header />
-            <Navbar />
-            <Switch>
-              <Route exact path="/" component={Home} />
-              <Route exact path="/article" component={ComponentArticle} />
-              <Route exact path="/addblogpost" component={AddBlogPost} />
-              <Route exact path="/singleblog/:id" component={SingleBlog} />
-              <Route exact path="/bloglist" component={BlogList} />
-              <Route exact path="/userlist" component={UserList} />
-              <Route exact path="/signup" component={SignUpPage} />
-              <Route exact path="/forgot" component={ForgotPage} />
-              <Route exact path="/authorize" component={AuthorizePage} />
-              <Route
-                exact
-                path="/resetcheck/:token"
-                component={CheckResetEmailPage}
+    <CurrentUserContext.Provider
+      value={{
+        userId,
+        token,
+        first_name,
+        last_name,
+        authorized,
+        setAuthorized,
+      }}
+    >
+      <TabContext.Provider value={{ tabIndex, setTabIndex }}>
+        <ApolloProvider client={client}>
+          <div
+            className="App"
+            style={{
+              background: "#edf1f5af",
+              overflow: "hidden",
+              position: "relative",
+              minHeight: "100%",
+            }}
+          >
+            <BrowserRouter>
+              <Header />
+              <Navbar />
+              <Switch>
+                <Route exact path="/" component={Home} />
+                <Route exact path="/article" component={ComponentArticle} />
+                <Route exact path="/addblogpost" component={AddBlogPost} />
+                <Route exact path="/singleblog/:id" component={SingleBlog} />
+                <Route exact path="/bloglist" component={BlogList} />
+                <Route exact path="/userlist" component={UserList} />
+                <Route exact path="/signup" component={SignUpPage} />
+                <Route exact path="/forgot" component={ForgotPage} />
+                <Route exact path="/authorize" component={AuthorizePage} />
+                <Route
+                  exact
+                  path="/resetcheck/:token"
+                  component={CheckResetEmailPage}
+                />
+                <Route exact path="/reset" component={ResetPage} />
+                <Route render={() => <Error />} />
+              </Switch>
+              <Footer
+                title="Created by Sanel Pajic"
+                description="Blog Posts React App"
               />
-              <Route exact path="/reset" component={ResetPage} />
-              <Route render={() => <Error />} />
-            </Switch>
-            <Footer
-              title="Created by Sanel Pajic"
-              description="Blog Posts React App"
-            />
-          </BrowserRouter>
-        </div>
-      </ApolloProvider>
-    </TabContext.Provider>
+            </BrowserRouter>
+          </div>
+        </ApolloProvider>
+      </TabContext.Provider>
+    </CurrentUserContext.Provider>
   );
 };
 

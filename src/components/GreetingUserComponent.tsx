@@ -33,6 +33,8 @@ export const GreetingUserComponent: React.FC = () => {
     return <CircularLoading />;
   }
 
+  console.log("GREETING COMPONENT DATA", data);
+
   const firstName = data.currentUser.first_name;
   const lastName = data.currentUser.last_name;
   return (

@@ -14,13 +14,15 @@ import { CommentComponent } from "../components/CommentComponent";
 import { AddCommentsComponent } from "../components/AddCommentsComponent";
 import { FetchQueryAuthor } from "../components/FetchQueryAuthor";
 import ThumbUpAltIcon from "@material-ui/icons/ThumbUpAlt";
-import { ADD_BLOG_LIKE, REMOVE_BLOG_LIKE } from "../graphql-queries-mutations/mutations";
+import {
+  ADD_BLOG_LIKE,
+  REMOVE_BLOG_LIKE,
+} from "../graphql-queries-mutations/mutations";
 import * as R from "ramda";
 import { ModalError } from "../components/ModalError";
 import mongoID from "bson-objectid";
 import { grey } from "@material-ui/core/colors";
 import { SINGLE_BLOG_QUERY } from "../graphql-queries-mutations/queries";
-import { useFetchQueryCurrentUser } from "../hooks/useFetchQueryCurrentUser";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -79,7 +81,7 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
   const idFromHistory = match.params.id;
 
   const classes = useStyles();
-  const currentUserData = useFetchQueryCurrentUser();
+  const currentUser: string | null = localStorage.getItem("userId");
 
   const { data, loading } = useQuery(SINGLE_BLOG_QUERY, {
     fetchPolicy: "cache-and-network",
@@ -151,12 +153,10 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
     );
   }
 
-  if (loading || !data) {
+  if (loading || !data || !currentUser) {
     return <CircularLoading />;
   }
   // console.log("DATA ", data);
-
-  const currentUser = currentUserData.toLocaleString();
 
   // console.log("CURRENT USER", currentUser);
 

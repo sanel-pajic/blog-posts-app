@@ -12,9 +12,9 @@ export const store = new Store<IStoreState>(
     authorized: false,
     token: "",
     userId: "",
-    tokenExpiration: 0
+    tokenExpiration: 0,
   },
   {
-    persistence: true // This property does the magic
+    persistence: true, // This property does the magic
   }
 );

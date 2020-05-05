@@ -61,8 +61,18 @@ export const CheckResetEmailPage: React.FC<RouteComponentProps<{
       },
     })
       .then((res) => {
-        console.log("DATA", res);
-        localStorage.setItem("resetToken", res.data.checkEmailResetToken.token);
+        console.log("RES", res);
+        localStorage.setItem("resetToken", tokenFromHistory);
+        localStorage.setItem("userId", res.data.checkEmailResetToken._id);
+        localStorage.setItem(
+          "first_name",
+          res.data.checkEmailResetToken.first_name
+        );
+        localStorage.setItem(
+          "last_name",
+          res.data.checkEmailResetToken.last_name
+        );
+
         history.push("/reset");
       })
       .catch((error) => console.log(error));

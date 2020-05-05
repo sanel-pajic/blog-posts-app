@@ -235,12 +235,10 @@ export const SignUpPage: React.FC = () => {
                     .then((res) => {
                       console.log("DATA", res);
                       localStorage.setItem("token", res.data.addUser.token);
+                      localStorage.setItem("userId", res.data.addUser.userId);
                       history.push("/authorize");
                       store.setState({
                         authorized: true,
-                        token: res.data.addUser.token,
-                        userId: res.data.addUser.userId,
-                        tokenExpiration: res.data.addUser.tokenExpiration,
                       });
                       console.log("STORE DATA", store);
                     })

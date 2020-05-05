@@ -1,15 +1,15 @@
-import React, { useEffect, memo, useContext } from "react";
+import React, { memo, useContext } from "react";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { store } from "./store";
 import { useStore } from "react-stores";
 import { useQuery } from "@apollo/react-hooks";
 import { USERS_QUERY } from "../graphql-queries-mutations/queries";
 import { CircularLoading } from "./CircularLoading";
-import { useFetchQueryCurrentUser } from "../hooks/useFetchQueryCurrentUser";
 import { TabContext } from "../App";
+import { useTabEffectNoAdmin } from "../hooks/useTabEffectNoAdmin";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -30,8 +30,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 const Navbar: React.FC = () => {
   const authStoreState = useStore(store);
   const classes = useStyles();
-  const location = useLocation();
-  const currentUserData = useFetchQueryCurrentUser();
+  const tabEffectNoAdmin = useTabEffectNoAdmin();
+  // const tabEffect = useTabEffectAllRoutes();
+  const currentUser: string | null = localStorage.getItem("userId");
 
   const { data, loading } = useQuery(USERS_QUERY, {
     fetchPolicy: "network-only",
@@ -41,7 +42,7 @@ const Navbar: React.FC = () => {
 
   const handleChange = (_event: React.ChangeEvent<{}>, newValue: number) => {
     setTabIndex(newValue);
-    console.log("NEW VALUE", newValue);
+    // console.log("NEW VALUE", newValue);
   };
 
   function a11yProps(index: any) {
@@ -51,25 +52,19 @@ const Navbar: React.FC = () => {
       "aria-controls": `simple-tabpanel-${index}`,
     };
   }
+  // console.log("CURRENT USER NAVBAR", currentUser);
+  // console.log("TAB EFFECT", tabEffect);
+  // console.log("TAB EFFECT NO ADMIN", tabEffectNoAdmin);
 
-  const ROUTES = ["/", "/addblogpost", "/article", "/bloglist", "/userlist"];
-
-  useEffect(() => {
-    const pathIndex = ROUTES.findIndex((val) => {
-      return val === location.pathname;
-    });
-    if (pathIndex >= 0) {
-      setTabIndex(pathIndex);
-    }
-  }, [location, ROUTES, setTabIndex]);
+  if (currentUser === null) {
+    setTabIndex(tabEffectNoAdmin);
+  }
 
   if (loading || !data) {
     return <CircularLoading />;
   }
 
   // console.log("DATA USERS", data);
-
-  const currentUser = currentUserData.toLocaleString();
 
   //console.log("CURRENT USER NAVBAR", currentUser);
 
@@ -79,6 +74,8 @@ const Navbar: React.FC = () => {
   );
 
   //console.log("IS ADMIN", isAdminData);
+
+  // console.log("STORE", authStoreState.authorized);
 
   return (
     <div

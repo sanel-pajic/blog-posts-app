@@ -29,7 +29,6 @@ import { FetchQueryAuthor } from "./FetchQueryAuthor";
 import { CommentLikeData } from "./CommentLikeData";
 import { COMMENTS_QUERY } from "../graphql-queries-mutations/queries";
 import * as R from "ramda";
-import { useFetchQueryCurrentUser } from "../hooks/useFetchQueryCurrentUser";
 import EditIcon from "@material-ui/icons/Edit";
 import CheckIcon from "@material-ui/icons/Check";
 
@@ -83,7 +82,7 @@ export const CommentComponent: React.FC<{
   postId: string;
 }> = ({ postId }) => {
   const classes = useStyles();
-  const currentUserData = useFetchQueryCurrentUser();
+  const currentUser: string | null = localStorage.getItem("userId");
   const [editingID, setEditingID] = useState<null | string>(null);
   const [editedText, setEditedText] = useState("");
   const { data, loading } = useQuery(COMMENTS_QUERY, {
@@ -207,13 +206,11 @@ export const CommentComponent: React.FC<{
   if (errorEditComment) {
     console.log("error", errorEditComment);
   }
-  if (loading || !data) {
+  if (loading || !data || !currentUser) {
     return <CircularLoading />;
   }
 
   // console.log("DATA", data);
-
-  const currentUser = currentUserData.toLocaleString();
 
   //@ts-ignore
   const dataLikeComments = data.comments.map((comment: any) => {

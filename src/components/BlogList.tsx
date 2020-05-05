@@ -19,60 +19,59 @@ import { BLOGS_QUERY } from "../graphql-queries-mutations/queries";
 import {
   REMOVE_BLOG_MUTATION,
   ADD_BLOG_LIKE,
-  REMOVE_BLOG_LIKE
+  REMOVE_BLOG_LIKE,
 } from "../graphql-queries-mutations/mutations";
 import { useProtectedPath } from "../hooks/useProtectedPath";
 import { Redirect } from "react-router";
 import mongoID from "bson-objectid";
 import * as R from "ramda";
-import { useFetchQueryCurrentUser } from "../hooks/useFetchQueryCurrentUser";
 import { ModalError } from "./ModalError";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      flexGrow: 1
+      flexGrow: 1,
     },
     control: {
-      padding: theme.spacing(2)
+      padding: theme.spacing(2),
     },
     card: {
       height: "auto",
       width: 450,
-      marginTop: "5vh"
+      marginTop: "5vh",
     },
     media: {
-      paddingTop: "56.25%"
+      paddingTop: "56.25%",
     },
     expand: {
       transform: "rotate(0deg)",
       marginLeft: "auto",
       transition: theme.transitions.create("transform", {
-        duration: theme.transitions.duration.shortest
-      })
+        duration: theme.transitions.duration.shortest,
+      }),
     },
     expandOpen: {
-      transform: "rotate(180deg)"
+      transform: "rotate(180deg)",
     },
     avatar: {
       backgroundColor: blue[800],
       width: 60,
-      height: 60
-    }
+      height: 60,
+    },
   })
 );
 
 export const BlogList: React.FC = () => {
   const classes = useStyles();
   let history = useHistory();
-  const currentUserData = useFetchQueryCurrentUser();
+  const currentUser: string | null = localStorage.getItem("userId");
 
   function handleClick(id: string) {
     history.push(`singleblog/${id}`);
   }
 
   const { data, loading } = useQuery(BLOGS_QUERY, {
-    fetchPolicy: "cache-and-network"
+    fetchPolicy: "cache-and-network",
   });
 
   const accessGrant = useProtectedPath();
@@ -84,7 +83,7 @@ export const BlogList: React.FC = () => {
     {
       update: (cache, { data }) => {
         const previousData: any = cache.readQuery({
-          query: BLOGS_QUERY
+          query: BLOGS_QUERY,
         });
 
         console.log("DATA QUERY", data, "PREVIOUS QUERY", previousData);
@@ -103,9 +102,9 @@ export const BlogList: React.FC = () => {
               R.over(R.lensProp("likes"), R.append(data.addLikeBlog))
             ),
             previousData
-          )
+          ),
         });
-      }
+      },
     }
   );
 
@@ -114,7 +113,7 @@ export const BlogList: React.FC = () => {
     {
       update: (cache, { data }) => {
         const previousData: any = cache.readQuery({
-          query: BLOGS_QUERY
+          query: BLOGS_QUERY,
         });
 
         console.log(
@@ -123,7 +122,7 @@ export const BlogList: React.FC = () => {
           "PREVIOUS QUERY REMOVE BLOG LIKE",
           previousData
         );
-      }
+      },
     }
   );
 
@@ -134,6 +133,7 @@ export const BlogList: React.FC = () => {
   if (loading || !data) {
     return <CircularLoading />;
   }
+
   if (error) {
     console.log("error", error);
     return (
@@ -173,8 +173,6 @@ export const BlogList: React.FC = () => {
     );
   }
 
-  const currentUser = currentUserData.toLocaleString();
-
   //@ts-ignore
   const dataBlogPosts = data.blogPosts.map((blog: any) => {
     const like = blog.likes.find(
@@ -184,7 +182,7 @@ export const BlogList: React.FC = () => {
       numLikes: blog.likes.length,
       isLikedByCurrentUser: like != null,
       blogId: blog._id,
-      userLikeID: like ? like._id : null
+      userLikeID: like ? like._id : null,
     };
   });
 
@@ -194,7 +192,7 @@ export const BlogList: React.FC = () => {
   const possibleDeleteBlogs = data.blogPosts.map((blog: any) => {
     return {
       user: blog.author,
-      possibleDelete: blog.author === currentUser
+      possibleDelete: blog.author === currentUser,
     };
   });
 
@@ -240,7 +238,7 @@ export const BlogList: React.FC = () => {
                       variant="h6"
                       style={{
                         marginLeft: 20,
-                        textDecoration: "underline"
+                        textDecoration: "underline",
                       }}
                     >
                       Description
@@ -261,10 +259,10 @@ export const BlogList: React.FC = () => {
                         dataBlogPosts[index].isLikedByCurrentUser
                           ? removeBlogLike({
                               variables: {
-                                _id: dataBlogPosts[index].userLikeID
+                                _id: dataBlogPosts[index].userLikeID,
                               },
-                              refetchQueries: [{ query: BLOGS_QUERY }]
-                            }).catch(error => {
+                              refetchQueries: [{ query: BLOGS_QUERY }],
+                            }).catch((error) => {
                               console.log("ERROR REMOVE BLOG LIKE", error);
                               alert(error);
                             })
@@ -272,10 +270,10 @@ export const BlogList: React.FC = () => {
                               variables: {
                                 data: {
                                   _id: mongoID.generate(),
-                                  blogId: blog._id
-                                }
-                              }
-                            }).catch(error => {
+                                  blogId: blog._id,
+                                },
+                              },
+                            }).catch((error) => {
                               console.log("ERROR ADD LIKE", error);
                             });
                       }}
@@ -298,8 +296,8 @@ export const BlogList: React.FC = () => {
                       onClick={() =>
                         removeBlogPost({
                           variables: { _id: blog._id },
-                          refetchQueries: [{ query: BLOGS_QUERY }]
-                        }).catch(error => {
+                          refetchQueries: [{ query: BLOGS_QUERY }],
+                        }).catch((error) => {
                           console.log("ERROR REMOVE BLOG", error);
                         })
                       }
@@ -316,7 +314,7 @@ export const BlogList: React.FC = () => {
                         marginLeft: "15%",
                         color: "#1565c0",
                         textTransform: "none",
-                        fontSize: "20px"
+                        fontSize: "20px",
                       }}
                       onClick={() => handleClick(blog._id)}
                     >

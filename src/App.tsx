@@ -35,6 +35,7 @@ export const client = new ApolloClient({
   },
   request: (operation) => {
     const token = localStorage.getItem("token");
+    console.log("TOKEN APP", token);
     if (token) {
       operation.setContext({
         headers: {

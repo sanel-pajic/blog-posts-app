@@ -80,6 +80,16 @@ export const ResetPage: React.FC = () => {
   const [alertMessage, setAlertMessage] = useState("");
   const resetToken = localStorage.getItem("resetToken");
   const history = useHistory();
+  const {
+    userId,
+    token,
+    first_name,
+    last_name,
+    authorized,
+    setAuthorized,
+  } = useContext(CurrentUserContext);
+  const firstName = localStorage.getItem("first_name");
+  const lastName = localStorage.getItem("last_name");
 
   const { data, loading } = useQuery(USERS_QUERY, {
     fetchPolicy: "cache-and-network",
@@ -94,6 +104,16 @@ export const ResetPage: React.FC = () => {
   }
 
   // console.log("DATA USERS", data);
+
+  console.log(
+    "CURRENT USER CONTEXT FROM RESET PAGE",
+    userId,
+    token,
+    first_name,
+    last_name,
+    authorized,
+    setAuthorized
+  );
 
   return (
     <div className={classes.rootDiv}>
@@ -181,8 +201,24 @@ export const ResetPage: React.FC = () => {
                 setSuccess(true);
                 store.setState({
                   authorized: true,
+                  token: res.data.resetPassword.token,
+                  userId: res.data.resetPassword.userId,
+                  tokenExpiration: res.data.resetPassword.tokenExpiration,
                 });
-                console.log("STORE DATA", store);
+                // console.log("STORE DATA", store);
+
+                const loggedUser = {
+                  userId: res.data.resetPassword.userId,
+                  token: res.data.resetPassword.token,
+                  first_name: firstName,
+                  last_name: lastName,
+                  authorized: store.state.authorized,
+                };
+
+                console.log("LOGGED USER", loggedUser);
+
+                setAuthorized(loggedUser);
+
                 setTimeout(() => {
                   history.push("/authorize");
                 }, 3000);

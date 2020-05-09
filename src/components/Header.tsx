@@ -84,10 +84,12 @@ function logout(apolloclient: ApolloClient<any>, history: any) {
 
 export const Header: React.FC = () => {
   const { setTabIndex } = useContext(TabContext);
-  const { setAuthorized } = useContext(CurrentUserContext);
   const history = useHistory();
   const classes = useStyles();
   const apolloclient = useApolloClient();
+  const { first_name, last_name, setAuthorized } = useContext(
+    CurrentUserContext
+  );
 
   function handleClick() {
     history.push("/authorize");
@@ -139,6 +141,13 @@ export const Header: React.FC = () => {
   const letterFN = firstName.charAt(0);
   const letterLN = lastName.charAt(0);
 
+  const firstNameContext: string = first_name;
+  const lastNameContext: string = last_name;
+  const letterFNContext = firstNameContext.charAt(0);
+  const letterLNContext = lastNameContext.charAt(0);
+
+  console.log("CURRENT USER HEADER CONTEXT", firstNameContext, lastNameContext);
+
   return (
     <div style={{ overflow: "auto" }}>
       <header className={classes.header}>
@@ -179,8 +188,8 @@ export const Header: React.FC = () => {
           >
             {" "}
             <Avatar className={classes.avatar}>
-              {letterFN}
-              {letterLN}
+              {letterFN || letterFNContext}
+              {letterLN || letterLNContext}
             </Avatar>
             <Typography className={classes.typography}>
               {firstName} {lastName}

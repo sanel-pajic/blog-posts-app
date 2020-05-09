@@ -15,6 +15,8 @@ export const store = new Store<IStoreState>(
     tokenExpiration: 0,
   },
   {
-    persistence: true, // This property does the magic
+    persistence: true,
+    // This property does the magic
+    uniqKey: "store-blog-post",
   }
 );

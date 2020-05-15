@@ -10,12 +10,13 @@ import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { useMutation } from "@apollo/react-hooks";
 import { LOGIN_MUTATION } from "../graphql-queries-mutations/mutations";
 import { useHistory } from "react-router-dom";
 import { store } from "../components/store";
 import { ValidationTextField } from "./SignUpPage";
+import { useMediaQuery } from "@material-ui/core";
 
 function Copyright() {
   return (
@@ -81,6 +82,21 @@ const useStyles = makeStyles((theme) => ({
   submitButton: {
     margin: theme.spacing(3, 0, 2),
     width: "68%",
+    backgroundColor: "#1976d2",
+    height: 42,
+  },
+  submitButtonMedia: {
+    margin: theme.spacing(3, 0, 2),
+    backgroundColor: "#1976d2",
+    height: 42,
+  },
+  rootDiv: {
+    display: "flex",
+    justifyContent: "space-around",
+    alignItems: "center",
+    marginBottom: "40vh",
+    marginTop: "1%",
+    width: 1000,
   },
 }));
 
@@ -91,6 +107,9 @@ export const LoginPage: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up("sm"));
+
   const [login, { error }] = useMutation(LOGIN_MUTATION);
 
   if (error) {
@@ -98,17 +117,7 @@ export const LoginPage: React.FC = () => {
   }
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "space-around",
-        alignItems: "center",
-        marginBottom: "40vh",
-        marginTop: "1%",
-        width: 1000,
-        minWidth: 500,
-      }}
-    >
+    <div className={classes.rootDiv}>
       <Grid container component="main" className={classes.root}>
         <CssBaseline />
         <Grid item xs={false} sm={4} md={7} className={classes.image} />
@@ -164,7 +173,9 @@ export const LoginPage: React.FC = () => {
                   fullWidth
                   variant="contained"
                   color="primary"
-                  className={classes.submitButton}
+                  className={
+                    matches ? classes.submitButton : classes.submitButtonMedia
+                  }
                   onClick={(e) => {
                     e.preventDefault();
                     setEmail("");
@@ -183,7 +194,6 @@ export const LoginPage: React.FC = () => {
                         store.setState({
                           authorized: true,
                         });
-                        console.log("STORE DATA", store);
                       })
                       .catch((error) => {
                         console.log("ERROR", error);

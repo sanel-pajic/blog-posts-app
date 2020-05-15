@@ -7,8 +7,14 @@ import {
   CardMedia,
   Divider,
   IconButton,
+  useMediaQuery,
 } from "@material-ui/core";
-import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
+import {
+  makeStyles,
+  createStyles,
+  Theme,
+  useTheme,
+} from "@material-ui/core/styles";
 import { RouteComponentProps } from "react-router-dom";
 import { CommentComponent } from "../components/CommentComponent";
 import { AddCommentsComponent } from "../components/AddCommentsComponent";
@@ -26,9 +32,18 @@ import { SINGLE_BLOG_QUERY } from "../graphql-queries-mutations/queries";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    media: {
+    card: {
       height: "50vh",
-      width: "85vw",
+      width: "90%",
+      marginBottom: "1%",
+      marginTop: "2%",
+    },
+    cardMedia: {
+      height: "30vh",
+      width: "68%",
+      marginBottom: "1%",
+      marginTop: "2%",
+      marginLeft: "16%",
     },
     likeBlog: {
       display: "flex",
@@ -39,6 +54,130 @@ const useStyles = makeStyles((theme: Theme) =>
       boxShadow: "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)",
       backgroundColor: grey[50],
     },
+    likeBlogMedia: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2),
+      boxShadow: "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)",
+      backgroundColor: grey[50],
+      height: theme.spacing(8),
+    },
+    divRoot: {
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      marginTop: "2%",
+      marginBottom: "2%",
+    },
+    paper: { width: "50vw", minWidth: 600 },
+    typographyTitle: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      marginTop: "5%",
+      wordWrap: "break-word",
+    },
+    divPublishedAuthor: {
+      marginLeft: "5rem",
+      position: "relative",
+      top: "6vh",
+      display: "flex",
+    },
+    divPublishedAuthorMedia: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      marginTop: "6vh",
+    },
+    typographyPublished: { fontWeight: "bolder", color: "#ff8a80" },
+    typographyDate: {
+      fontWeight: "bolder",
+      marginLeft: "0.5rem",
+      color: "#ff8a80",
+    },
+    typographyBy: {
+      fontWeight: "bolder",
+      marginLeft: "0.5rem",
+      color: "#ff8a80",
+    },
+    typographyAuthor: {
+      fontWeight: "bolder",
+      marginLeft: "0.2rem",
+      color: "#ff8a80",
+    },
+    typographyInfo: {
+      paddingTop: "7%",
+      paddingLeft: "6%",
+      marginTop: "0.5%",
+      marginBottom: "0.5%",
+    },
+    typographyInfoMedia: {
+      marginTop: "3%",
+      marginBottom: "1%",
+      marginLeft: "19%",
+      fontSize: "1.2rem",
+    },
+    typographyDescriptionShort: {
+      paddingLeft: "3rem",
+      wordWrap: "break-word",
+      paddingRight: "3rem",
+    },
+    typographyDescriptionShortMedia: {
+      wordWrap: "break-word",
+      textAlign: "justify",
+      marginLeft: "20%",
+      marginRight: "20%",
+    },
+    image: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      padding: "1rem",
+    },
+    imageMedia: {
+      padding: "1rem",
+    },
+    typographyDescription: { padding: "3rem", wordWrap: "break-word" },
+    typographyDescriptionMedia: {
+      wordWrap: "break-word",
+      textAlign: "justify",
+      marginLeft: "20%",
+      marginRight: "20%",
+    },
+    divLikeBlog: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      marginBottom: "5vh",
+    },
+    likeIconButton: {
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      marginLeft: "2vw",
+    },
+    divThumbUpIcon: {
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      width: 60,
+      height: 60,
+    },
+    divThumbUpIconMedia: {
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      width: 20,
+      height: 20,
+      marginRight: 5,
+    },
+    typographyNumberLikes: { marginLeft: "1.5vw", marginRight: "2vw" },
   })
 );
 
@@ -82,6 +221,9 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
 
   const classes = useStyles();
   const currentUser: string | null = localStorage.getItem("userId");
+
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up("sm"));
 
   const { data, loading } = useQuery(SINGLE_BLOG_QUERY, {
     fetchPolicy: "cache-and-network",
@@ -153,21 +295,15 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
     );
   }
 
-  if (loading || !data || !currentUser) {
+  if (loading || !data) {
     return <CircularLoading />;
   }
-  // console.log("DATA ", data);
-
-  // console.log("CURRENT USER", currentUser);
 
   //@ts-ignore
-
   const likeSingleBlog =
     data.blogPost.likes.findIndex(
       (like: { userId: string }) => like.userId === currentUser
     ) >= 0;
-
-  // console.log("SINGLE BLOG LIKE", likeSingleBlog);
 
   const like = data.blogPost.likes.find((like: any) => {
     return like.userId === currentUser;
@@ -179,80 +315,36 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
     userLikeID: like ? like._id : null,
   };
 
-  // console.log("DATA BLOG", dataBLOG);
-
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        marginTop: "2%",
-        marginBottom: "2%",
-      }}
-    >
-      <Paper
-        style={{
-          width: "50vw",
-          minWidth: 600,
-        }}
-      >
+    <div className={classes.divRoot}>
+      <Paper className={classes.paper}>
         <Typography
           color="textPrimary"
-          variant="h3"
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            marginTop: "5%",
-            wordWrap: "break-word",
-          }}
+          variant={matches ? "h3" : "h4"}
+          className={classes.typographyTitle}
         >
           {data.blogPost.title}
         </Typography>
         <div
-          style={{
-            marginLeft: "5rem",
-            position: "relative",
-            top: "6vh",
-            display: "flex",
-          }}
+          className={
+            matches
+              ? classes.divPublishedAuthor
+              : classes.divPublishedAuthorMedia
+          }
         >
-          <Typography
-            variant="body1"
-            style={{ fontWeight: "bolder", color: "#ff8a80" }}
-          >
+          <Typography variant="body1" className={classes.typographyPublished}>
             Published:
           </Typography>
-          <Typography
-            variant="body1"
-            style={{
-              fontWeight: "bolder",
-              marginLeft: "0.5rem",
-              color: "#ff8a80",
-            }}
-          >
+          <Typography variant="body1" className={classes.typographyDate}>
             {handleDate(data.blogPost.date)}
           </Typography>
-          <Typography
-            variant="body1"
-            style={{
-              fontWeight: "bolder",
-              marginLeft: "0.5rem",
-              color: "#ff8a80",
-            }}
-          >
+          <Typography variant="body1" className={classes.typographyBy}>
             by
           </Typography>
           <Typography
             component={"span"}
             variant="body1"
-            style={{
-              fontWeight: "bolder",
-              marginLeft: "0.2rem",
-              color: "#ff8a80",
-            }}
+            className={classes.typographyAuthor}
           >
             <FetchQueryAuthor userID={data.blogPost.author} />
           </Typography>
@@ -260,73 +352,53 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
         <Typography
           color="primary"
           variant="h6"
-          style={{
-            paddingTop: "3.5rem",
-            paddingLeft: "3rem",
-            marginTop: "0.5%",
-            marginBottom: "0.5%",
-          }}
+          className={
+            matches ? classes.typographyInfo : classes.typographyInfoMedia
+          }
         >
           Short description: To read more scroll down!
         </Typography>
         <Typography
           color="textSecondary"
-          variant="h5"
-          style={{
-            paddingLeft: "3rem",
-            wordWrap: "break-word",
-            paddingRight: "3rem",
-          }}
+          variant={matches ? "h5" : "h6"}
+          className={
+            matches
+              ? classes.typographyDescriptionShort
+              : classes.typographyDescriptionShortMedia
+          }
         >
           {data.blogPost.description_short}
         </Typography>
 
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            padding: "1rem",
-          }}
-        >
+        <div className={matches ? classes.image : classes.imageMedia}>
           <CardMedia
             image={data.blogPost.image}
             title="Blog Post Image"
-            className={classes.media}
-            style={{ width: "90%", marginBottom: "1rem", marginTop: "1rem" }}
+            className={matches ? classes.card : classes.cardMedia}
             component="div"
           />
         </div>
         <Typography
           color="textPrimary"
-          variant="h5"
-          style={{
-            padding: "3rem",
-            wordWrap: "break-word",
-          }}
+          variant={matches ? "h5" : "h6"}
+          className={
+            matches
+              ? classes.typographyDescription
+              : classes.typographyDescriptionShortMedia
+          }
           dangerouslySetInnerHTML={{ __html: data.blogPost.description }}
         ></Typography>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            marginBottom: "5vh",
-          }}
-        >
-          <Paper className={classes.likeBlog}>
-            <Typography color="textSecondary" variant="h6">
+        <div className={classes.divLikeBlog}>
+          <Paper className={matches ? classes.likeBlog : classes.likeBlogMedia}>
+            <Typography
+              color="textSecondary"
+              variant={matches ? "h6" : "subtitle1"}
+            >
               If you like this post please press like!
             </Typography>
             <IconButton
               aria-label="add to favorites"
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                marginLeft: "2vw",
-              }}
+              className={classes.likeIconButton}
               onClick={() =>
                 dataBLOG.isLikedByCurrentUser
                   ? removeBlogLike({
@@ -340,7 +412,7 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
                         },
                       ],
                     }).catch((error) => {
-                      console.log("ERROR REMOVE BLOG LIKE", error);
+                      console.log(error);
                       alert(error);
                     })
                   : addBlogLike({
@@ -351,21 +423,15 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
                         },
                       },
                     }).catch((error) => {
-                      console.log("ERROR ADD LIKE", error);
+                      console.log(error);
                     })
               }
             >
               <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  width: 60,
-                  height: 60,
-                }}
+                className={
+                  matches ? classes.divThumbUpIcon : classes.divThumbUpIconMedia
+                }
               >
-                {" "}
                 <ThumbUpAltIcon
                   color={likeSingleBlog ? "primary" : "inherit"}
                 />
@@ -378,9 +444,9 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
               </div>
             </IconButton>
             <Typography
-              style={{ marginLeft: "1.5vw", marginRight: "2vw" }}
+              className={classes.typographyNumberLikes}
               color="primary"
-              variant="h4"
+              variant={matches ? "h4" : "h5"}
             >
               {data.blogPost.likes.length}
             </Typography>

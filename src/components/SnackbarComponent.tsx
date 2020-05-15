@@ -2,39 +2,41 @@ import React from "react";
 import clsx from "clsx";
 import InfoIcon from "@material-ui/icons/Info";
 import SnackbarContent from "@material-ui/core/SnackbarContent";
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import { makeStyles, Theme, useTheme } from "@material-ui/core/styles";
 import { lightBlue, green } from "@material-ui/core/colors";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import { useMediaQuery } from "@material-ui/core";
 
 const variantIcon = {
   info: InfoIcon,
-  success: CheckCircleIcon
+  success: CheckCircleIcon,
 };
 
 const useStyles = makeStyles((theme: Theme) => ({
   info: {
-    backgroundColor: lightBlue[400]
+    backgroundColor: lightBlue[400],
   },
   success: {
-    backgroundColor: green[500]
+    backgroundColor: green[500],
   },
   icon: {
-    fontSize: 35
+    fontSize: 35,
   },
   iconVariant: {
     opacity: 0.9,
-    marginRight: theme.spacing(1)
+    marginRight: theme.spacing(1),
   },
   message: {
     display: "flex",
     alignItems: "center",
-    fontSize: 18
+    fontSize: 18,
   },
   snackbarDiv: {
     width: "62vw",
     minWidth: 500,
-    marginBottom: "2vh"
-  }
+    marginBottom: "2vh",
+  },
+  snackbarDivMedia: { width: 350, marginBottom: "3vh", marginTop: "2vh" },
 }));
 
 export interface Props {
@@ -47,9 +49,11 @@ function MySnackbarContentWrapper(props: Props) {
   const classes = useStyles();
   const { className, message, variant } = props;
   const Icon = variantIcon[variant];
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up("sm"));
 
   return (
-    <div className={classes.snackbarDiv}>
+    <div className={matches ? classes.snackbarDiv : classes.snackbarDivMedia}>
       <SnackbarContent
         className={clsx(classes[variant], className)}
         aria-describedby="client-snackbar"

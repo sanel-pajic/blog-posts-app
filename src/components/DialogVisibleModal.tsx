@@ -3,10 +3,11 @@ import {
   makeStyles,
   Theme,
   createStyles,
-  withStyles
+  withStyles,
+  useTheme,
 } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
-import { Typography, Button, Paper } from "@material-ui/core";
+import { Typography, Button, Paper, useMediaQuery } from "@material-ui/core";
 import CheckCircleRoundedIcon from "@material-ui/icons/CheckCircleRounded";
 import { green, deepOrange } from "@material-ui/core/colors";
 import { useHistory } from "react-router-dom";
@@ -22,7 +23,7 @@ function getModalStyle() {
   return {
     top: `${top}%`,
     left: `${left}%`,
-    transform: `translate(-${top}%, -${left}%)`
+    transform: `translate(-${top}%, -${left}%)`,
   };
 }
 
@@ -35,29 +36,62 @@ const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: theme.palette.background.paper,
       border: "2px solid #000",
       boxShadow: theme.shadows[5],
-      padding: theme.spacing(2, 4, 3)
+      padding: theme.spacing(2, 4, 3),
+    },
+    paperMedia: {
+      position: "absolute",
+      width: 300,
+      height: 340,
+      backgroundColor: theme.palette.background.paper,
+      border: "2px solid #000",
+      boxShadow: theme.shadows[5],
+      padding: theme.spacing(2, 4, 3),
     },
     btnAdd: {
       margin: theme.spacing(1),
-      width: 150
+      width: 150,
     },
     btnShow: {
       margin: theme.spacing(1),
-      width: 180
-    }
+      width: 180,
+    },
+    divRoot: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      marginTop: 20,
+    },
+    paperRoot: {
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      width: 350,
+      height: 300,
+      boxShadow: "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)",
+    },
+    checkCircleIcon: { color: green[500], width: 100, height: 100 },
+    checkCircleIconMedia: { color: green[500], width: 80, height: 80 },
+    typographyMessage: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      marginTop: "5%",
+      marginBottom: "5%",
+    },
   })
 );
 
 const ColorButtonAdd = withStyles((theme: Theme) => ({
   root: {
-    backgroundColor: green[500]
-  }
+    backgroundColor: green[500],
+  },
 }))(Button);
 
 const ColorButtonShow = withStyles((theme: Theme) => ({
   root: {
-    backgroundColor: deepOrange[500]
-  }
+    backgroundColor: deepOrange[500],
+  },
 }))(Button);
 
 export const DialogVisibleModal: React.FC<{
@@ -67,13 +101,14 @@ export const DialogVisibleModal: React.FC<{
 }> = ({ dialogVisible, message, blogID }) => {
   let history = useHistory();
   const classes = useStyles();
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up("sm"));
 
   const [modalStyle] = React.useState(getModalStyle);
 
   const handleClickShowBlog = (id: string) => {
     history.push(`singleblog/${id}`);
   };
-  //console.log("BLOG ID", blogID);
   return (
     <div>
       <Modal
@@ -81,42 +116,24 @@ export const DialogVisibleModal: React.FC<{
         aria-describedby="simple-modal-description"
         open={dialogVisible}
       >
-        <div style={modalStyle} className={classes.paper}>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              marginTop: 20
-            }}
-          >
-            <Paper
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                width: 350,
-                height: 300,
-                boxShadow:
-                  "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)"
-              }}
-            >
-              {" "}
+        <div
+          style={modalStyle}
+          className={matches ? classes.paper : classes.paperMedia}
+        >
+          <div className={classes.divRoot}>
+            <Paper className={classes.paperRoot}>
               <CheckCircleRoundedIcon
-                style={{ color: green[500], width: 100, height: 100 }}
+                className={
+                  matches
+                    ? classes.checkCircleIcon
+                    : classes.checkCircleIconMedia
+                }
               />
               <Typography
                 id="simple-modal-title"
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  marginTop: "5%",
-                  marginBottom: "5%"
-                }}
+                className={classes.typographyMessage}
                 color="textSecondary"
-                variant="h5"
+                variant={matches ? "h5" : "h6"}
               >
                 {message}
               </Typography>

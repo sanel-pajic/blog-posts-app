@@ -1,7 +1,12 @@
 import React from "react";
-import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
+import {
+  makeStyles,
+  Theme,
+  createStyles,
+  useTheme,
+} from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
-import { Typography, Button } from "@material-ui/core";
+import { Typography, Button, useMediaQuery } from "@material-ui/core";
 import messageError from "../images/errorMessage.png";
 
 function rand() {
@@ -15,7 +20,7 @@ function getModalStyle() {
   return {
     top: `${top}%`,
     left: `${left}%`,
-    transform: `translate(-${top}%, -${left}%)`
+    transform: `translate(-${top}%, -${left}%)`,
   };
 }
 
@@ -28,13 +33,45 @@ const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: theme.palette.background.paper,
       border: "2px solid #000",
       boxShadow: theme.shadows[5],
-      padding: theme.spacing(2, 4, 3)
-    }
+      padding: theme.spacing(2, 4, 3),
+    },
+    paperMedia: {
+      position: "absolute",
+      width: 300,
+      height: 340,
+      backgroundColor: theme.palette.background.paper,
+      border: "2px solid #000",
+      boxShadow: theme.shadows[5],
+      padding: theme.spacing(2, 4, 3),
+    },
+    rootDiv: {
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    imageError: {
+      marginTop: "5%",
+      width: 220,
+      height: 170,
+      opacity: 0.7,
+      marginBottom: "5%",
+    },
+    typographyMessage: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      marginBottom: "5%",
+      textAlign: "center",
+    },
   })
 );
 
 export const ModalError: React.FC<{ message: string }> = ({ message }) => {
   const classes = useStyles();
+
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up("sm"));
 
   const [modalStyle] = React.useState(getModalStyle);
   const [open] = React.useState(true);
@@ -46,35 +83,19 @@ export const ModalError: React.FC<{ message: string }> = ({ message }) => {
         aria-describedby="simple-modal-description"
         open={open}
       >
-        <div style={modalStyle} className={classes.paper}>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center"
-            }}
-          >
-            {" "}
+        <div
+          style={modalStyle}
+          className={matches ? classes.paper : classes.paperMedia}
+        >
+          <div className={classes.rootDiv}>
             <img
               src={messageError}
               alt="Error Message"
-              style={{
-                marginTop: "5%",
-                width: 220,
-                height: 170,
-                opacity: 0.7,
-                marginBottom: "5%"
-              }}
+              className={classes.imageError}
             />
             <Typography
               id="simple-modal-title"
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                marginBottom: "5%"
-              }}
+              className={classes.typographyMessage}
               color="error"
               variant="h4"
             >

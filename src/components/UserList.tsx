@@ -16,7 +16,10 @@ import { Typography, TextField } from "@material-ui/core";
 import { useProtectedPath } from "../hooks/useProtectedPath";
 import { Redirect } from "react-router";
 import { USERS_QUERY } from "../graphql-queries-mutations/queries";
-import { REMOVE_USER_MUTATION, UPDATE_USER } from "../graphql-queries-mutations/mutations";
+import {
+  REMOVE_USER_MUTATION,
+  UPDATE_USER,
+} from "../graphql-queries-mutations/mutations";
 import CheckIcon from "@material-ui/icons/Check";
 import { green, red } from "@material-ui/core/colors";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -44,6 +47,8 @@ export const UserList: React.FC = () => {
   const [editedLastName, setEditedLastName] = useState("");
   const [editedEmail, setEditedEmail] = useState("");
   const [isAdmin, setIsAdmin] = React.useState("false");
+  const currentUser: string | null = localStorage.getItem("userId");
+
   const { data, loading } = useQuery(USERS_QUERY, {
     fetchPolicy: "cache-and-network",
   });
@@ -114,7 +119,16 @@ export const UserList: React.FC = () => {
     setIsAdmin(event.target.value as string);
   };
 
-  // console.log("USERS DATA", data);
+  const isAdminData = data.users.find(
+    (user: { _id: string; isAdmin: boolean }) =>
+      user._id === currentUser && user.isAdmin === true
+  );
+
+  if (isAdminData === undefined) {
+    return <Redirect to="/authorize" />;
+  }
+
+  console.log("ADMIN", isAdminData);
 
   return (
     <div

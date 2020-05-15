@@ -11,6 +11,8 @@ import {
   FormControl,
   InputLabel,
   Button,
+  useTheme,
+  useMediaQuery,
 } from "@material-ui/core";
 import { useMutation } from "@apollo/react-hooks";
 import { FORGOT_EMAIL_MUTATION } from "../graphql-queries-mutations/mutations";
@@ -27,9 +29,14 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       flexWrap: "wrap",
     },
-    margin: {
+    formControl: {
       width: "100%",
       marginTop: "1%",
+    },
+    formControlMedia: {
+      width: "100%",
+      marginTop: "5%",
+      marginBottom: "5%",
     },
     buttonReset: {
       width: 140,
@@ -42,6 +49,39 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: "center",
       alignItems: "center",
     },
+    rootDiv: {
+      width: "80%",
+      paddingLeft: "10%",
+      paddingRight: "5%",
+      paddingTop: "2%",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      minHeight: "100%",
+      marginBottom: "12.7%",
+    },
+    rootDivMedia: {
+      width: "80%",
+      paddingLeft: "10%",
+      paddingRight: "5%",
+      paddingTop: "2%",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      minHeight: "100%",
+      marginBottom: "12.7%",
+      marginTop: "10%",
+    },
+    inputEmailLabel: { fontSize: 22, fontWeight: "bold", marginLeft: 5 },
+    inputEmailMedia: {
+      fontSize: 22,
+      fontWeight: "bold",
+      marginLeft: 5,
+      marginTop: 15,
+    },
+    typographyForgot: { marginTop: "1%" },
+    typographyForgotMedia: { marginTop: "3%" },
+    alert: { display: "flex", justifyContent: "center", alignItems: "center" },
   })
 );
 
@@ -85,50 +125,55 @@ export const ForgotPage: React.FC = () => {
   const [forgotEmail, setForgotEmail] = useState("");
   const [success, setSuccess] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up("sm"));
 
   const [forgotEmailMutation, { error }] = useMutation(FORGOT_EMAIL_MUTATION, {
     errorPolicy: "all",
   });
 
   return (
-    <div
-      style={{
-        width: "80%",
-        paddingLeft: "10%",
-        paddingRight: "5%",
-        paddingTop: "2%",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        minHeight: "100%",
-        marginBottom: "12.7%",
-      }}
-    >
+    <div className={matches ? classes.rootDiv : classes.rootDivMedia}>
       {!success ? (
         error &&
         error.graphQLErrors.map(({ message }, i) => (
           <div key={i}>
-            <Alert color="error" variant="filled">
+            <Alert
+              color="error"
+              variant="filled"
+              className={matches ? undefined : classes.alert}
+            >
               {message}
             </Alert>
           </div>
         ))
       ) : (
-        <Alert color="success" variant="filled">
+        <Alert
+          color="success"
+          variant="filled"
+          className={matches ? undefined : classes.alert}
+        >
           {alertMessage}
         </Alert>
       )}
 
-      <Typography variant="h5" style={{ marginTop: "1%" }}>
+      <Typography
+        variant="h5"
+        className={
+          matches ? classes.typographyForgot : classes.typographyForgotMedia
+        }
+      >
         Forgot Password
       </Typography>
       <Divider style={{ width: "100%", marginTop: "1%" }} />
 
-      <FormControl className={classes.margin}>
+      <FormControl
+        className={matches ? classes.formControl : classes.formControlMedia}
+      >
         <InputLabel
           shrink
           htmlFor="forgot-input"
-          style={{ fontSize: 22, fontWeight: "bold", marginLeft: 5 }}
+          className={classes.inputEmailLabel}
         >
           Email
         </InputLabel>

@@ -9,6 +9,8 @@ import {
   Typography,
   Divider,
   TextField,
+  useTheme,
+  useMediaQuery,
 } from "@material-ui/core";
 import Like from "@material-ui/icons/ThumbUpAltOutlined";
 import { useQuery, useMutation } from "@apollo/react-hooks";
@@ -75,6 +77,75 @@ const useStyles = makeStyles((theme: Theme) =>
       marginRight: "0.6rem",
       paddingLeft: "0.2rem",
     },
+    divRoot: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    typographyAuthor: { color: "#e65100", fontSize: 18, marginLeft: "0.5rem" },
+    personIcon: { height: 40, width: 40 },
+    removeIcon: {
+      position: "relative",
+      left: 380,
+      top: 5,
+      width: 50,
+      height: 50,
+    },
+    removeIconMedia: {
+      position: "relative",
+      left: 180,
+      top: 10,
+      width: 50,
+      height: 50,
+    },
+    commentLike: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      marginLeft: 10,
+    },
+    commentFooter: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+    },
+    divPossibleDeleteEdit: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      marginRight: 5,
+    },
+    dividerRoot: { marginBottom: 50, marginTop: 40 },
+    dividerRootMedia: {
+      marginBottom: 50,
+      marginTop: 40,
+      width: 550,
+      position: "relative",
+      right: 120,
+    },
+    dividerComment: { transform: "rotate(90deg)", width: 40 },
+    dividerCommentMedia: {
+      transform: "rotate(90deg)",
+      width: 40,
+      position: "relative",
+      left: 15,
+    },
+    editIconMedia: { position: "relative", left: 25 },
+    checkIconMedia: { position: "relative", left: 25 },
+    divRootMedia: {
+      display: "block",
+      marginLeft: "auto",
+      marginRight: "auto",
+      width: "50%",
+    },
+    editedCommentText: {
+      width: 500,
+    },
+    editedCommentTextMedia: {
+      width: 300,
+      wordWrap: "break-word",
+      textAlign: "justify",
+    },
   })
 );
 
@@ -85,6 +156,10 @@ export const CommentComponent: React.FC<{
   const currentUser: string | null = localStorage.getItem("userId");
   const [editingID, setEditingID] = useState<null | string>(null);
   const [editedText, setEditedText] = useState("");
+
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up("sm"));
+
   const { data, loading } = useQuery(COMMENTS_QUERY, {
     fetchPolicy: "cache-and-network",
     variables: { postId },
@@ -206,11 +281,9 @@ export const CommentComponent: React.FC<{
   if (errorEditComment) {
     console.log("error", errorEditComment);
   }
-  if (loading || !data || !currentUser) {
+  if (loading || !data) {
     return <CircularLoading />;
   }
-
-  // console.log("DATA", data);
 
   //@ts-ignore
   const dataLikeComments = data.comments.map((comment: any) => {
@@ -224,16 +297,13 @@ export const CommentComponent: React.FC<{
       userLikeID: like ? like._id : null,
     };
   });
-  // console.log("DATA LIKE COMMENTS", dataLikeComments);
-  // console.log("DATA LIKE COMMENTS", dataLikeComments);
-  //console.log("DATA COMMENTS", data);
+
   const possibleDeleteEditComments = data.comments.map((comment: any) => {
     return {
       user: comment.author,
       possibleDeleteEdit: comment.author === currentUser,
     };
   });
-  // console.log("POSSIBLE DELETE COMMENTS", possibleDeleteEditComments);
 
   const handleEditingChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -243,7 +313,7 @@ export const CommentComponent: React.FC<{
   };
 
   return (
-    <div>
+    <div className={matches ? undefined : classes.divRootMedia}>
       {data.comments.map(
         (
           comment: {
@@ -257,42 +327,25 @@ export const CommentComponent: React.FC<{
           index: any
         ) => (
           <div key={comment._id} id={comment._id}>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
+            <div className={classes.divRoot}>
               <Paper className={classes.root1}>
                 <div style={{ display: "flex" }}>
-                  {" "}
                   <Avatar variant="rounded" className={classes.green}>
-                    <PersonIcon
-                      style={{
-                        height: 40,
-                        width: 40,
-                      }}
-                    />
+                    <PersonIcon className={classes.personIcon} />
                   </Avatar>
                   {possibleDeleteEditComments[index].possibleDeleteEdit ? (
                     <IconButton
-                      style={{
-                        position: "relative",
-                        left: 380,
-                        top: 5,
-                        width: 50,
-                        height: 50,
-                      }}
+                      className={
+                        matches ? classes.removeIcon : classes.removeIconMedia
+                      }
                       onClick={() => {
-                        console.log("COMMENT ID U REMOVE COMMENT", comment._id);
                         removeComment({
                           variables: { _id: comment._id },
                           refetchQueries: [
                             { query: COMMENTS_QUERY, variables: { postId } },
                           ],
                         }).catch((error) => {
-                          console.log("ERROR REMOVE COMMENT", error);
+                          console.log("error", error);
                           alert(error);
                         });
                       }}
@@ -312,12 +365,8 @@ export const CommentComponent: React.FC<{
                     >
                       <FetchQueryAuthor userID={comment.author} />
                       <Typography
+                        className={classes.typographyAuthor}
                         variant="body1"
-                        style={{
-                          color: "#e65100",
-                          fontSize: 18,
-                          marginLeft: "0.5rem",
-                        }}
                       >
                         says...
                       </Typography>
@@ -343,34 +392,20 @@ export const CommentComponent: React.FC<{
                       <TextField
                         multiline={true}
                         variant="outlined"
-                        style={{ width: 500 }}
+                        className={
+                          matches
+                            ? classes.editedCommentText
+                            : classes.editedCommentTextMedia
+                        }
                         value={editedText}
                         onChange={handleEditingChange}
                       />
                     )}
                   </div>
                 </div>
-                <Divider style={{ position: "relative", top: 32 }} />
-                <div
-                  style={{
-                    position: "relative",
-                    top: "2vh",
-                    marginTop: "4.4%",
-                    marginBottom: "2.2%",
-                    padding: "0.2%",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      marginLeft: 10,
-                    }}
-                  >
+                <Divider style={{ marginTop: 32 }} />
+                <div className={classes.commentFooter}>
+                  <div className={classes.commentLike}>
                     <IconButton
                       onClick={() => {
                         dataLikeComments[index].isLikedByCurrentUser
@@ -418,20 +453,16 @@ export const CommentComponent: React.FC<{
                       <CommentLikeData comment={comment} />
                     </Typography>
                   </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      marginRight: 10,
-                    }}
-                  >
-                    <div>
+                  <div className={classes.divPossibleDeleteEdit}>
+                    <div style={{ width: 48, height: 48 }}>
                       {possibleDeleteEditComments[index].possibleDeleteEdit ? (
                         <IconButton>
                           {editingID === comment._id ? (
                             <div>
                               <CheckIcon
+                                className={
+                                  matches ? undefined : classes.checkIconMedia
+                                }
                                 color="primary"
                                 onClick={() => {
                                   editComment({
@@ -451,6 +482,9 @@ export const CommentComponent: React.FC<{
                           ) : (
                             <div>
                               <EditIcon
+                                className={
+                                  matches ? undefined : classes.editIconMedia
+                                }
                                 onClick={() => {
                                   setEditingID(comment._id);
                                   setEditedText(comment.text);
@@ -463,10 +497,11 @@ export const CommentComponent: React.FC<{
                       ) : null}
                     </div>
                     <Divider
-                      style={{
-                        transform: "rotate(90deg)",
-                        width: 35,
-                      }}
+                      className={
+                        matches
+                          ? classes.dividerComment
+                          : classes.dividerCommentMedia
+                      }
                     />
                     <IconButton>
                       <ReplyIcon />
@@ -476,8 +511,10 @@ export const CommentComponent: React.FC<{
               </Paper>
             </div>
             <Divider
-              variant="fullWidth"
-              style={{ marginBottom: "10%", marginTop: "8%" }}
+              className={
+                matches ? classes.dividerRoot : classes.dividerRootMedia
+              }
+              variant={matches ? "fullWidth" : undefined}
             />
           </div>
         )

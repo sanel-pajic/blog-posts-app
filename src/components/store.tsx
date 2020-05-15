@@ -16,7 +16,6 @@ export const store = new Store<IStoreState>(
   },
   {
     persistence: true,
-    // This property does the magic
     uniqKey: "store-blog-post",
   }
 );

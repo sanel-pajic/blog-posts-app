@@ -10,6 +10,7 @@ import {
   CardContent,
   CardActions,
   Button,
+  useTheme,
 } from "@material-ui/core";
 import { CircularLoading } from "../components/CircularLoading";
 import { useQuery } from "@apollo/react-hooks";
@@ -19,11 +20,13 @@ import { blue, yellow } from "@material-ui/core/colors";
 import { useHistory, Link } from "react-router-dom";
 import StarsIcon from "@material-ui/icons/Stars";
 import { ColorButtonTeal } from "../components/AddCommentsComponent";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 const useStyles = makeStyles((theme) => ({
   card: {
     height: "auto",
-    width: 450,
+    minWidth: 300,
+    maxWidth: 400,
     marginTop: "5vh",
   },
   avatar: {
@@ -46,11 +49,89 @@ const useStyles = makeStyles((theme) => ({
     width: 40,
     borderRadius: 40,
   },
+  starOneLeft: {
+    position: "relative",
+    left: 15,
+    bottom: 1,
+    color: theme.palette.getContrastText(yellow[400]),
+    backgroundColor: yellow[300],
+    height: 30,
+    width: 30,
+    borderRadius: 30,
+  },
+  starOneRight: {
+    position: "relative",
+    right: 15,
+    bottom: 1,
+    color: theme.palette.getContrastText(yellow[400]),
+    backgroundColor: yellow[300],
+    height: 30,
+    width: 30,
+    borderRadius: 30,
+  },
+  descriptionTypography: {
+    marginLeft: 20,
+    textDecoration: "underline",
+  },
+  descriptionShortTypography: { wordWrap: "break-word" },
+  buttonContinueReading: {
+    color: "#1565c0",
+    textTransform: "none",
+    fontSize: "20px",
+    marginLeft: "5%",
+  },
+  cardActions: {
+    display: "flex",
+    justifyContent: "space-around",
+    width: 390,
+  },
+  expandMN: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: "10vh",
+  },
+  typographyMN: { marginLeft: 20, marginRight: 20 },
+  typographyMNMedia: { marginLeft: 5, marginRight: 5 },
+  buttonGetStarted: {
+    width: 200,
+    height: 50,
+    fontSize: 20,
+    textTransform: "initial",
+    marginTop: "5vh",
+    marginBottom: "2vh",
+  },
+  buttonGetStartedMedia: {
+    width: 170,
+    height: 40,
+    fontSize: 17,
+    textTransform: "initial",
+    marginTop: "5vh",
+    marginBottom: "2vh",
+  },
+  divRoot: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+    marginTop: "2vh",
+    marginBottom: "5vh",
+  },
+  imageCarousel: {
+    boxShadow: "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)",
+    width: "80%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
 }));
 
 export const Home: React.FC = () => {
   let history = useHistory();
   const classes = useStyles();
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up("sm"));
 
   const { data, loading } = useQuery(BLOGS_QUERY, {
     fetchPolicy: "cache-and-network",
@@ -59,8 +140,6 @@ export const Home: React.FC = () => {
   if (loading || !data) {
     return <CircularLoading />;
   }
-
-  // console.log("DATA BLOGS FROM HOME", data);
 
   const dataBlogPostsHome = data.blogPosts.map(
     (blog: {
@@ -81,7 +160,6 @@ export const Home: React.FC = () => {
       };
     }
   );
-  // console.log("DATA BLOG FILTERED", dataBlogPostsHome);
 
   const likeNumbers = dataBlogPostsHome.map((x: any) => {
     return {
@@ -94,21 +172,12 @@ export const Home: React.FC = () => {
     };
   });
 
-  // console.log("LIKES NUMBERS", likeNumbers);
-
   const threeHighestLike = likeNumbers
-    .sort(function (a: number, b: number) {
-      if (a < b) {
-        return 1;
-      } else if (a === b) {
-        return 0;
-      } else {
-        return -1;
-      }
+    .sort(function (a: { numLIKES: number }, b: { numLIKES: number }) {
+      return a.numLIKES - b.numLIKES;
     })
-    .slice(0, 3);
-
-  // console.log("THREE HIGHEST LIKES", threeHighestLike);
+    .slice(2, 5)
+    .reverse();
 
   function handleClick(id: string) {
     history.push(`singleblog/${id}`);
@@ -116,26 +185,8 @@ export const Home: React.FC = () => {
 
   return (
     <div>
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          width: "100%",
-          marginTop: "2vh",
-          marginBottom: "5vh",
-        }}
-      >
-        <div
-          style={{
-            boxShadow:
-              "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)",
-            width: "80%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
+      <div className={classes.divRoot}>
+        <div className={classes.imageCarousel}>
           <ImageCarousel />
         </div>
       </div>
@@ -154,19 +205,51 @@ export const Home: React.FC = () => {
             alignItems: "center",
           }}
         >
-          <StarsIcon className={classes.star} />
-          <StarsIcon className={classes.star} />
-          <StarsIcon className={classes.star} />
+          {matches ? (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <StarsIcon className={classes.star} />
+              <StarsIcon className={classes.star} />
+              <StarsIcon className={classes.star} />{" "}
+            </div>
+          ) : (
+            <StarsIcon className={classes.starOneLeft} />
+          )}
+
           <Typography
-            variant="h3"
+            variant={matches ? "h3" : "h4"}
             color="initial"
-            style={{ marginLeft: 20, marginRight: 20 }}
+            style={{ marginLeft: 20 }}
           >
-            FEATURED BLOGS
+            FEATURED
           </Typography>
-          <StarsIcon className={classes.star} />
-          <StarsIcon className={classes.star} />
-          <StarsIcon className={classes.star} />
+          <Typography
+            variant={matches ? "h3" : "h4"}
+            color="initial"
+            style={{ marginLeft: 15, marginRight: 20 }}
+          >
+            BLOGS
+          </Typography>
+          {matches ? (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <StarsIcon className={classes.star} />
+              <StarsIcon className={classes.star} />
+              <StarsIcon className={classes.star} />{" "}
+            </div>
+          ) : (
+            <StarsIcon className={classes.starOneRight} />
+          )}
         </div>
 
         <Grid container className={classes.root} spacing={2}>
@@ -208,10 +291,7 @@ export const Home: React.FC = () => {
                         <Typography
                           gutterBottom
                           variant="h6"
-                          style={{
-                            marginLeft: 20,
-                            textDecoration: "underline",
-                          }}
+                          className={classes.descriptionTypography}
                         >
                           Description
                         </Typography>
@@ -219,7 +299,7 @@ export const Home: React.FC = () => {
                           variant="body2"
                           color="textSecondary"
                           component="p"
-                          style={{ wordWrap: "break-word" }}
+                          className={classes.descriptionShortTypography}
                         >
                           {blog.description_short}
                         </Typography>
@@ -228,11 +308,7 @@ export const Home: React.FC = () => {
                         <Button
                           size="large"
                           color="primary"
-                          style={{
-                            color: "#1565c0",
-                            textTransform: "none",
-                            fontSize: "20px",
-                          }}
+                          className={classes.buttonContinueReading}
                           onClick={() => handleClick(blog.blogID)}
                         >
                           Continue reading ...
@@ -246,39 +322,26 @@ export const Home: React.FC = () => {
           </Grid>
         </Grid>
       </div>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          marginTop: "10vh",
-        }}
-      >
+      <div className={classes.expandMN}>
         <Typography
-          variant="h2"
+          className={matches ? classes.typographyMN : classes.typographyMNMedia}
+          variant={matches ? "h2" : "h4"}
           color="initial"
-          style={{ marginLeft: 20, marginRight: 20 }}
         >
           Expand your knowledge.
         </Typography>
         <Typography
-          variant="h2"
           color="initial"
-          style={{ marginLeft: 20, marginRight: 20 }}
+          className={classes.typographyMN}
+          variant={matches ? "h2" : "h4"}
         >
           Expand your mind.
         </Typography>
         <Link to="/signup" style={{ textDecoration: "none" }}>
           <ColorButtonTeal
-            style={{
-              width: 200,
-              height: 50,
-              fontSize: 20,
-              textTransform: "initial",
-              marginTop: "5vh",
-              marginBottom: "2vh",
-            }}
+            className={
+              matches ? classes.buttonGetStarted : classes.buttonGetStartedMedia
+            }
           >
             Get started
           </ColorButtonTeal>

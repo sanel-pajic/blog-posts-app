@@ -1,12 +1,16 @@
 import React, { useState } from "react";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import {
+  createStyles,
+  makeStyles,
+  Theme,
+  useTheme,
+} from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import mongoID from "bson-objectid";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import * as yup from "yup";
-import { Paper, Typography } from "@material-ui/core";
-import TextareaAutosize from "@material-ui/core/TextareaAutosize";
+import { Paper, Typography, useMediaQuery } from "@material-ui/core";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { EditorState, convertToRaw } from "draft-js";
@@ -45,6 +49,58 @@ const useStyles = makeStyles((theme: Theme) =>
       fontColor: blue[800],
       marginRight: "0.5vw",
     },
+    paperRoot: {
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      width: "58%",
+      padding: "1.5%",
+      boxShadow: "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)",
+    },
+    paperRootMedia: {
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      padding: "1.5%",
+      boxShadow: "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)",
+    },
+    divRoot: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      marginTop: "1%",
+    },
+    titleItems: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    frameMain: { border: "1px solid #bdbdbd", margin: "4%", padding: "6%" },
+    widgetButtonTogether: {
+      padding: 10,
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    widgetButtonTogetherMedia: {
+      padding: 10,
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    cloudinaryWidget: {
+      marginRight: "5vw",
+    },
+    addBlogButton: {
+      width: 140,
+      marginLeft: "5vw",
+    },
+    addBlogButtonMedia: {
+      width: 120,
+    },
   })
 );
 
@@ -56,6 +112,8 @@ export const AddBlogPost: React.FC = () => {
   const [description, setDescription] = useState(EditorState.createEmpty());
   const [image, setImageURL] = useState("");
   const [dialogVisible, setDialogVisible] = useState(false);
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up("sm"));
 
   const { data, loading } = useQuery(BLOGS_QUERY, {
     fetchPolicy: "cache-and-network",
@@ -66,17 +124,6 @@ export const AddBlogPost: React.FC = () => {
     { error: errorAddBlogPost, data: mutationData },
   ] = useMutation(ADD_BLOG_MUTATION, {
     errorPolicy: "all",
-    update: (cache, { data }) => {
-      const previousData: any = cache.readQuery({
-        query: BLOGS_QUERY,
-      });
-      console.log(
-        "DATA QUERY ADD BLOG POST",
-        data,
-        "PREVIOUS QUERY ADD BLOG POST",
-        previousData
-      );
-    },
   });
   if (errorAddBlogPost) {
     console.log("error", errorAddBlogPost);
@@ -99,43 +146,14 @@ export const AddBlogPost: React.FC = () => {
     return <Redirect to="/authorize" />;
   }
 
-  //console.log("ACCESS GRANT", accessGrant);
-
   const onChangeHandler = (description: EditorState) => {
-    // const raw = convertToRaw(description.getCurrentContent());
     setDescription(description);
-    // console.log(draftToHtml(raw));
   };
 
-  //console.log("MUTATION DATA", mutationData);
-
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        marginTop: "1%",
-      }}
-    >
-      <Paper
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          width: "58%",
-          padding: "1.5%",
-          boxShadow: "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
+    <div className={classes.divRoot}>
+      <Paper className={matches ? classes.paperRoot : classes.paperRootMedia}>
+        <div className={classes.titleItems}>
           <Typography variant="h5" className={classes.blogTitle}>
             Add New
           </Typography>
@@ -146,13 +164,8 @@ export const AddBlogPost: React.FC = () => {
             Post
           </Typography>
         </div>
-        <div
-          style={{
-            border: "1px solid #bdbdbd",
-            margin: "4%",
-            padding: "6%",
-          }}
-        >
+
+        <div className={classes.frameMain}>
           <form className={classes.root} noValidate autoComplete="off">
             <TextField
               id="title"
@@ -161,12 +174,14 @@ export const AddBlogPost: React.FC = () => {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
             />
-            <TextareaAutosize
+            <TextField
               id="description_short"
-              aria-label="minimum height"
               placeholder="Short Description: Min 100 characters"
-              style={{ height: "10vh" }}
               value={description_short}
+              multiline
+              rows={4}
+              variant="outlined"
+              label="Short Description"
               onChange={(e) => setDescriptionShort(e.target.value)}
             />
             <div>
@@ -189,22 +204,23 @@ export const AddBlogPost: React.FC = () => {
             </div>
           </form>
           <div
-            style={{
-              padding: 10,
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
+            className={
+              matches
+                ? classes.widgetButtonTogether
+                : classes.widgetButtonTogetherMedia
+            }
           >
-            <div style={{ marginRight: "5vw" }}>
+            <div className={matches ? classes.cloudinaryWidget : undefined}>
               <CloudinaryWidget onUploadSuccess={setImageURL} />
             </div>
             <Button
               id="submitButton"
               color="primary"
               variant="contained"
-              size="large"
-              style={{ width: 140, marginLeft: "5vw" }}
+              size={matches ? "large" : "small"}
+              className={
+                matches ? classes.addBlogButton : classes.addBlogButtonMedia
+              }
               onClick={(e) => {
                 const idBlog = mongoID.generate();
                 e.preventDefault();

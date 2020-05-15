@@ -8,9 +8,9 @@ import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
+import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import { Paper } from "@material-ui/core";
+import { Paper, useMediaQuery } from "@material-ui/core";
 import mongoID from "bson-objectid";
 import { useMutation, useQuery } from "@apollo/react-hooks";
 import * as yup from "yup";
@@ -27,34 +27,6 @@ let schema = yup.object().shape({
   password: yup.string().required().min(5),
 });
 
-function Copyright() {
-  return (
-    <div>
-      <Typography variant="body2" color="textSecondary" align="center">
-        {"Copyright © "}
-        <Link
-          color="primary"
-          href="https://react-beach-resort-sanel-recording.netlify.com/"
-        >
-          Sanel Pajic
-        </Link>{" "}
-        {new Date().getFullYear()}
-        {"."}
-      </Typography>
-      <Typography
-        variant="body2"
-        color="textSecondary"
-        align="center"
-        style={{ position: "relative", top: 30 }}
-      >
-        <Link color="primary" href="/">
-          Go Back
-        </Link>
-      </Typography>
-    </div>
-  );
-}
-
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
@@ -66,6 +38,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "4.7%",
     paddingBottom: "4%",
   },
+  rootMedia: { marginTop: "2%", marginBottom: "4.7%" },
   paper: {
     marginTop: theme.spacing(8),
     display: "flex",
@@ -77,13 +50,23 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main,
   },
+  avatarMedia: {
+    marginTop: 20,
+    backgroundColor: "#f50057",
+  },
   form: {
     width: "100%",
     marginTop: theme.spacing(3),
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
+    backgroundColor: "#1976d2",
   },
+  typographyCopyright: {
+    position: "relative",
+    top: 30,
+  },
+  typographyCopyrightMedia: { padding: 20 },
 }));
 
 export const ValidationTextField = withStyles({
@@ -110,6 +93,40 @@ export const SignUpPage: React.FC = () => {
   const [last_name, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up("sm"));
+
+  function Copyright() {
+    return (
+      <div>
+        <Typography variant="body2" color="textSecondary" align="center">
+          {"Copyright © "}
+          <Link
+            color="primary"
+            href="https://react-beach-resort-sanel-recording.netlify.com/"
+          >
+            Sanel Pajic
+          </Link>{" "}
+          {new Date().getFullYear()}
+          {"."}
+        </Typography>
+        <Typography
+          variant="body2"
+          color="textSecondary"
+          align="center"
+          className={
+            matches
+              ? classes.typographyCopyright
+              : classes.typographyCopyrightMedia
+          }
+        >
+          <Link color="primary" href="/">
+            Go Back
+          </Link>
+        </Typography>
+      </div>
+    );
+  }
 
   const { data, loading } = useQuery(USERS_QUERY, {
     fetchPolicy: "cache-and-network",
@@ -127,14 +144,12 @@ export const SignUpPage: React.FC = () => {
     console.log("error", error);
   }
 
-  // console.log("DATA USERS", data);
-
   return (
-    <Paper className={classes.root}>
+    <Paper className={matches ? classes.root : classes.rootMedia}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <div className={classes.paper}>
-          <Avatar className={classes.avatar}>
+          <Avatar className={matches ? classes.avatar : classes.avatarMedia}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
@@ -220,7 +235,6 @@ export const SignUpPage: React.FC = () => {
                     password,
                   });
                   console.log("VALID", valid);
-
                   addUser({
                     variables: {
                       data: {
@@ -233,7 +247,6 @@ export const SignUpPage: React.FC = () => {
                     },
                   })
                     .then((res) => {
-                      console.log("DATA", res);
                       localStorage.setItem("token", res.data.addUser.token);
                       localStorage.setItem("userId", res.data.addUser.userId);
                       history.push("/authorize");

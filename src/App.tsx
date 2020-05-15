@@ -18,6 +18,18 @@ import Navbar from "./components/Navbar";
 import { ForgotPage } from "./pages/ForgotPage";
 import { ResetPage } from "./pages/ResetPage";
 import { CheckResetEmailPage } from "./pages/CheckResetEmailPage";
+import { MUITableUsers } from "./components/MUITableVjezba";
+import ResponsiveDrawer from "./components/ResponsiveDrawer";
+import { useTheme, useMediaQuery, makeStyles } from "@material-ui/core";
+
+const useStyles = makeStyles(() => ({
+  divRoot: {
+    background: "#edf1f5af",
+    overflow: "hidden",
+    position: "relative",
+    minHeight: "100%",
+  },
+}));
 
 export const client = new ApolloClient({
   uri: "http://localhost:8080/graphql",
@@ -35,7 +47,6 @@ export const client = new ApolloClient({
   },
   request: (operation) => {
     const token = localStorage.getItem("token");
-    console.log("TOKEN APP", token);
     if (token) {
       operation.setContext({
         headers: {
@@ -68,6 +79,7 @@ export const CurrentUserContext = React.createContext<{
 });
 
 const App: React.FC = () => {
+  const classes = useStyles();
   const [tabIndex, setTabIndex] = useState(0);
   const [
     { userId, token, first_name, last_name, authorized },
@@ -79,8 +91,9 @@ const App: React.FC = () => {
     last_name: "",
     authorized: false,
   });
-  // console.log("TAB INDEX APP", tabIndex);
-  console.log("USER CONTEXT", userId, token, first_name, last_name, authorized);
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up("sm"));
+
   return (
     <CurrentUserContext.Provider
       value={{
@@ -94,18 +107,12 @@ const App: React.FC = () => {
     >
       <TabContext.Provider value={{ tabIndex, setTabIndex }}>
         <ApolloProvider client={client}>
-          <div
-            className="App"
-            style={{
-              background: "#edf1f5af",
-              overflow: "hidden",
-              position: "relative",
-              minHeight: "100%",
-            }}
-          >
+          <div className={classes.divRoot}>
             <BrowserRouter>
               <Header />
-              <Navbar />
+
+              {matches ? <Navbar /> : <ResponsiveDrawer />}
+
               <Switch>
                 <Route exact path="/" component={Home} />
                 <Route exact path="/article" component={ComponentArticle} />
@@ -116,6 +123,7 @@ const App: React.FC = () => {
                 <Route exact path="/signup" component={SignUpPage} />
                 <Route exact path="/forgot" component={ForgotPage} />
                 <Route exact path="/authorize" component={AuthorizePage} />
+                <Route exact path="/muiusers" component={MUITableUsers} />
                 <Route
                   exact
                   path="/resetcheck/:token"

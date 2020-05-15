@@ -3,14 +3,15 @@ import MUIDataTable, { MUIDataTableOptions } from "mui-datatables";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import { CircularLoading } from "./CircularLoading";
 import { ErrorLoading } from "./ErrorLoading";
-import { Button } from "@material-ui/core";
+import { Button, Typography } from "@material-ui/core";
 import * as R from "ramda";
 import { USERS_QUERY } from "../graphql-queries-mutations/queries";
 import { REMOVE_USER_MUTATION } from "../graphql-queries-mutations/mutations";
+import { green, red } from "@material-ui/core/colors";
 
-export const MUITableVjezba: React.FC = () => {
+export const MUITableUsers: React.FC = () => {
   const { data, loading } = useQuery(USERS_QUERY, {
-    fetchPolicy: "cache-and-network"
+    fetchPolicy: "cache-and-network",
   });
 
   console.log("DOCS", data);
@@ -29,7 +30,7 @@ export const MUITableVjezba: React.FC = () => {
     { label: "First Name", name: "first_name" },
     { label: "Last Name", name: "last_name" },
     { label: "Email", name: "email" },
-    { label: "Password", name: "password" },
+    { label: "Is Admin", name: "isAdmin" },
     {
       name: "Delete",
 
@@ -44,9 +45,9 @@ export const MUITableVjezba: React.FC = () => {
               onClick={() =>
                 removeUser({
                   variables: { _id: userId },
-                  update: proxy => {
+                  update: (proxy) => {
                     const data = proxy.readQuery({
-                      query: USERS_QUERY
+                      query: USERS_QUERY,
                     });
                     const updatedData = R.over(
                       R.lensProp("users"),
@@ -55,31 +56,33 @@ export const MUITableVjezba: React.FC = () => {
                     );
 
                     proxy.writeQuery({ query: USERS_QUERY, data: updatedData });
-                  }
+                  },
                 })
               }
             >
               Delete
             </Button>
           );
-        }
-      }
-    }
+        },
+      },
+    },
   ];
 
   const options: MUIDataTableOptions = {
     filterType: "dropdown",
     responsive: "stacked",
-    fixedHeader: true
+    fixedHeader: true,
   };
 
   return (
     <div
       style={{
-        width: "70%",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center"
+        display: "block",
+        marginLeft: "auto",
+        marginRight: "auto",
+        width: "50%",
+        marginTop: "3%",
+        marginBottom: "5%",
       }}
     >
       <MUIDataTable
@@ -90,14 +93,17 @@ export const MUITableVjezba: React.FC = () => {
             first_name: string;
             last_name: string;
             email: string;
-            password: string;
+            isAdmin: boolean;
           }) => {
             return [
               user.first_name,
               user.last_name,
               user.email,
-              user.password,
-              user._id
+              user.isAdmin === true ? (
+                <Typography style={{ color: green[500] }}>YES</Typography>
+              ) : (
+                <Typography style={{ color: red[500] }}>NO</Typography>
+              ),
             ];
           }
         )}

@@ -56,16 +56,6 @@ export const CURRENT_USER_QUERY = gql`
     }
   }
 `;
-export const CURRENT_USER_QUERY_ID = gql`
-  query {
-    currentUser {
-      _id
-      first_name
-      last_name
-      email
-    }
-  }
-`;
 
 export const DATA_USER_QUERY = gql`
   query($_id: ID!) {

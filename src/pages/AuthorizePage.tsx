@@ -12,8 +12,15 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       marginTop: "2vh",
       justifyContent: "center",
-      alignItems: "center"
-    }
+      alignItems: "center",
+    },
+    login: { display: "flex", justifyContent: "center", alignItems: "center" },
+    divRoot: {
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+    },
   })
 );
 
@@ -23,14 +30,7 @@ export const AuthorizePage: React.FC = () => {
 
   return authStoreState.authorized ? (
     <div>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center"
-        }}
-      >
+      <div className={classes.divRoot}>
         <div className={classes.snackbar}>
           <SnackbarComponent message="Authorized" />
         </div>
@@ -43,13 +43,7 @@ export const AuthorizePage: React.FC = () => {
       <div className={classes.snackbar}>
         <SnackbarComponent message="Unauthorized! - Please Sign In" />
       </div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center"
-        }}
-      >
+      <div className={classes.login}>
         <LoginPage />
       </div>
     </div>

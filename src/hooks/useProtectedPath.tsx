@@ -7,7 +7,7 @@ import React from "react";
 import { CircularLoading } from "../components/CircularLoading";
 
 const PROTECTED_PATHS = ["/addblogpost", "/article"];
-const PROTECTED_PATHS_ADMIN = ["/userlist"];
+const PROTECTED_PATHS_ADMIN = ["/userlist", "/muiusers"];
 
 export const useProtectedPath = () => {
   const { authorized } = useStore(store);

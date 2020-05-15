@@ -25,13 +25,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: theme.spacing(1),
     width: 200,
   },
+  divRoot: {
+    display: "flex",
+    justifyContent: "space-around",
+    alignItems: "center",
+    position: "relative",
+    bottom: "1vh",
+  },
 }));
 
 const Navbar: React.FC = () => {
   const authStoreState = useStore(store);
   const classes = useStyles();
   const tabEffectNoAdmin = useTabEffectNoAdmin();
-  // const tabEffect = useTabEffectAllRoutes();
   const currentUser: string | null = localStorage.getItem("userId");
 
   const { data, loading } = useQuery(USERS_QUERY, {
@@ -42,19 +48,14 @@ const Navbar: React.FC = () => {
 
   const handleChange = (_event: React.ChangeEvent<{}>, newValue: number) => {
     setTabIndex(newValue);
-    // console.log("NEW VALUE", newValue);
   };
 
   function a11yProps(index: any) {
-    // console.log("INDEX", index);
     return {
       id: `simple-tab-${index}`,
       "aria-controls": `simple-tabpanel-${index}`,
     };
   }
-  // console.log("CURRENT USER NAVBAR", currentUser);
-  // console.log("TAB EFFECT", tabEffect);
-  // console.log("TAB EFFECT NO ADMIN", tabEffectNoAdmin);
 
   if (currentUser === null) {
     setTabIndex(tabEffectNoAdmin);
@@ -64,29 +65,13 @@ const Navbar: React.FC = () => {
     return <CircularLoading />;
   }
 
-  // console.log("DATA USERS", data);
-
-  //console.log("CURRENT USER NAVBAR", currentUser);
-
   const isAdminData = data.users.find(
     (user: { _id: string; isAdmin: boolean }) =>
       user._id === currentUser && user.isAdmin === true
   );
 
-  //console.log("IS ADMIN", isAdminData);
-
-  // console.log("STORE", authStoreState.authorized);
-
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "space-around",
-        alignItems: "center",
-        position: "relative",
-        bottom: "1vh",
-      }}
-    >
+    <div className={classes.divRoot}>
       {authStoreState.authorized ? (
         <div className={classes.root}>
           {isAdminData ? (
@@ -132,6 +117,13 @@ const Navbar: React.FC = () => {
                 component={React.memo(NavLink)}
                 to={"/userlist"}
                 {...a11yProps(4)}
+              />
+              <Tab
+                style={{ fontSize: 20 }}
+                label="User List MUI DT"
+                component={React.memo(NavLink)}
+                to={"/muiusers"}
+                {...a11yProps(5)}
               />
             </Tabs>
           ) : (

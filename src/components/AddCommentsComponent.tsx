@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       padding: "2%",
-      width: "60%",
+      width: "100%",
       marginTop: "3%",
       marginBottom: "4%",
       boxShadow: "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)",
@@ -33,6 +33,25 @@ const useStyles = makeStyles((theme: Theme) =>
     margin: {
       margin: theme.spacing(1),
     },
+    divRoot: {
+      display: "block",
+      marginLeft: "auto",
+      marginRight: "auto",
+      width: "50%",
+    },
+    textFieldComment: { width: "100%" },
+    commentTypography: {
+      marginLeft: "3%",
+      marginBottom: "1%",
+      marginTop: "1%",
+    },
+    button: {
+      display: "flex",
+      justifyContent: "flex-end",
+      alignItems: "center",
+      marginTop: "5%",
+    },
+    divider: { marginBottom: "10%", marginTop: "5%" },
   })
 );
 
@@ -101,7 +120,6 @@ export const AddCommentsComponent: React.FC<{ postId: string }> = ({
 
   const handleClick = (id: string) => {
     setText("");
-    console.log("CLG HANDLE CLICK", id);
     setTimeout(() => {
       scrollToForm(id);
     }, 100);
@@ -109,18 +127,12 @@ export const AddCommentsComponent: React.FC<{ postId: string }> = ({
 
   return (
     <div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
+      <div className={classes.divRoot}>
         <Paper className={classes.root}>
           <Typography
             variant="subtitle2"
             color="textSecondary"
-            style={{ marginLeft: "1rem", marginBottom: "0.5rem" }}
+            className={classes.commentTypography}
           >
             COMMENT
           </Typography>
@@ -132,18 +144,9 @@ export const AddCommentsComponent: React.FC<{ postId: string }> = ({
             variant="outlined"
             value={text}
             onChange={(e) => setText(e.target.value)}
-            style={{
-              width: "100%",
-            }}
+            className={classes.textFieldComment}
           />
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              alignItems: "center",
-              marginTop: "5%",
-            }}
-          >
+          <div className={classes.button}>
             <ColorButtonTeal
               variant="text"
               color="inherit"
@@ -172,10 +175,7 @@ export const AddCommentsComponent: React.FC<{ postId: string }> = ({
           </div>
         </Paper>
       </div>
-      <Divider
-        variant="fullWidth"
-        style={{ marginBottom: "10%", marginTop: "5%" }}
-      />
+      <Divider variant="fullWidth" className={classes.divider} />
     </div>
   );
 };

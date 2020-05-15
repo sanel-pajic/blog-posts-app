@@ -5,6 +5,8 @@ import {
   Theme,
   createStyles,
   makeStyles,
+  useTheme,
+  useMediaQuery,
 } from "@material-ui/core";
 import { useMutation } from "@apollo/react-hooks";
 import { CHECK_VALID_TOKEN_RESET_MUTATION } from "../graphql-queries-mutations/mutations";
@@ -34,6 +36,14 @@ const useStyles = makeStyles((theme: Theme) =>
       marginTop: "1%",
       marginBottom: "1%",
     },
+    dividerMedia: {
+      width: "100%",
+      marginTop: "3%",
+      marginBottom: "5%",
+    },
+    typographyReset: { marginTop: "1 %" },
+    typographyResetMedia: { marginTop: "5%" },
+    alert: { display: "flex", justifyContent: "center", alignItems: "center" },
   })
 );
 
@@ -41,11 +51,12 @@ export const CheckResetEmailPage: React.FC<RouteComponentProps<{
   token: string;
 }>> = ({ match }) => {
   const tokenFromHistory = match.params.token;
+
   let history = useHistory();
-
-  console.log("TOKEN FROM HISTORY", tokenFromHistory);
-
   const classes = useStyles();
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up("sm"));
+  console.log("MATCHES", matches);
 
   const [checkResetTokenMutation, { error }] = useMutation(
     CHECK_VALID_TOKEN_RESET_MUTATION,
@@ -61,7 +72,6 @@ export const CheckResetEmailPage: React.FC<RouteComponentProps<{
       },
     })
       .then((res) => {
-        console.log("RES", res);
         localStorage.setItem("resetToken", tokenFromHistory);
         localStorage.setItem("userId", res.data.checkEmailResetToken._id);
         localStorage.setItem(
@@ -80,14 +90,23 @@ export const CheckResetEmailPage: React.FC<RouteComponentProps<{
 
   return (
     <div className={classes.rootDiv}>
-      <Typography variant="h5" style={{ marginTop: "1 %" }}>
+      <Typography
+        variant="h5"
+        className={
+          matches ? classes.typographyReset : classes.typographyResetMedia
+        }
+      >
         Reset Password
       </Typography>
-      <Divider className={classes.divider} />
+      <Divider className={matches ? classes.divider : classes.dividerMedia} />
       {error &&
         error.graphQLErrors.map(({ message }, i) => (
           <div key={i}>
-            <Alert color="error" variant="filled">
+            <Alert
+              color="error"
+              variant="filled"
+              className={matches ? undefined : classes.alert}
+            >
               {message}
             </Alert>
           </div>

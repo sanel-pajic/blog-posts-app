@@ -1,5 +1,5 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -10,7 +10,7 @@ import Paper from "@material-ui/core/Paper";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import { CircularLoading } from "../components/CircularLoading";
 import { ErrorLoading } from "./ErrorLoading";
-import { IconButton, Typography } from "@material-ui/core";
+import { IconButton, Typography, useMediaQuery } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { ARTICLES_QUERY } from "../graphql-queries-mutations/queries";
 import { REMOVE_ARTICLE_MUTATION } from "../graphql-queries-mutations/mutations";
@@ -20,8 +20,9 @@ const TAX_RATE = 0.1;
 const useStyles = makeStyles({
   table: {
     minWidth: 700,
-    marginTop: "1%"
-  }
+    marginTop: "1%",
+  },
+  tableMedia: {},
 });
 
 function ccyFormat(num: number) {
@@ -30,8 +31,12 @@ function ccyFormat(num: number) {
 
 export const TableArticles: React.FC = () => {
   const classes = useStyles();
+
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up("sm"));
+
   const { data, loading } = useQuery(ARTICLES_QUERY, {
-    fetchPolicy: "cache-and-network"
+    fetchPolicy: "cache-and-network",
   });
 
   const [removeComponentArticle, { error }] = useMutation(
@@ -62,7 +67,10 @@ export const TableArticles: React.FC = () => {
 
   return (
     <TableContainer component={Paper}>
-      <Table className={classes.table} aria-label="spanning table">
+      <Table
+        className={matches ? classes.table : classes.tableMedia}
+        aria-label="spanning table"
+      >
         <TableHead>
           <TableRow>
             <TableCell align="left">
@@ -110,7 +118,7 @@ export const TableArticles: React.FC = () => {
                     onClick={() =>
                       removeComponentArticle({
                         variables: { _id: article._id },
-                        refetchQueries: [{ query: ARTICLES_QUERY }]
+                        refetchQueries: [{ query: ARTICLES_QUERY }],
                       })
                     }
                   >

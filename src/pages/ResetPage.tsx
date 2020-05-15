@@ -8,6 +8,8 @@ import {
   FormControl,
   InputLabel,
   Button,
+  useTheme,
+  useMediaQuery,
 } from "@material-ui/core";
 import { useMutation, useQuery } from "@apollo/react-hooks";
 import { RESET_EMAIL_MUTATION } from "../graphql-queries-mutations/mutations";
@@ -33,15 +35,17 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       flexWrap: "wrap",
     },
-    margin: {
+    formControl: {
       width: "100%",
       marginTop: "1%",
     },
+    formControlMedia: { width: "100%", marginTop: "5%", marginBottom: "1%" },
     buttonUpdate: {
       width: 160,
       textTransform: "none",
       marginTop: "1.5%",
     },
+    buttonUpdateMedia: { width: 160, textTransform: "none", marginTop: "5%" },
     snackbar: {
       display: "flex",
       marginTop: "2vh",
@@ -59,6 +63,18 @@ const useStyles = makeStyles((theme: Theme) =>
       minHeight: "100%",
       marginBottom: "12.7%",
     },
+    rootDivMedia: {
+      width: "80%",
+      paddingLeft: "10%",
+      paddingRight: "5%",
+      paddingTop: "2%",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      minHeight: "100%",
+      marginBottom: "12.7%",
+      marginTop: "8%",
+    },
     divider: {
       width: "100%",
       marginTop: "1%",
@@ -69,6 +85,7 @@ const useStyles = makeStyles((theme: Theme) =>
       fontWeight: "bold",
       marginLeft: 5,
     },
+    alert: { display: "flex", justifyContent: "center", alignItems: "center" },
   })
 );
 
@@ -80,16 +97,12 @@ export const ResetPage: React.FC = () => {
   const [alertMessage, setAlertMessage] = useState("");
   const resetToken = localStorage.getItem("resetToken");
   const history = useHistory();
-  const {
-    userId,
-    token,
-    first_name,
-    last_name,
-    authorized,
-    setAuthorized,
-  } = useContext(CurrentUserContext);
+  const { setAuthorized } = useContext(CurrentUserContext);
   const firstName = localStorage.getItem("first_name");
   const lastName = localStorage.getItem("last_name");
+
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up("sm"));
 
   const { data, loading } = useQuery(USERS_QUERY, {
     fetchPolicy: "cache-and-network",
@@ -103,31 +116,27 @@ export const ResetPage: React.FC = () => {
     return <CircularLoading />;
   }
 
-  // console.log("DATA USERS", data);
-
-  console.log(
-    "CURRENT USER CONTEXT FROM RESET PAGE",
-    userId,
-    token,
-    first_name,
-    last_name,
-    authorized,
-    setAuthorized
-  );
-
   return (
-    <div className={classes.rootDiv}>
+    <div className={matches ? classes.rootDiv : classes.rootDivMedia}>
       {!success ? (
         error &&
         error.graphQLErrors.map(({ message }, i) => (
           <div key={i}>
-            <Alert color="error" variant="filled">
+            <Alert
+              color="error"
+              variant="filled"
+              className={matches ? undefined : classes.alert}
+            >
               {message}
             </Alert>
           </div>
         ))
       ) : (
-        <Alert color="success" variant="filled">
+        <Alert
+          color="success"
+          variant="filled"
+          className={matches ? undefined : classes.alert}
+        >
           {alertMessage}
         </Alert>
       )}
@@ -137,7 +146,9 @@ export const ResetPage: React.FC = () => {
       </Typography>
       <Divider className={classes.divider} />
 
-      <FormControl className={classes.margin}>
+      <FormControl
+        className={matches ? classes.formControl : classes.formControlMedia}
+      >
         <InputLabel
           shrink
           htmlFor="new-password-input"
@@ -153,7 +164,9 @@ export const ResetPage: React.FC = () => {
           onChange={(e) => setNewPassword(e.target.value)}
         />
       </FormControl>
-      <FormControl className={classes.margin}>
+      <FormControl
+        className={matches ? classes.formControl : classes.formControlMedia}
+      >
         <InputLabel
           shrink
           htmlFor="confirm-password-input"
@@ -173,7 +186,7 @@ export const ResetPage: React.FC = () => {
       <Button
         variant="contained"
         color="primary"
-        className={classes.buttonUpdate}
+        className={matches ? classes.buttonUpdate : classes.buttonUpdateMedia}
         onClick={(e) => {
           e.preventDefault();
           setNewPassword("");

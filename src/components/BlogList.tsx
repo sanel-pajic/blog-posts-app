@@ -32,31 +32,36 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       flexGrow: 1,
     },
-    control: {
-      padding: theme.spacing(2),
-    },
     card: {
       height: "auto",
-      width: 450,
+      minWidth: 300,
+      maxWidth: 400,
       marginTop: "5vh",
     },
     media: {
       paddingTop: "56.25%",
     },
-    expand: {
-      transform: "rotate(0deg)",
-      marginLeft: "auto",
-      transition: theme.transitions.create("transform", {
-        duration: theme.transitions.duration.shortest,
-      }),
-    },
-    expandOpen: {
-      transform: "rotate(180deg)",
-    },
     avatar: {
       backgroundColor: blue[800],
       width: 60,
       height: 60,
+    },
+    descriptionTypography: {
+      marginLeft: 20,
+      textDecoration: "underline",
+    },
+    descriptionShortTypography: { wordWrap: "break-word" },
+    removeIcon: { marginLeft: "1%" },
+    button: {
+      color: "#1565c0",
+      textTransform: "none",
+      fontSize: "20px",
+      marginLeft: "5%",
+    },
+    cardActions: {
+      display: "flex",
+      justifyContent: "space-around",
+      width: 390,
     },
   })
 );
@@ -86,7 +91,6 @@ export const BlogList: React.FC = () => {
           query: BLOGS_QUERY,
         });
 
-        console.log("DATA QUERY", data, "PREVIOUS QUERY", previousData);
         const blogIdx: any = previousData.blogPosts.findIndex(
           (blog: { _id: any }) => {
             return blog._id === data.addLikeBlog.blogId;
@@ -109,21 +113,7 @@ export const BlogList: React.FC = () => {
   );
 
   const [removeBlogLike, { error: errorRemoveBlogLike }] = useMutation(
-    REMOVE_BLOG_LIKE,
-    {
-      update: (cache, { data }) => {
-        const previousData: any = cache.readQuery({
-          query: BLOGS_QUERY,
-        });
-
-        console.log(
-          "DATA QUERY REMOVE BLOG LIKE",
-          data,
-          "PREVIOUS QUERY REMOVE BLOG LIKE",
-          previousData
-        );
-      },
-    }
+    REMOVE_BLOG_LIKE
   );
 
   if (!accessGrant) {
@@ -186,17 +176,12 @@ export const BlogList: React.FC = () => {
     };
   });
 
-  // console.log("DATA BLOG POSTS", dataBlogPosts);
-  // console.log("DATA LIST", data);
-
   const possibleDeleteBlogs = data.blogPosts.map((blog: any) => {
     return {
       user: blog.author,
       possibleDelete: blog.author === currentUser,
     };
   });
-
-  //console.log("DATA DELETE BLOG POSTS", possibleDeleteBlogs);
 
   return (
     <Grid container className={classes.root} spacing={2}>
@@ -236,10 +221,7 @@ export const BlogList: React.FC = () => {
                     <Typography
                       gutterBottom
                       variant="h6"
-                      style={{
-                        marginLeft: 20,
-                        textDecoration: "underline",
-                      }}
+                      className={classes.descriptionTypography}
                     >
                       Description
                     </Typography>
@@ -247,12 +229,12 @@ export const BlogList: React.FC = () => {
                       variant="body2"
                       color="textSecondary"
                       component="p"
-                      style={{ wordWrap: "break-word" }}
+                      className={classes.descriptionShortTypography}
                     >
                       {blog.description_short}
                     </Typography>
                   </CardContent>
-                  <CardActions disableSpacing>
+                  <CardActions disableSpacing className={classes.cardActions}>
                     <IconButton
                       aria-label="add to favorites"
                       onClick={() => {
@@ -263,7 +245,7 @@ export const BlogList: React.FC = () => {
                               },
                               refetchQueries: [{ query: BLOGS_QUERY }],
                             }).catch((error) => {
-                              console.log("ERROR REMOVE BLOG LIKE", error);
+                              console.log("error", error);
                               alert(error);
                             })
                           : addBlogLike({
@@ -274,7 +256,7 @@ export const BlogList: React.FC = () => {
                                 },
                               },
                             }).catch((error) => {
-                              console.log("ERROR ADD LIKE", error);
+                              console.log("error", error);
                             });
                       }}
                     >
@@ -292,13 +274,13 @@ export const BlogList: React.FC = () => {
                       </Typography>
                     </IconButton>
                     <IconButton
-                      style={{ marginLeft: "1%" }}
+                      className={classes.removeIcon}
                       onClick={() =>
                         removeBlogPost({
                           variables: { _id: blog._id },
                           refetchQueries: [{ query: BLOGS_QUERY }],
                         }).catch((error) => {
-                          console.log("ERROR REMOVE BLOG", error);
+                          console.log("error", error);
                         })
                       }
                     >
@@ -310,12 +292,7 @@ export const BlogList: React.FC = () => {
                     <Button
                       size="large"
                       color="primary"
-                      style={{
-                        marginLeft: "15%",
-                        color: "#1565c0",
-                        textTransform: "none",
-                        fontSize: "20px",
-                      }}
+                      className={classes.button}
                       onClick={() => handleClick(blog._id)}
                     >
                       Continue reading ...

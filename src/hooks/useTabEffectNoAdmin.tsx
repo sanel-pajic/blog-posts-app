@@ -15,11 +15,8 @@ export const useTabEffectNoAdmin = () => {
 
   useEffect(() => {
     const pathIndex = ALL_ROUTES.findIndex((val) => {
-      // console.log("VALUE", val);
-      // console.log("LOCATION", location.pathname);
       return val === location.pathname;
     });
-    // console.log("PATH INDEX", pathIndex);
 
     if (pathIndex === 3) {
       setTabIndex(2);

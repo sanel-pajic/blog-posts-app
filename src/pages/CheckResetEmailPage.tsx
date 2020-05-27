@@ -56,7 +56,6 @@ export const CheckResetEmailPage: React.FC<RouteComponentProps<{
   const classes = useStyles();
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up("sm"));
-  console.log("MATCHES", matches);
 
   const [checkResetTokenMutation, { error }] = useMutation(
     CHECK_VALID_TOKEN_RESET_MUTATION,

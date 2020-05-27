@@ -187,7 +187,6 @@ export const LoginPage: React.FC = () => {
                       },
                     })
                       .then((res) => {
-                        console.log("DATA", res);
                         localStorage.setItem("token", res.data.login.token);
                         localStorage.setItem("userId", res.data.login.userId);
                         history.push("/authorize");

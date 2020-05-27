@@ -42,23 +42,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: "1.3rem",
     marginRight: "3%",
   },
-  avatarMedia: {
-    color: theme.palette.getContrastText(deepOrange[500]),
-    backgroundColor: deepOrange[400],
-    height: 40,
-    width: 40,
-    fontSize: "1.3rem",
-    marginRight: 8,
-  },
   typography: {
     color: "#212121",
     fontSize: "1.4rem",
     height: 50,
     marginTop: 15,
-  },
-  typographyMedia: {
-    color: "#212121",
-    fontSize: "1.4rem",
   },
   button: {
     height: 35,
@@ -69,6 +57,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 35,
     width: 160,
     marginLeft: "1%",
+  },
+  buttonSocialIconsMedia: {
+    height: 35,
+    width: 160,
+    marginBottom: 15,
   },
 
   login: {
@@ -89,11 +82,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 35,
     alignSelf: "center",
   },
-  marginMedia: {
-    height: 35,
-    width: 100,
-    alignSelf: "center",
-  },
   imageLogo: {
     margin: 0,
     padding: 0,
@@ -103,34 +91,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: 15,
     marginBottom: 5,
   },
-  buttonMedia: { marginTop: 15, marginBottom: 20 },
   userDataButtonLogout: {
     marginRight: 20,
     width: 200,
     display: "flex",
     flexDirection: "column",
   },
-  userDataButtonLogoutMedia: {
-    display: "flex",
-    width: 350,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 20,
-    marginBottom: 20,
-  },
   avatarTypographyTogether: {
     display: "flex",
     alignItems: "center",
   },
-  avatarTypographyTogetherMedia: {
-    display: "flex",
-    marginRight: 20,
-    justifyContent: "center",
-    alignItems: "center",
-  },
 }));
 
-function logout(apolloclient: ApolloClient<any>, history: any) {
+export function logout(apolloclient: ApolloClient<any>, history: any) {
   store.setState({
     authorized: false,
   });
@@ -165,7 +138,13 @@ export const Header: React.FC = () => {
       <div style={{ overflowX: "hidden" }}>
         <header className={matches ? classes.header : classes.headerMedia}>
           <Box {...(matches ? { order: "1" } : { order: "2" })}>
-            <div className={classes.buttonSocialIcons}>
+            <div
+              className={
+                matches
+                  ? classes.buttonSocialIcons
+                  : classes.buttonSocialIconsMedia
+              }
+            >
               <LinkMaterialUI href="https://www.facebook.com/" color="inherit">
                 <FacebookIcon className={classes.mediaIcon} />
               </LinkMaterialUI>
@@ -194,13 +173,15 @@ export const Header: React.FC = () => {
           </Box>
           <Box order={3}>
             <div className={classes.login}>
-              <Button
-                variant="outlined"
-                className={matches ? classes.button : classes.buttonMedia}
-                onClick={handleClick}
-              >
-                LOGIN
-              </Button>
+              {matches ? (
+                <Button
+                  variant="outlined"
+                  className={classes.button}
+                  onClick={handleClick}
+                >
+                  LOGIN
+                </Button>
+              ) : null}
             </div>
           </Box>
         </header>
@@ -222,7 +203,13 @@ export const Header: React.FC = () => {
     <div style={{ overflow: "auto" }}>
       <header className={matches ? classes.header : classes.headerMedia}>
         <Box {...(matches ? { order: "1" } : { order: "2" })}>
-          <div className={classes.buttonSocialIcons}>
+          <div
+            className={
+              matches
+                ? classes.buttonSocialIcons
+                : classes.buttonSocialIconsMedia
+            }
+          >
             <LinkMaterialUI href="https://www.facebook.com/" color="inherit">
               <FacebookIcon className={classes.mediaIcon} />
             </LinkMaterialUI>
@@ -251,47 +238,34 @@ export const Header: React.FC = () => {
           </Link>
         </Box>
         <Box order={3}>
-          <div
-            className={
-              matches
-                ? classes.userDataButtonLogout
-                : classes.userDataButtonLogoutMedia
-            }
-          >
-            <div
-              className={
-                matches
-                  ? classes.avatarTypographyTogether
-                  : classes.avatarTypographyTogetherMedia
-              }
-            >
-              <Avatar
-                className={matches ? classes.avatar : classes.avatarMedia}
-              >
-                {letterFN || letterFNContext}
-                {letterLN || letterLNContext}
-              </Avatar>
-              <Typography
-                className={
-                  matches ? classes.typography : classes.typographyMedia
-                }
-              >
-                {firstName} {lastName}
-              </Typography>
+          <div className={classes.userDataButtonLogout}>
+            <div className={classes.avatarTypographyTogether}>
+              {matches ? (
+                <Avatar className={classes.avatar}>
+                  {letterFN || letterFNContext}
+                  {letterLN || letterLNContext}
+                </Avatar>
+              ) : null}
+              {matches ? (
+                <Typography className={classes.typography}>
+                  {firstName} {lastName}
+                </Typography>
+              ) : null}
             </div>
-
-            <Button
-              variant="outlined"
-              color="default"
-              className={matches ? classes.margin : classes.marginMedia}
-              onClick={() => {
-                setTabIndex(0);
-                setAuthorized(false);
-                logout(apolloclient, history);
-              }}
-            >
-              Logout
-            </Button>
+            {matches ? (
+              <Button
+                variant="outlined"
+                color="default"
+                className={classes.margin}
+                onClick={() => {
+                  setTabIndex(0);
+                  setAuthorized(false);
+                  logout(apolloclient, history);
+                }}
+              >
+                Logout
+              </Button>
+            ) : null}
           </div>
         </Box>
       </header>

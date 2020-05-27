@@ -86,8 +86,6 @@ export const UserList: React.FC = () => {
     console.log("error", errorEditUser);
   }
 
-  // console.log("ACCESS GRANT USER LIST", accessGrant);
-
   const handleEditingFirstNameChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -127,8 +125,6 @@ export const UserList: React.FC = () => {
   if (isAdminData === undefined) {
     return <Redirect to="/authorize" />;
   }
-
-  console.log("ADMIN", isAdminData);
 
   return (
     <div

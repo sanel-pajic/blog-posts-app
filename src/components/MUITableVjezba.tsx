@@ -14,8 +14,6 @@ export const MUITableUsers: React.FC = () => {
     fetchPolicy: "cache-and-network",
   });
 
-  console.log("DOCS", data);
-
   const [removeUser, { error }] = useMutation(REMOVE_USER_MUTATION);
 
   if (loading || !data) {

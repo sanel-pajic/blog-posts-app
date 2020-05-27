@@ -82,6 +82,7 @@ const useStyles = makeStyles((theme: Theme) =>
     typographyForgot: { marginTop: "1%" },
     typographyForgotMedia: { marginTop: "3%" },
     alert: { display: "flex", justifyContent: "center", alignItems: "center" },
+    divider: { width: "100%", marginTop: "1%" },
   })
 );
 
@@ -165,7 +166,7 @@ export const ForgotPage: React.FC = () => {
       >
         Forgot Password
       </Typography>
-      <Divider style={{ width: "100%", marginTop: "1%" }} />
+      <Divider className={classes.divider} />
 
       <FormControl
         className={matches ? classes.formControl : classes.formControlMedia}
@@ -203,13 +204,13 @@ export const ForgotPage: React.FC = () => {
               },
             })
               .then((res) => {
-                console.log("DATA", res);
-                setAlertMessage(res.data.forgot.message);
-                console.log(res.data.forgot.message);
-                setSuccess(true);
+                setTimeout(() => {
+                  setAlertMessage(res.data.forgot.message);
+                  setSuccess(true);
+                }, 1200);
               })
               .catch((error) => {
-                console.log("ERROR SEND EMAIL", error);
+                console.log("error", error);
               });
           } catch (error) {
             alert(error);

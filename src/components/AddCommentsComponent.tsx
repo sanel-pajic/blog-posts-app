@@ -98,7 +98,6 @@ export const AddCommentsComponent: React.FC<{ postId: string }> = ({
   });
   const [addComment, { error }] = useMutation(ADD_COMMENT);
   if (error) {
-    console.log("error", error);
     return (
       <div>
         {error.graphQLErrors.map(({ message }, i) => (

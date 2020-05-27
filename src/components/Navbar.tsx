@@ -1,4 +1,4 @@
-import React, { memo, useContext } from "react";
+import React, { memo, useContext, useEffect } from "react";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
@@ -57,9 +57,11 @@ const Navbar: React.FC = () => {
     };
   }
 
-  if (currentUser === null) {
-    setTabIndex(tabEffectNoAdmin);
-  }
+  useEffect(() => {
+    if (currentUser === null) {
+      setTabIndex(tabEffectNoAdmin);
+    }
+  }, [currentUser, tabEffectNoAdmin, setTabIndex]);
 
   if (loading || !data) {
     return <CircularLoading />;

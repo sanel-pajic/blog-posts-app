@@ -1,0 +1,52 @@
+{
+  "name": "BlogPostApp",
+  "short_name": "BlogPostApp",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#edf1f5af",
+  "theme_color": "#edf1f5af",
+  "description": "Simple Blog Post App where you can add your own blogs.",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icons/imgblogpost48x37.png",
+      "sizes": "48x37",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/imgblogpost72x55.png",
+      "sizes": "72x55",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/imgblogpost96x74.png",
+      "sizes": "96x74",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/imgblogpost144x111.png",
+      "sizes": "144x111",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/imgblogpost168x130.png",
+      "sizes": "168x130",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/imgblogpost192x149.png",
+      "sizes": "192x149",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/imgblogpost384x298.png",
+      "sizes": "384x298",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/imgblogpost512x397.png",
+      "sizes": "512x397",
+      "type": "image/png"
+    }
+  ]
+}

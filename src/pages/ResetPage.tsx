@@ -206,7 +206,6 @@ export const ResetPage: React.FC = () => {
               },
             })
               .then((res) => {
-                console.log("DATA", res);
                 localStorage.removeItem("resetToken");
                 localStorage.setItem("token", res.data.resetPassword.token);
                 localStorage.setItem("userId", res.data.resetPassword.userId);
@@ -218,7 +217,6 @@ export const ResetPage: React.FC = () => {
                   userId: res.data.resetPassword.userId,
                   tokenExpiration: res.data.resetPassword.tokenExpiration,
                 });
-                // console.log("STORE DATA", store);
 
                 const loggedUser = {
                   userId: res.data.resetPassword.userId,
@@ -227,8 +225,6 @@ export const ResetPage: React.FC = () => {
                   last_name: lastName,
                   authorized: store.state.authorized,
                 };
-
-                console.log("LOGGED USER", loggedUser);
 
                 setAuthorized(loggedUser);
 

@@ -1,6 +1,11 @@
 import React from "react";
 import ErrorIcon from "@material-ui/icons/Error";
-import { Typography, makeStyles } from "@material-ui/core";
+import {
+  Typography,
+  makeStyles,
+  useTheme,
+  useMediaQuery,
+} from "@material-ui/core";
 
 const useStyles = makeStyles(() => ({
   divRoot: {
@@ -12,18 +17,35 @@ const useStyles = makeStyles(() => ({
     marginBottom: 150,
   },
   errorIcon: { width: 100, height: 100 },
+  errorIconMedia: { width: 70, height: 70 },
+  typography: { marginTop: 20 },
 }));
 
 export const ErrorLoading: React.FC = () => {
   const classes = useStyles();
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up("sm"));
+
   return (
     <div className={classes.divRoot}>
-      <ErrorIcon className={classes.errorIcon} color="error" fontSize="large" />
+      <ErrorIcon
+        className={matches ? classes.errorIcon : classes.errorIconMedia}
+        color="error"
+        fontSize="large"
+      />
 
-      <Typography color="textSecondary" variant="h3" style={{ marginTop: 20 }}>
+      <Typography
+        color="textSecondary"
+        variant={matches ? "h3" : "h4"}
+        className={classes.typography}
+      >
         Error Loading !!!
       </Typography>
-      <Typography color="textSecondary" variant="h3" style={{ marginTop: 20 }}>
+      <Typography
+        color="textSecondary"
+        variant={matches ? "h3" : "h4"}
+        className={classes.typography}
+      >
         To continue, try to reload.
       </Typography>
     </div>

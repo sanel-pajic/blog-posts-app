@@ -22,30 +22,19 @@ export const useProtectedPath = () => {
     return <CircularLoading />;
   }
 
-  // console.log("CURRENT USER", currentUser);
-
   const isAdminData = data.users.find(
     (user: { _id: string; isAdmin: boolean }) =>
       user._id === currentUser && user.isAdmin !== undefined
   );
 
-  // console.log("DATA USERS", data);
-  // console.log("IS ADMIN DATA", isAdminData);
-
   if (PROTECTED_PATHS_ADMIN.indexOf((match && match.path) || "") >= 0) {
     const accessGrantAdmin = isAdminData !== null && isAdminData !== undefined;
-
-    // console.log("ACCESS GRANT ADMIN ROUTES", accessGrantAdmin);
 
     return accessGrantAdmin;
   } else {
     const protectedPath =
       PROTECTED_PATHS.indexOf((match && match.path) || "") >= 0;
     const accessGrant = !protectedPath || (protectedPath && authorized);
-
-    // console.log("ACCESS GRANT NO ADMIN ROUTES", accessGrant);
-    // console.log("PROTECTED PATH", protectedPath);
-    // console.log("ACCESS GRAND", accessGrant);
 
     return accessGrant;
   }

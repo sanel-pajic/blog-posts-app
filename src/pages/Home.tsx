@@ -176,7 +176,7 @@ export const Home: React.FC = () => {
     .sort(function (a: { numLIKES: number }, b: { numLIKES: number }) {
       return a.numLIKES - b.numLIKES;
     })
-    .slice(2, 5)
+    .slice(0, 3)
     .reverse();
 
   function handleClick(id: string) {

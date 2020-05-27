@@ -47,8 +47,6 @@ export const ImageCarousel: React.FC = () => {
     };
   }, []);
 
-  //console.log("DATA IMAGES", listImages);
-
   useInterval(() => {
     if (index === listImages.length - 1) {
       setIndex(0);

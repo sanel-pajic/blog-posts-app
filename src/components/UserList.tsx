@@ -3,16 +3,25 @@ import { useQuery, useMutation } from "@apollo/react-hooks";
 import { CircularLoading } from "./CircularLoading";
 import { ErrorLoading } from "./ErrorLoading";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
-import IconButton from "@material-ui/core/IconButton";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Paper,
+  IconButton,
+  Typography,
+  TextField,
+  InputLabel,
+  MenuItem,
+  FormHelperText,
+  FormControl,
+  Select,
+} from "@material-ui/core";
+
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
-import { Typography, TextField } from "@material-ui/core";
 import { useProtectedPath } from "../hooks/useProtectedPath";
 import { Redirect } from "react-router";
 import { USERS_QUERY } from "../graphql-queries-mutations/queries";
@@ -22,11 +31,6 @@ import {
 } from "../graphql-queries-mutations/mutations";
 import CheckIcon from "@material-ui/icons/Check";
 import { green, red } from "@material-ui/core/colors";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

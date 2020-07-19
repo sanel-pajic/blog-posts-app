@@ -1,8 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import logoError from "../images/error.png";
-import Button from "@material-ui/core/Button";
-import { Paper, makeStyles, useTheme, useMediaQuery } from "@material-ui/core";
+import {
+  Paper,
+  makeStyles,
+  useTheme,
+  useMediaQuery,
+  Button,
+} from "@material-ui/core";
 
 const useStyles = makeStyles(() => ({
   divRoot: {

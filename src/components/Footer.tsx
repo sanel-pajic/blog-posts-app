@@ -1,8 +1,6 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import Link from "@material-ui/core/Link";
-import { Divider } from "@material-ui/core";
+import { Divider, Typography, Link } from "@material-ui/core";
 
 function Copyright() {
   return (
@@ -20,7 +18,7 @@ function Copyright() {
   );
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   footer: {
     backgroundColor: "#282c34",
     position: "relative",
@@ -31,15 +29,15 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
-    alignItems: "center", 
-    padding:"2%"
-  }
+    alignItems: "center",
+    padding: "2%",
+  },
 }));
 
 export const Footer: React.FC<{
   description: string;
   title: string;
-}> = props => {
+}> = (props) => {
   const classes = useStyles();
   const { description, title } = props;
 

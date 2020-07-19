@@ -1,16 +1,20 @@
 import React from "react";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  IconButton,
+  Typography,
+  useMediaQuery,
+} from "@material-ui/core";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import { CircularLoading } from "../components/CircularLoading";
 import { ErrorLoading } from "./ErrorLoading";
-import { IconButton, Typography, useMediaQuery } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { ARTICLES_QUERY } from "../graphql-queries-mutations/queries";
 import { REMOVE_ARTICLE_MUTATION } from "../graphql-queries-mutations/mutations";

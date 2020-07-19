@@ -5,18 +5,22 @@ import {
   Theme,
   useTheme,
 } from "@material-ui/core/styles";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
+import {
+  TextField,
+  Button,
+  Paper,
+  Typography,
+  useMediaQuery,
+  Avatar,
+} from "@material-ui/core";
 import mongoID from "bson-objectid";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import * as yup from "yup";
-import { Paper, Typography, useMediaQuery } from "@material-ui/core";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { EditorState, convertToRaw } from "draft-js";
 import { CloudinaryWidget } from "../components/CloudinaryWidget";
 import draftToHtml from "draftjs-to-html";
-import Avatar from "@material-ui/core/Avatar";
 import { blue } from "@material-ui/core/colors";
 import { useProtectedPath } from "../hooks/useProtectedPath";
 import { Redirect } from "react-router";

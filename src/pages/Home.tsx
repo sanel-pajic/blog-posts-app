@@ -11,16 +11,16 @@ import {
   CardActions,
   Button,
   useTheme,
+  Grid,
+  useMediaQuery,
 } from "@material-ui/core";
 import { CircularLoading } from "../components/CircularLoading";
 import { useQuery } from "@apollo/react-hooks";
 import { BLOGS_QUERY } from "../graphql-queries-mutations/queries";
-import Grid from "@material-ui/core/Grid";
 import { blue, yellow } from "@material-ui/core/colors";
 import { useHistory, Link } from "react-router-dom";
 import StarsIcon from "@material-ui/icons/Stars";
 import { ColorButtonTeal } from "../components/AddCommentsComponent";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 const useStyles = makeStyles((theme) => ({
   card: {

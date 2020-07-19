@@ -5,8 +5,7 @@ import {
   createStyles,
   useTheme,
 } from "@material-ui/core/styles";
-import Modal from "@material-ui/core/Modal";
-import { Typography, Button, useMediaQuery } from "@material-ui/core";
+import { Typography, Button, useMediaQuery, Modal } from "@material-ui/core";
 import messageError from "../images/errorMessage.png";
 
 function rand() {

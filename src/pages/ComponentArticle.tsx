@@ -5,6 +5,7 @@ import {
   Typography,
   Grid,
   useMediaQuery,
+  TextField,
 } from "@material-ui/core";
 import {
   createStyles,
@@ -12,7 +13,6 @@ import {
   Theme,
   useTheme,
 } from "@material-ui/core/styles";
-import TextField from "@material-ui/core/TextField";
 import mongoID from "bson-objectid";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import * as yup from "yup";
@@ -280,7 +280,7 @@ export const ComponentArticle: React.FC = () => {
                           },
                         },
                         refetchQueries: [{ query: ARTICLES_QUERY }],
-                      }).catch((error) => alert(error));
+                      }).catch((_error) => {});
                     } catch (error) {
                       alert(error);
                     }

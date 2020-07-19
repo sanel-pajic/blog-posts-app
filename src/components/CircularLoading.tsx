@@ -1,9 +1,11 @@
 import React from "react";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
-import CircularProgress, {
-  CircularProgressProps
-} from "@material-ui/core/CircularProgress";
-import { Typography } from "@material-ui/core";
+
+import {
+  Typography,
+  CircularProgress,
+  CircularProgressProps,
+} from "@material-ui/core";
 
 const useStylesFacebook = makeStyles({
   root: {
@@ -11,15 +13,15 @@ const useStylesFacebook = makeStyles({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 100
+    marginTop: 100,
   },
   top: {
-    color: "#eef3fd"
+    color: "#eef3fd",
   },
   bottom: {
     color: "#6798e5",
-    animationDuration: "550ms"
-  }
+    animationDuration: "550ms",
+  },
 });
 
 function FacebookProgress(props: CircularProgressProps) {
@@ -45,11 +47,11 @@ function FacebookProgress(props: CircularProgressProps) {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      flexGrow: 1
+      flexGrow: 1,
     },
     margin: {
-      margin: theme.spacing(1)
-    }
+      margin: theme.spacing(1),
+    },
   })
 );
 

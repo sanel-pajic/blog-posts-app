@@ -1,12 +1,11 @@
 import React from "react";
-import { Paper, Typography, useMediaQuery } from "@material-ui/core";
+import { Paper, Typography, useMediaQuery, Avatar } from "@material-ui/core";
 import {
   makeStyles,
   createStyles,
   Theme,
   useTheme,
 } from "@material-ui/core/styles";
-import Avatar from "@material-ui/core/Avatar";
 import image from "../images/blog1.jpg";
 import { useQuery } from "@apollo/react-hooks";
 import { CURRENT_USER_QUERY } from "../graphql-queries-mutations/queries";

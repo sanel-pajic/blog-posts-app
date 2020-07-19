@@ -2,8 +2,15 @@ import React, { useContext } from "react";
 import logo from "../images/blog.jpg";
 import LinkMaterialUI from "@material-ui/core/Link";
 import { makeStyles, Theme, useTheme } from "@material-ui/core/styles";
-import { Divider, Button, Typography, useMediaQuery } from "@material-ui/core";
-import Avatar from "@material-ui/core/Avatar";
+import {
+  Divider,
+  Button,
+  Typography,
+  useMediaQuery,
+  Avatar,
+  Box,
+} from "@material-ui/core";
+
 import { deepOrange, grey } from "@material-ui/core/colors";
 import { CURRENT_USER_QUERY } from "../graphql-queries-mutations/queries";
 import { useQuery, useApolloClient } from "@apollo/react-hooks";
@@ -15,7 +22,6 @@ import InstagramIcon from "@material-ui/icons/Instagram";
 import { store } from "./store";
 import { ApolloClient } from "apollo-boost";
 import { TabContext, CurrentUserContext } from "../App";
-import Box from "@material-ui/core/Box";
 
 const useStyles = makeStyles((theme: Theme) => ({
   header: {

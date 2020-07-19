@@ -32,6 +32,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: "relative",
     bottom: "1vh",
   },
+  tabHome: { fontSize: 20, marginLeft: "10vw" },
+  tabGeneral: { fontSize: 20 },
 }));
 
 const Navbar: React.FC = () => {
@@ -85,14 +87,14 @@ const Navbar: React.FC = () => {
               centered
             >
               <Tab
-                style={{ fontSize: 20, marginLeft: "10vw" }}
+                className={classes.tabHome}
                 label="Home"
                 component={React.memo(NavLink)}
                 to={"/"}
                 {...a11yProps(0)}
               />
               <Tab
-                style={{ fontSize: 20 }}
+                className={classes.tabGeneral}
                 label="Add Blog Post"
                 component={React.memo(NavLink)}
                 to={"/addblogpost"}
@@ -100,28 +102,28 @@ const Navbar: React.FC = () => {
               />
 
               <Tab
-                style={{ fontSize: 20 }}
+                className={classes.tabGeneral}
                 label="Component Article"
                 component={React.memo(NavLink)}
                 to={"/article"}
                 {...a11yProps(2)}
               />
               <Tab
-                style={{ fontSize: 20 }}
+                className={classes.tabGeneral}
                 label="Blog List"
                 component={React.memo(NavLink)}
                 to={"/bloglist"}
                 {...a11yProps(3)}
               />
               <Tab
-                style={{ fontSize: 20 }}
+                className={classes.tabGeneral}
                 label="User List"
                 component={React.memo(NavLink)}
                 to={"/userlist"}
                 {...a11yProps(4)}
               />
               <Tab
-                style={{ fontSize: 20 }}
+                className={classes.tabGeneral}
                 label="User List MUI DT"
                 component={React.memo(NavLink)}
                 to={"/muiusers"}
@@ -137,28 +139,28 @@ const Navbar: React.FC = () => {
               centered
             >
               <Tab
-                style={{ fontSize: 20, marginLeft: "10vw" }}
+                className={classes.tabHome}
                 label="Home"
                 component={React.memo(NavLink)}
                 to={"/"}
                 {...a11yProps(0)}
               />
               <Tab
-                style={{ fontSize: 20 }}
+                className={classes.tabGeneral}
                 label="Add Blog Post"
                 component={React.memo(NavLink)}
                 to={"/addblogpost"}
                 {...a11yProps(1)}
               />
               <Tab
-                style={{ fontSize: 20 }}
+                className={classes.tabGeneral}
                 label="Component Article"
                 component={React.memo(NavLink)}
                 to={"/article"}
                 {...a11yProps(2)}
               />
               <Tab
-                style={{ fontSize: 20 }}
+                className={classes.tabGeneral}
                 label="Blog List"
                 component={React.memo(NavLink)}
                 to={"/bloglist"}
@@ -177,21 +179,21 @@ const Navbar: React.FC = () => {
             centered
           >
             <Tab
-              style={{ fontSize: 20, marginLeft: "10vw" }}
+              className={classes.tabHome}
               label="Home"
               component={React.memo(NavLink)}
               to={"/"}
               {...a11yProps(0)}
             />
             <Tab
-              style={{ fontSize: 20 }}
+              className={classes.tabGeneral}
               label="Add Blog Post"
               component={React.memo(NavLink)}
               to={"/addblogpost"}
               {...a11yProps(1)}
             />
             <Tab
-              style={{ fontSize: 20 }}
+              className={classes.tabGeneral}
               label="Blog List"
               component={React.memo(NavLink)}
               to={"/bloglist"}

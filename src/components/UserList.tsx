@@ -56,20 +56,7 @@ export const UserList: React.FC = () => {
 
   const [removeUser, { error }] = useMutation(REMOVE_USER_MUTATION);
 
-  const [editUser, { error: errorEditUser }] = useMutation(UPDATE_USER, {
-    update: (cache, { data }) => {
-      const previousData: any = cache.readQuery({
-        query: USERS_QUERY,
-      });
-
-      console.log(
-        "DATA QUERY REMOVE COMMENT LIKE",
-        data,
-        "PREVIOUS QUERY REMOVE COMMENT LIKE",
-        previousData
-      );
-    },
-  });
+  const [editUser, { error: errorEditUser }] = useMutation(UPDATE_USER);
 
   if (!accessGrant) {
     return <Redirect to="/authorize" />;
@@ -78,12 +65,11 @@ export const UserList: React.FC = () => {
     return <CircularLoading />;
   }
   if (error) {
-    console.log("error", error);
     return <ErrorLoading />;
   }
 
   if (errorEditUser) {
-    console.log("error", errorEditUser);
+    alert(errorEditUser);
   }
 
   const handleEditingFirstNameChange = (
@@ -274,7 +260,9 @@ export const UserList: React.FC = () => {
                                     isAdmin: isAdmin === "true" ? true : false,
                                   },
                                 },
-                              }).catch((error) => console.log("error", error));
+                              }).catch((error) => {
+                                alert(error);
+                              });
                               setEditingID(null);
                             }}
                           />

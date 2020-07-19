@@ -126,7 +126,6 @@ export const AddBlogPost: React.FC = () => {
     errorPolicy: "all",
   });
   if (errorAddBlogPost) {
-    console.log("error", errorAddBlogPost);
     return (
       <div>
         {errorAddBlogPost.graphQLErrors.map(({ message }, i) => (
@@ -252,7 +251,7 @@ export const AddBlogPost: React.FC = () => {
                   })
                     .then(() => setDialogVisible(true))
                     .catch((error) => {
-                      console.log("ERROR ADD BLOG POST", error);
+                      alert(error);
                     });
                 } catch (error) {
                   alert(error);

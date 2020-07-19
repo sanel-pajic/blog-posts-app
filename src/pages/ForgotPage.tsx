@@ -210,7 +210,7 @@ export const ForgotPage: React.FC = () => {
                 }, 1200);
               })
               .catch((error) => {
-                console.log("error", error);
+                alert(error);
               });
           } catch (error) {
             alert(error);

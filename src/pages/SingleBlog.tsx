@@ -236,8 +236,6 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
         variables: { postId: idFromHistory },
       });
 
-      console.log("DATA QUERY", data, "PREVIOUS QUERY", previousData);
-
       cache.writeQuery({
         query: SINGLE_BLOG_QUERY,
         variables: { postId: idFromHistory },
@@ -251,26 +249,10 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
   });
 
   const [removeBlogLike, { error: errorRemoveBlogLike }] = useMutation(
-    REMOVE_BLOG_LIKE,
-    {
-      update: (cache, { data }) => {
-        const previousData: any = cache.readQuery({
-          query: SINGLE_BLOG_QUERY,
-          variables: { postId: idFromHistory },
-        });
-
-        console.log(
-          "DATA QUERY REMOVE BLOG LIKE",
-          data,
-          "PREVIOUS QUERY REMOVE BLOG LIKE",
-          previousData
-        );
-      },
-    }
+    REMOVE_BLOG_LIKE
   );
 
   if (error) {
-    console.log("error", error);
     return (
       <div>
         {error.graphQLErrors.map(({ message }, i) => (
@@ -283,7 +265,6 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
   }
 
   if (errorRemoveBlogLike) {
-    console.log("error", errorRemoveBlogLike);
     return (
       <div>
         {errorRemoveBlogLike.graphQLErrors.map(({ message }, i) => (
@@ -412,7 +393,6 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
                         },
                       ],
                     }).catch((error) => {
-                      console.log(error);
                       alert(error);
                     })
                   : addBlogLike({
@@ -423,7 +403,7 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
                         },
                       },
                     }).catch((error) => {
-                      console.log(error);
+                      alert(error);
                     })
               }
             >

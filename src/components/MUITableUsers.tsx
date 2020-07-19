@@ -20,7 +20,6 @@ export const MUITableUsers: React.FC = () => {
     return <CircularLoading />;
   }
   if (error) {
-    console.log("error", error);
     return <ErrorLoading />;
   }
 

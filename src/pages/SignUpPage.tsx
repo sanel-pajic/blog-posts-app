@@ -129,7 +129,7 @@ export const SignUpPage: React.FC = () => {
   const [addUser, { error }] = useMutation(ADD_MUTATION_USER);
 
   if (error) {
-    console.log("error", error);
+    alert(error);
   }
 
   return (

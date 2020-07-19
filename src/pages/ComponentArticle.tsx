@@ -144,8 +144,6 @@ export const ComponentArticle: React.FC = () => {
     errorPolicy: "all",
   });
   if (error) {
-    console.log("error", error);
-
     return (
       <div>
         {error.graphQLErrors.map(({ message }, i) => (
@@ -282,9 +280,7 @@ export const ComponentArticle: React.FC = () => {
                           },
                         },
                         refetchQueries: [{ query: ARTICLES_QUERY }],
-                      }).catch((error) =>
-                        console.log("ERROR ADD ARTICLE", error)
-                      );
+                      }).catch((error) => alert(error));
                     } catch (error) {
                       alert(error);
                     }

@@ -84,7 +84,7 @@ export const CheckResetEmailPage: React.FC<RouteComponentProps<{
 
         history.push("/reset");
       })
-      .catch((error) => console.log(error));
+      .catch((error) => alert(error));
   }, [tokenFromHistory, checkResetTokenMutation, history]);
 
   return (

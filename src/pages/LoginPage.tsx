@@ -113,7 +113,7 @@ export const LoginPage: React.FC = () => {
   const [login, { error }] = useMutation(LOGIN_MUTATION);
 
   if (error) {
-    console.log("error", error);
+    alert(error);
   }
 
   return (
@@ -195,7 +195,6 @@ export const LoginPage: React.FC = () => {
                         });
                       })
                       .catch((error) => {
-                        console.log("ERROR", error);
                         alert(error);
                       })
                       .finally(() => window.location.reload());

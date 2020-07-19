@@ -125,7 +125,6 @@ export const BlogList: React.FC = () => {
   }
 
   if (error) {
-    console.log("error", error);
     return (
       <div>
         {error.graphQLErrors.map(({ message }, i) => (
@@ -138,7 +137,6 @@ export const BlogList: React.FC = () => {
   }
 
   if (addBlogLikeError) {
-    console.log("error", addBlogLikeError);
     return (
       <div>
         {addBlogLikeError.graphQLErrors.map(({ message }, i) => (
@@ -151,7 +149,6 @@ export const BlogList: React.FC = () => {
   }
 
   if (errorRemoveBlogLike) {
-    console.log("error", errorRemoveBlogLike);
     return (
       <div>
         {errorRemoveBlogLike.graphQLErrors.map(({ message }, i) => (
@@ -245,7 +242,6 @@ export const BlogList: React.FC = () => {
                               },
                               refetchQueries: [{ query: BLOGS_QUERY }],
                             }).catch((error) => {
-                              console.log("error", error);
                               alert(error);
                             })
                           : addBlogLike({
@@ -256,7 +252,7 @@ export const BlogList: React.FC = () => {
                                 },
                               },
                             }).catch((error) => {
-                              console.log("error", error);
+                              alert(error);
                             });
                       }}
                     >
@@ -280,7 +276,7 @@ export const BlogList: React.FC = () => {
                           variables: { _id: blog._id },
                           refetchQueries: [{ query: BLOGS_QUERY }],
                         }).catch((error) => {
-                          console.log("error", error);
+                          alert(error);
                         })
                       }
                     >

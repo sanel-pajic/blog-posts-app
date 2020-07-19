@@ -165,22 +165,7 @@ export const CommentComponent: React.FC<{
     variables: { postId },
   });
   const [removeComment, { error: errorRemoveComment }] = useMutation(
-    REMOVE_COMMENT_MUTATION,
-    {
-      update: (cache, { data }) => {
-        const previousData: any = cache.readQuery({
-          query: COMMENTS_QUERY,
-          variables: { postId },
-        });
-
-        console.log(
-          "DATA QUERY REMOVE COMMENT",
-          data,
-          "PREVIOUS QUERY REMOVE COMMENT",
-          previousData
-        );
-      },
-    }
+    REMOVE_COMMENT_MUTATION
   );
   const [addCommentLike, { error }] = useMutation(ADD_COMMENT_LIKE, {
     update: (cache, { data }) => {
@@ -189,7 +174,6 @@ export const CommentComponent: React.FC<{
         variables: { postId },
       });
 
-      console.log("DATA QUERY", data, "PREVIOUS QUERY", previousData);
       const commentIdx: any = previousData.comments.findIndex(
         (comment: { _id: any }) => {
           return comment._id === data.addLikeComment.commentId;
@@ -211,22 +195,7 @@ export const CommentComponent: React.FC<{
     },
   });
   const [removeCommentLike, { error: errorRemoveCommentLike }] = useMutation(
-    REMOVE_COMMENT_LIKE,
-    {
-      update: (cache, { data }) => {
-        const previousData: any = cache.readQuery({
-          query: COMMENTS_QUERY,
-          variables: { postId },
-        });
-
-        console.log(
-          "DATA QUERY REMOVE COMMENT LIKE",
-          data,
-          "PREVIOUS QUERY REMOVE COMMENT LIKE",
-          previousData
-        );
-      },
-    }
+    REMOVE_COMMENT_LIKE
   );
 
   const [editComment, { error: errorEditComment }] = useMutation(
@@ -238,12 +207,6 @@ export const CommentComponent: React.FC<{
           variables: { postId },
         });
 
-        console.log(
-          "DATA QUERY EDIT COMMENT",
-          data,
-          "PREVIOUS DATA QUERY EDIT COMMENT",
-          previousData
-        );
         const commentIdx: any = previousData.comments.findIndex(
           (comment: { _id: any }) => {
             return comment._id === data.updateComment.commentId;
@@ -267,19 +230,19 @@ export const CommentComponent: React.FC<{
   );
 
   if (error) {
-    console.log("error", error);
+    alert(error);
   }
 
   if (errorRemoveComment) {
-    console.log("error", errorRemoveComment);
+    alert(errorRemoveComment);
   }
 
   if (errorRemoveCommentLike) {
-    console.log("error", errorRemoveCommentLike);
+    alert(errorRemoveCommentLike);
   }
 
   if (errorEditComment) {
-    console.log("error", errorEditComment);
+    alert(errorEditComment);
   }
   if (loading || !data) {
     return <CircularLoading />;
@@ -345,7 +308,6 @@ export const CommentComponent: React.FC<{
                             { query: COMMENTS_QUERY, variables: { postId } },
                           ],
                         }).catch((error) => {
-                          console.log("error", error);
                           alert(error);
                         });
                       }}
@@ -420,7 +382,6 @@ export const CommentComponent: React.FC<{
                                 },
                               ],
                             }).catch((error) => {
-                              console.log("ERROR REMOVE COMMENT", error);
                               alert(error);
                             })
                           : addCommentLike({
@@ -431,7 +392,6 @@ export const CommentComponent: React.FC<{
                                 },
                               },
                             }).catch((error) => {
-                              console.log("ERROR ADD LIKE", error);
                               alert(error);
                             });
                       }}
@@ -472,9 +432,7 @@ export const CommentComponent: React.FC<{
                                         text: editedText,
                                       },
                                     },
-                                  }).catch((error) =>
-                                    console.log("error", error)
-                                  );
+                                  }).catch((error) => alert(error));
                                   setEditingID(null);
                                 }}
                               />

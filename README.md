@@ -1,44 +1,145 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<a href="http://fvcproductions.com"><img src="public/icons/imgblogpost168x130.png" title="imageBlogPost" alt="imageBlogPost" align="right"></a>
 
-## Available Scripts
+# Project Title
 
-In the project directory, you can run:
+Blogposts App - Frontend
 
-### `npm start`
+## Table of contents
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- [General Info](#general-info)
+- [Technologies](#technologies)
+- [Installing](#installing)
+- [Licence](#license)
+- [Author Info](#author-info)
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+## General Info
 
-### `npm test`
+This is and app for creating blogs. App is created on two levels:
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. Backend - server side of the app
 
-### `npm run build`
+   - Go to repo: https://github.com/sanel-pajic/blogPosts-App-Graphql-NodeJs.git
+   - Read README.md file for setting up the server before starting with client
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+2. Frontend - client side of the app
+This is a training project created with one purpose: Learn more about Reactjs.
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+   <br/>
+<div align="right">
+    <b><a href="#project-title">↥ back to top</a></b>
+</div>
+<br/>
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Technologies
 
-### `npm run eject`
+Project is created with:
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+- [React](https://reactjs.org/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Material-UI](https://material-ui.com/)
+- [Apollo GraphQL](https://www.apollographql.com/)
+- [Cloudinary](https://cloudinary.com/)
+- [GraphQL](https://graphql.org/)
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+<br/>
+<div align="right">
+    <b><a href="#project-title">↥ back to top</a></b>
+</div>
+<br/>
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## Installing
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+```
+git clone https://github.com/sanel-pajic/blog-posts-app.git
 
-## Learn More
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```
+cd blog-posts-app
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```
+npm install
+```
+
+```
+npm start
+```
+
+<br/>
+<div align="right">
+    <b><a href="#project-title">↥ back to top</a></b>
+</div>
+<br/>
+
+## Usage
+
+### Create Client code
+
+Once you create your client, hook it up to your app by passing it to the ApolloProvider exported from react-apollo.
+
+```javascript
+import React from "react";
+import { render } from "react-dom";
+import ApolloClient from "apollo-boost";
+import { ApolloProvider } from "react-apollo";
+
+// Pass your GraphQL endpoint to uri
+const client = new ApolloClient({
+  uri: "http://localhost:8000/graphql",
+});
+
+const ApolloApp = (AppComponent) => (
+  <ApolloProvider client={client}>
+    <AppComponent />
+  </ApolloProvider>
+);
+
+render(ApolloApp(App), document.getElementById("root"));
+```
+
+##### You should see app running like on the picture
+
+<a href="http://fvcproductions.com"><img src="public/icons/blog_post_home.jpg" title="imageBlogPost" alt="imageBlogPost" align="right"></a>
+
+<br/>
+<div align="right">
+    <b><a href="#project-title">↥ back to top</a></b>
+</div>
+<br/>
+
+## License
+
+MIT License
+
+Copyright (c) [2020] Sanel Pajic
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+<br/>
+<div align="right">
+    <b><a href="#project-title">↥ back to top</a></b>
+</div>
+<br/>
+
+## Author Info
+
+- LinkedIn - [@sanel-pajic](https://www.linkedin.com/in/sanel-pajic-b506b9187/)
+
+<a href="#project-title">Back to top</a>

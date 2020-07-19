@@ -21,6 +21,11 @@ import { CheckResetEmailPage } from "./pages/CheckResetEmailPage";
 import { MUITableUsers } from "./components/MUITableUsers";
 import ResponsiveDrawer from "./components/ResponsiveDrawer";
 import { useTheme, useMediaQuery, makeStyles } from "@material-ui/core";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const URI_APOLLO_CLIENT = process.env.REACT_APP_URI_APOLLO_CLIENT;
 
 const useStyles = makeStyles(() => ({
   divRoot: {
@@ -32,7 +37,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 export const client = new ApolloClient({
-  uri: "http://localhost:8080/graphql",
+  uri: URI_APOLLO_CLIENT,
   onError: ({ graphQLErrors, networkError }) => {
     if (graphQLErrors)
       graphQLErrors.map(

@@ -19,16 +19,19 @@ import { LOGIN_MUTATION } from "../graphql-queries-mutations/mutations";
 import { useHistory } from "react-router-dom";
 import { store } from "../components/store";
 import { ValidationTextField } from "./SignUpPage";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const URL_COPYRIGHT_LINK = process.env.REACT_APP_URL_COPYRIGHT_LINK;
+const RANDOM_IMAGE_LINK = process.env.REACT_APP_RANDOM_IMAGE_LINK;
 
 function Copyright() {
   return (
     <div>
       <Typography variant="body2" color="textSecondary" align="center">
         {"Copyright © "}
-        <Link
-          color="primary"
-          href="https://react-beach-resort-sanel-recording.netlify.com/"
-        >
+        <Link color="primary" href={URL_COPYRIGHT_LINK}>
           Sanel Pajic
         </Link>{" "}
         {new Date().getFullYear()}
@@ -55,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "1%",
   },
   image: {
-    backgroundImage: "url(https://source.unsplash.com/random)",
+    backgroundImage: `url(${RANDOM_IMAGE_LINK})`,
     backgroundRepeat: "no-repeat",
     backgroundColor:
       theme.palette.type === "dark"

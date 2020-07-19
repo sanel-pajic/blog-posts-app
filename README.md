@@ -9,6 +9,7 @@ Blogposts App - Frontend
 - [General Info](#general-info)
 - [Technologies](#technologies)
 - [Installing](#installing)
+- [Usage](#usage)
 - [Licence](#license)
 - [Author Info](#author-info)
 

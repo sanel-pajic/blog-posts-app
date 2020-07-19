@@ -18,7 +18,7 @@ import Navbar from "./components/Navbar";
 import { ForgotPage } from "./pages/ForgotPage";
 import { ResetPage } from "./pages/ResetPage";
 import { CheckResetEmailPage } from "./pages/CheckResetEmailPage";
-import { MUITableUsers } from "./components/MUITableVjezba";
+import { MUITableUsers } from "./components/MUITableUsers";
 import ResponsiveDrawer from "./components/ResponsiveDrawer";
 import { useTheme, useMediaQuery, makeStyles } from "@material-ui/core";
 

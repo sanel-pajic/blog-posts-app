@@ -79,6 +79,16 @@ const useStyles = makeStyles((theme: Theme) =>
       alignItems: "center",
       marginTop: "5%",
       wordWrap: "break-word",
+      padding: 24,
+    },
+    typographyTitleMedia: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      marginTop: "2%",
+      padding: 24,
+      marginLeft: "15%",
+      marginRight: "15%",
     },
     divPublishedAuthor: {
       marginLeft: "5rem",
@@ -302,7 +312,9 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
         <Typography
           color="textPrimary"
           variant={matches ? "h3" : "h4"}
-          className={classes.typographyTitle}
+          className={
+            matches ? classes.typographyTitle : classes.typographyTitleMedia
+          }
         >
           {data.blogPost.title}
         </Typography>

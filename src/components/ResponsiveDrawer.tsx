@@ -58,12 +58,6 @@ const NoUserRoutes = [
     sidebarName: "Home",
     component: Home,
   },
-
-  {
-    path: "/addblogpost",
-    sidebarName: "Add Blog Post",
-    component: AddBlogPost,
-  },
   {
     path: "/bloglist",
     sidebarName: "Blog List",

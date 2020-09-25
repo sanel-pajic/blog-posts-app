@@ -171,13 +171,6 @@ const Navbar: React.FC = () => {
             />
             <Tab
               className={classes.tabGeneral}
-              label="Add Blog Post"
-              component={React.memo(NavLink)}
-              to={"/addblogpost"}
-              {...a11yProps(1)}
-            />
-            <Tab
-              className={classes.tabGeneral}
               label="Blog List"
               component={React.memo(NavLink)}
               to={"/bloglist"}

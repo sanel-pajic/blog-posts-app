@@ -7,7 +7,6 @@ import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "@apollo/react-hooks";
 import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
-import { ComponentArticle } from "./pages/ComponentArticle";
 import { AddBlogPost } from "./pages/AddBlogPost";
 import { BlogList } from "./components/BlogList";
 import { UserList } from "./components/UserList";
@@ -120,7 +119,6 @@ const App: React.FC = () => {
 
               <Switch>
                 <Route exact path="/" component={Home} />
-                <Route exact path="/article" component={ComponentArticle} />
                 <Route exact path="/addblogpost" component={AddBlogPost} />
                 <Route exact path="/singleblog/:id" component={SingleBlog} />
                 <Route exact path="/bloglist" component={BlogList} />

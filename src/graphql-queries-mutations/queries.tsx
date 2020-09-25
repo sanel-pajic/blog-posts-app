@@ -20,19 +20,6 @@ export const BLOGS_QUERY = gql`
   }
 `;
 
-// Query for displaying all articles component
-export const ARTICLES_QUERY = gql`
-  query {
-    componentArticles {
-      _id
-      code
-      description
-      quantity
-      price
-    }
-  }
-`;
-
 // Query for displaying all users
 
 export const USERS_QUERY = gql`

@@ -19,7 +19,6 @@ import FacebookIcon from "@material-ui/icons/Facebook";
 import TwitterIcon from "@material-ui/icons/Twitter";
 import PinterestIcon from "@material-ui/icons/Pinterest";
 import InstagramIcon from "@material-ui/icons/Instagram";
-import { store } from "./store";
 import { ApolloClient } from "apollo-boost";
 import { TabContext, CurrentUserContext } from "../App";
 
@@ -109,10 +108,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export function logout(apolloclient: ApolloClient<any>, history: any) {
-  store.setState({
-    authorized: false,
-  });
+export function logout(
+  apolloclient: ApolloClient<any>,
+  history: any,
+  setAuthorized: Function
+) {
+  setAuthorized(false);
   localStorage.clear();
   apolloclient.clearStore();
   history.push("/");
@@ -266,7 +267,7 @@ export const Header: React.FC = () => {
                 onClick={() => {
                   setTabIndex(0);
                   setAuthorized(false);
-                  logout(apolloclient, history);
+                  logout(apolloclient, history, setAuthorized);
                 }}
               >
                 Logout

@@ -403,7 +403,7 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
                         },
                       },
                     }).catch((error) => {
-                      alert(error);
+                      console.log(error);
                     })
               }
             >

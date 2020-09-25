@@ -23,7 +23,6 @@ import {
 import MenuIcon from "@material-ui/icons/Menu";
 import { Home } from "../pages/Home";
 import { BlogList } from "./BlogList";
-import { ComponentArticle } from "../pages/ComponentArticle";
 import { AddBlogPost } from "../pages/AddBlogPost";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import logo from "../images/blog.jpg";
@@ -40,11 +39,6 @@ const Routes = [
     path: "/",
     sidebarName: "Home",
     component: Home,
-  },
-  {
-    path: "/article",
-    sidebarName: "Component Article",
-    component: ComponentArticle,
   },
   {
     path: "/addblogpost",
@@ -308,7 +302,7 @@ const ResponsiveDrawer: React.FC = (props: any) => {
               onClick={() => {
                 setTabIndex(0);
                 setAuthorized(false);
-                logout(apolloclient, history);
+                logout(apolloclient, history, setAuthorized);
               }}
             >
               Logout

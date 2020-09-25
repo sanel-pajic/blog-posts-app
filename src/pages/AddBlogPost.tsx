@@ -236,6 +236,7 @@ export const AddBlogPost: React.FC = () => {
                     description_short,
                     description,
                   });
+
                   console.log("VALID", valid);
 
                   addBlogPost({

@@ -99,14 +99,6 @@ const Navbar: React.FC = () => {
                 to={"/addblogpost"}
                 {...a11yProps(1)}
               />
-
-              <Tab
-                className={classes.tabGeneral}
-                label="Component Article"
-                component={React.memo(NavLink)}
-                to={"/article"}
-                {...a11yProps(2)}
-              />
               <Tab
                 className={classes.tabGeneral}
                 label="Blog List"
@@ -150,13 +142,6 @@ const Navbar: React.FC = () => {
                 component={React.memo(NavLink)}
                 to={"/addblogpost"}
                 {...a11yProps(1)}
-              />
-              <Tab
-                className={classes.tabGeneral}
-                label="Component Article"
-                component={React.memo(NavLink)}
-                to={"/article"}
-                {...a11yProps(2)}
               />
               <Tab
                 className={classes.tabGeneral}

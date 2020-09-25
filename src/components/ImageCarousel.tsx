@@ -36,7 +36,7 @@ export const ImageCarousel: React.FC = () => {
 
     axios
       .get(
-        `http://res.cloudinary.com/${CLOUD_NAME}/image/list/blog-post-app.json
+        `https://res.cloudinary.com/${CLOUD_NAME}/image/list/blog-post-app.json
       `
       )
       .then((result) => {

@@ -165,7 +165,7 @@ export const AddCommentsComponent: React.FC<{ postId: string }> = ({
                 })
                   .then((res) => handleClick(res.data.addComment._id))
                   .catch((error) => {
-                    alert(error);
+                    console.log(error);
                   });
               }}
             >

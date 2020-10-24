@@ -23,7 +23,7 @@ import { USERS_QUERY } from "../graphql-queries-mutations/queries";
 import { CurrentUserContext } from "../App";
 
 let schema = yup.object().shape({
-  newPassword: yup.string().required("Password is required!").min(5, "Must be at least 5 characters."),
+  newPassword: yup.string().required("Password is required!").min(5, "Password: Must be at least 5 characters."),
   confirmPassword: yup
     .string()
     .oneOf([yup.ref("newPassword"), null], "Passwords must match!"),

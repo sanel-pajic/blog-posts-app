@@ -1,7 +1,7 @@
 {
   "name": "BlogPostApp",
   "short_name": "BlogPostApp",
-  "start_url": "/index.html",
+  "start_url": "https://blog-post-app-sanel.netlify.app/",
   "display": "standalone",
   "background_color": "#edf1f5af",
   "theme_color": "#edf1f5af",

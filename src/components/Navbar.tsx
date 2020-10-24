@@ -6,9 +6,9 @@ import { store } from "./store";
 import { useStore } from "react-stores";
 import { useQuery } from "@apollo/react-hooks";
 import { USERS_QUERY } from "../graphql-queries-mutations/queries";
-import { CircularLoading } from "./CircularLoading";
 import { TabContext } from "../App";
 import { useTabEffectNoAdmin } from "../hooks/useTabEffectNoAdmin";
+import { CircularLoadingNavbar } from "./CircularLoadingNavbar";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -65,7 +65,7 @@ const Navbar: React.FC = () => {
   }, [currentUser, tabEffectNoAdmin, setTabIndex]);
 
   if (loading || !data) {
-    return <CircularLoading />;
+    return <CircularLoadingNavbar />;
   }
 
   const isAdminData = data.users.find(

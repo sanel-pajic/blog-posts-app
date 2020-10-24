@@ -126,13 +126,7 @@ const ResponsiveDrawer: React.FC = (props: any) => {
     fetchPolicy: "cache-and-network",
   });
 
-  // const token = localStorage.getItem("token");
-
   const authStoreState = useStore(store);
-
-  // if (!token) {
-  //   return <Redirect to="/authorize" />;
-  // }
 
   const activeRoute = (routeName: any) => {
     return props.location.pathname === routeName ? true : false;
@@ -263,7 +257,6 @@ const ResponsiveDrawer: React.FC = (props: any) => {
   const lastName: string = data.currentUser.last_name;
   const letterFN = firstName.charAt(0);
   const letterLN = lastName.charAt(0);
-
   const firstNameContext: string = first_name;
   const lastNameContext: string = last_name;
   const letterFNContext = firstNameContext.charAt(0);

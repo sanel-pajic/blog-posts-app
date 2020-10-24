@@ -392,7 +392,7 @@ export const CommentComponent: React.FC<{
                                 },
                               },
                             }).catch((error) => {
-                              alert(error);
+                              console.log(error);
                             });
                       }}
                     >

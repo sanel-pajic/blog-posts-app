@@ -31,8 +31,8 @@ import { ADD_BLOG_MUTATION } from "../graphql-queries-mutations/mutations";
 import { DialogVisibleModal } from "../components/DialogVisibleModal";
 
 let schema = yup.object().shape({
-  title: yup.string().required().min(5),
-  description: yup.string().required().min(5),
+  title: yup.string().required("Title is required field.").min(5,"Title must be at least 5 characters."),
+  description: yup.string().required("Description is required field.").min(5, "Description must be at least 5 characters."),
 });
 
 const useStyles = makeStyles((theme: Theme) =>

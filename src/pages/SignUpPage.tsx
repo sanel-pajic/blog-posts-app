@@ -22,10 +22,10 @@ import { useHistory } from "react-router-dom";
 import { store } from "../components/store";
 
 let schema = yup.object().shape({
-  first_name: yup.string().required().min(3),
-  last_name: yup.string().required().min(3),
-  email: yup.string().required().min(5).email(),
-  password: yup.string().required().min(5),
+  first_name: yup.string().required("Please enter First Name.").min(3,"Must be at least 3 characters."),
+  last_name: yup.string().required("Please enter Last Name.").min(3,"Must be at least 3 characters."),
+  email: yup.string().required("Please Enter your Email.").min(5,"Must be at least 5 characters.").email("Must be Email."),
+  password: yup.string().required("Password is required!").min(5,"Must be at least 5 characters."),
 });
 
 const useStyles = makeStyles((theme) => ({

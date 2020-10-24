@@ -263,15 +263,7 @@ export const SingleBlog: React.FC<RouteComponentProps<{ id: string }>> = ({
   );
 
   if (error) {
-    return (
-      <div>
-        {error.graphQLErrors.map(({ message }, i) => (
-          <div key={i}>
-            <ModalError message={message} />
-          </div>
-        ))}
-      </div>
-    );
+    alert(error);
   }
 
   if (errorRemoveBlogLike) {

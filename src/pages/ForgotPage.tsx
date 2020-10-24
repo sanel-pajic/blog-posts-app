@@ -20,7 +20,7 @@ import * as yup from "yup";
 import Alert from "@material-ui/lab/Alert";
 
 let schema = yup.object().shape({
-  forgotEmail: yup.string().required().min(5).email(),
+  forgotEmail: yup.string().required("Please Enter your Email.").min(5, "Email must be at least 5 characters.").email("Must be Email."),
 });
 
 const useStyles = makeStyles((theme: Theme) =>

@@ -129,15 +129,7 @@ export const BlogList: React.FC = () => {
   }
 
   if (error) {
-    return (
-      <div>
-        {error.graphQLErrors.map(({ message }, i) => (
-          <div key={i}>
-            <ModalError message={message} />
-          </div>
-        ))}
-      </div>
-    );
+  alert(error);
   }
 
   if (addBlogLikeError) {

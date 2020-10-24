@@ -20,8 +20,14 @@ import { useHistory } from "react-router-dom";
 import { store } from "../components/store";
 import { ValidationTextField } from "./SignUpPage";
 import dotenv from "dotenv";
+import * as yup from "yup";
 
 dotenv.config();
+
+let schema = yup.object().shape({
+  email: yup.string().required("Please Enter your Email.").min(5,"Must be at least 5 characters.").email("Must be Email."),
+  password: yup.string().required("Password is required!").min(5,"Must be at least 5 characters."),
+});
 
 const URL_COPYRIGHT_LINK = process.env.REACT_APP_URL_COPYRIGHT_LINK;
 const RANDOM_IMAGE_LINK = process.env.REACT_APP_RANDOM_IMAGE_LINK;
@@ -185,6 +191,12 @@ export const LoginPage: React.FC = () => {
                     e.preventDefault();
                     setEmail("");
                     setPassword("");
+                    try {
+                      const valid = schema.validateSync({
+                        email,
+                        password,
+                      });
+                      console.log("VALID", valid);
                     login({
                       variables: {
                         email: email,
@@ -200,9 +212,12 @@ export const LoginPage: React.FC = () => {
                         });
                       })
                       .catch((error) => {
-                        alert(error);
+                       console.log(error);
                       })
                       .finally(() => window.location.reload());
+                    } catch (error) {
+                      alert(error);
+                    }
                   }}
                 >
                   Sign In - PRESS TO LOGIN

@@ -230,7 +230,7 @@ export const CommentComponent: React.FC<{
   );
 
   if (error) {
-    alert(error);
+     alert(error)
   }
 
   if (errorRemoveComment) {
